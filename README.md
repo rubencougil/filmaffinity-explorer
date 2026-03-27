@@ -1,5 +1,7 @@
 # 🎬 Filmaffinity Explorer
 
+[![CI](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml)
+
 A local web app to browse, sync, and analyze FilmAffinity ratings for one or more users.
 
 ![Filmaffinity Explorer preview](public/readme/preview-home.jpg)
