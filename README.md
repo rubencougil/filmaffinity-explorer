@@ -2,7 +2,7 @@
 
 A local web app to browse, sync, and analyze FilmAffinity ratings for one or more users.
 
-![Filmaffinity Explorer preview](public/readme/preview-home.png)
+![Filmaffinity Explorer preview](public/readme/preview-home.jpg)
 
 ## ✨ What you can do
 
