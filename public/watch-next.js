@@ -256,7 +256,17 @@ function buildRecommendations(activeUserName, librariesByUser) {
         rankScore
       };
     })
-    .sort((a, b) => b.rankScore - a.rankScore || a.title.localeCompare(b.title))
+    .sort((a, b) => {
+      const yearDiff = getYearSortValue(b.year) - getYearSortValue(a.year);
+      if (yearDiff !== 0) {
+        return yearDiff;
+      }
+      const scoreDiff = b.rankScore - a.rankScore;
+      if (scoreDiff !== 0) {
+        return scoreDiff;
+      }
+      return a.title.localeCompare(b.title);
+    })
     .slice(0, 80);
 }
 
