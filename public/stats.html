@@ -16,6 +16,7 @@
         <nav class="top-links" aria-label="Primary">
           <a data-nav-target="home" href="/">🎬 Biblioteca</a>
           <a class="is-active" data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
           <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
         </nav>
 
@@ -40,19 +41,19 @@
 
         <div class="stats-grid stats-grid-large">
           <article class="stat-card">
-            <span class="stat-label">🎟️ Votos totales</span>
+            <span class="stat-label has-tooltip" data-tooltip="Cantidad total de títulos con voto personal del usuario seleccionado.">🎟️ Votos totales</span>
             <strong id="stats-total-votes">0</strong>
           </article>
           <article class="stat-card">
-            <span class="stat-label">⭐ Nota media global</span>
+            <span class="stat-label has-tooltip" data-tooltip="Promedio simple de todas las notas personales del usuario (escala 1 a 10).">⭐ Nota media global</span>
             <strong id="stats-average-rating">-</strong>
           </article>
           <article class="stat-card">
-            <span class="stat-label">🔥 Año más activo</span>
+            <span class="stat-label has-tooltip" data-tooltip="Año con mayor número de votos registrados para el usuario seleccionado.">🔥 Año más activo</span>
             <strong id="stats-busiest-year">-</strong>
           </article>
           <article class="stat-card">
-            <span class="stat-label">🤝 Títulos compartidos</span>
+            <span class="stat-label has-tooltip" data-tooltip="Número de títulos que también tienen voto de al menos otro usuario configurado.">🤝 Títulos compartidos</span>
             <strong id="stats-shared-count">0</strong>
           </article>
         </div>

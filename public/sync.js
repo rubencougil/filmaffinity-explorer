@@ -24,7 +24,8 @@ function updateNavLinks() {
   const byTarget = {
     home: `/${userParam}`,
     stats: `/stats.html${userParam}`,
-    sync: `/sync.html${userParam}`
+    sync: `/sync.html${userParam}`,
+    watchnext: `/watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {

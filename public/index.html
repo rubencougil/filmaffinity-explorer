@@ -16,6 +16,7 @@
         <nav class="top-links" aria-label="Primary">
           <a class="is-active" data-nav-target="home" href="/">🎬 Biblioteca</a>
           <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
           <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
         </nav>
 
@@ -26,7 +27,7 @@
     </header>
 
     <div class="page-shell">
-      <main class="layout">
+      <main class="layout layout-single">
         <section id="results-section" class="panel search-panel">
           <div class="panel-header">
             <div>
@@ -69,6 +70,14 @@
               </div>
             </label>
             <label class="field small-field">
+              <span>📅 Año</span>
+              <div class="rating-filter">
+                <select id="year-filter">
+                  <option value="all" selected>Todos los años</option>
+                </select>
+              </div>
+            </label>
+            <label class="field small-field">
               <span>👥 Votos comunes</span>
               <div class="toggle-field">
                 <input id="shared-only" type="checkbox" />
@@ -85,29 +94,6 @@
             <button id="next-page" class="ghost-button" type="button">Siguiente</button>
           </div>
         </section>
-
-        <aside class="panel summary-panel">
-          <div class="panel-header">
-            <div>
-              <p class="panel-kicker">Resumen</p>
-              <h2>Actividad</h2>
-            </div>
-          </div>
-          <div class="stats-grid stats-grid-side">
-            <article class="stat-card">
-              <span class="stat-label">🎟️ Votaciones guardadas</span>
-              <strong id="stats-count">0</strong>
-            </article>
-            <article class="stat-card">
-              <span class="stat-label">⭐ Nota media</span>
-              <strong id="stats-average">-</strong>
-            </article>
-            <article class="stat-card">
-              <span class="stat-label">🗓️ Última votación</span>
-              <strong id="stats-latest">-</strong>
-            </article>
-          </div>
-        </aside>
       </main>
     </div>
 

@@ -285,10 +285,35 @@ async function scrapeCurrentPage(page) {
       const image = card.querySelector('img');
       const srcset = image?.getAttribute('data-srcset') || image?.getAttribute('srcset') || '';
       if (srcset) {
-        const firstEntry = srcset.split(',')[0]?.trim() || '';
-        const firstUrl = firstEntry.split(/\s+/)[0];
-        if (firstUrl) {
-          return firstUrl;
+        const bestEntry = srcset
+          .split(',')
+          .map((entry) => entry.trim())
+          .map((entry) => {
+            const [url = '', descriptor = ''] = entry.split(/\s+/, 2);
+            const numeric = Number.parseInt(descriptor.replace(/[^\d]/g, ''), 10);
+            return {
+              url,
+              score: Number.isFinite(numeric) ? numeric : 0,
+              isWidth: descriptor.endsWith('w'),
+              isDensity: descriptor.endsWith('x')
+            };
+          })
+          .filter((entry) => entry.url)
+          .sort((a, b) => {
+            if (a.score !== b.score) {
+              return b.score - a.score;
+            }
+            if (a.isWidth !== b.isWidth) {
+              return a.isWidth ? -1 : 1;
+            }
+            if (a.isDensity !== b.isDensity) {
+              return a.isDensity ? -1 : 1;
+            }
+            return 0;
+          })[0];
+
+        if (bestEntry?.url) {
+          return bestEntry.url;
         }
       }
 

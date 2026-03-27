@@ -5,6 +5,7 @@ const USER_QUERY_KEY = 'userName';
 const elements = {
   searchInput: document.querySelector('#search-input'),
   minRating: document.querySelector('#min-rating'),
+  yearFilter: document.querySelector('#year-filter'),
   sharedOnly: document.querySelector('#shared-only'),
   userSelector: document.querySelector('#global-user-selector'),
   navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
@@ -16,9 +17,6 @@ const elements = {
   nextPage: document.querySelector('#next-page'),
   pageInfo: document.querySelector('#page-info'),
   importStatus: document.querySelector('#import-status'),
-  statsCount: document.querySelector('#stats-count'),
-  statsAverage: document.querySelector('#stats-average'),
-  statsLatest: document.querySelector('#stats-latest'),
   resultTemplate: document.querySelector('#result-template')
 };
 
@@ -48,7 +46,8 @@ function updateNavLinks() {
   const byTarget = {
     home: `/${userParam}`,
     stats: `/stats.html${userParam}`,
-    sync: `/sync.html${userParam}`
+    sync: `/sync.html${userParam}`,
+    watchnext: `/watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {
@@ -91,9 +90,6 @@ function showLibraryLoader(message = 'Cargando biblioteca...') {
   elements.results.appendChild(createLoader(message));
   elements.resultsMeta.textContent = 'Cargando datos...';
   elements.pagination.hidden = true;
-  elements.statsCount.textContent = '-';
-  elements.statsAverage.textContent = '-';
-  elements.statsLatest.textContent = '-';
 }
 
 function saveLibrary(records) {
@@ -113,6 +109,59 @@ function normalizeRecord(record) {
     posterUrl: String(record.posterUrl || '').trim(),
     otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
   };
+}
+
+function getPosterCandidates(url) {
+  const source = String(url || '').trim();
+  if (!source) {
+    return [];
+  }
+
+  const candidates = [];
+  const pushUnique = (value) => {
+    if (value && !candidates.includes(value)) {
+      candidates.push(value);
+    }
+  };
+
+  if (source.includes('-msmall.')) {
+    pushUnique(source.replace('-msmall.', '-large.'));
+    pushUnique(source.replace('-msmall.', '-mmed.'));
+    pushUnique(source.replace('-msmall.', '-med.'));
+  }
+
+  pushUnique(source);
+  return candidates;
+}
+
+function setPosterSource(imageNode, posterUrl) {
+  const candidates = getPosterCandidates(posterUrl);
+  if (!candidates.length) {
+    imageNode.removeAttribute('src');
+    return;
+  }
+
+  let currentIndex = 0;
+  const applyNextCandidate = () => {
+    if (currentIndex >= candidates.length) {
+      imageNode.removeAttribute('src');
+      imageNode.onerror = null;
+      imageNode.onload = null;
+      return;
+    }
+    imageNode.src = candidates[currentIndex];
+  };
+
+  imageNode.onerror = () => {
+    currentIndex += 1;
+    applyNextCandidate();
+  };
+  imageNode.onload = () => {
+    imageNode.onerror = null;
+    imageNode.onload = null;
+  };
+
+  applyNextCandidate();
 }
 
 function parseFlexibleDate(value) {
@@ -201,19 +250,34 @@ function setStatus(message, isError = false) {
   elements.importStatus.style.color = isError ? '#8a1f11' : '';
 }
 
-function renderStats(records) {
-  elements.statsCount.textContent = String(records.length);
+function getYearSortValue(yearText) {
+  const match = String(yearText || '').match(/\d{4}/);
+  return match ? Number(match[0]) : Number.NEGATIVE_INFINITY;
+}
 
-  const rated = records.filter((record) => Number.isFinite(record.rating));
-  const average = rated.length
-    ? (rated.reduce((sum, record) => sum + record.rating, 0) / rated.length).toFixed(1)
-    : '-';
-  elements.statsAverage.textContent = average;
+function updateYearFilterOptions(records) {
+  const previousValue = elements.yearFilter.value || 'all';
+  const years = [...new Set(records.map((record) => String(record.year || '').trim()).filter(Boolean))]
+    .sort((a, b) => {
+      const diff = getYearSortValue(b) - getYearSortValue(a);
+      return diff !== 0 ? diff : b.localeCompare(a);
+    });
 
-  const latest = records
-    .filter((record) => parseFlexibleDate(record.ratedAt))
-    .sort((a, b) => parseFlexibleDate(b.ratedAt) - parseFlexibleDate(a.ratedAt))[0];
-  elements.statsLatest.textContent = latest ? formatDate(latest.ratedAt) : '-';
+  elements.yearFilter.innerHTML = '';
+  const allOption = document.createElement('option');
+  allOption.value = 'all';
+  allOption.textContent = 'Todos los años';
+  elements.yearFilter.appendChild(allOption);
+
+  years.forEach((year) => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    elements.yearFilter.appendChild(option);
+  });
+
+  const canKeepCurrent = previousValue !== 'all' && years.includes(previousValue);
+  elements.yearFilter.value = canKeepCurrent ? previousValue : 'all';
 }
 
 function updateSelectedUserLabel() {
@@ -259,7 +323,7 @@ function renderResults(records) {
     poster.alt = record.title ? `Poster for ${record.title}` : 'Film poster';
 
     if (record.posterUrl) {
-      poster.src = record.posterUrl;
+      setPosterSource(poster, record.posterUrl);
     } else {
       poster.removeAttribute('src');
       poster.alt = '';
@@ -326,14 +390,16 @@ function renderPagination(totalResults) {
 function filterRecords() {
   const query = elements.searchInput.value.trim().toLowerCase();
   const minRating = Number(elements.minRating.value);
+  const selectedYear = elements.yearFilter.value || 'all';
   const sharedOnly = Boolean(elements.sharedOnly.checked);
 
   const filtered = library.filter((record) => {
     const haystack = `${record.title} ${record.year} ${record.url}`.toLowerCase();
     const queryMatch = !query || haystack.includes(query);
     const ratingMatch = !minRating || (record.rating ?? -Infinity) >= minRating;
+    const yearMatch = selectedYear === 'all' || record.year === selectedYear;
     const sharedMatch = !sharedOnly || record.otherVotes.length > 0;
-    return queryMatch && ratingMatch && sharedMatch;
+    return queryMatch && ratingMatch && yearMatch && sharedMatch;
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -347,7 +413,6 @@ function filterRecords() {
     : `0 resultados · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`;
 
   updateSelectedUserLabel();
-  renderStats(library);
   renderResults(visible);
   renderPagination(filtered.length);
 }
@@ -370,6 +435,7 @@ async function loadLibraryForSelectedUser() {
   }
 
   const records = dedupeRecords(payload.ratings || []);
+  updateYearFilterOptions(records);
   saveLibrary(records);
 
   const hasAnyPersonalRating = records.some(
@@ -437,6 +503,10 @@ elements.searchInput.addEventListener('input', () => {
   render();
 });
 elements.minRating.addEventListener('change', () => {
+  currentPage = 1;
+  render();
+});
+elements.yearFilter.addEventListener('change', () => {
   currentPage = 1;
   render();
 });

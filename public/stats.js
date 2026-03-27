@@ -53,7 +53,8 @@ function updateNavLinks() {
   const byTarget = {
     home: `/${userParam}`,
     stats: `/stats.html${userParam}`,
-    sync: `/sync.html${userParam}`
+    sync: `/sync.html${userParam}`,
+    watchnext: `/watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {
@@ -398,32 +399,117 @@ function renderLineChart(target, dataset) {
 function renderInsights(records) {
   elements.insightsGrid.innerHTML = '';
 
+  const ratedRecords = records.filter((record) => Number.isFinite(record.rating));
   const datedRecords = records.filter((record) => record.date);
-  const highest = [...records]
-    .filter((record) => Number.isFinite(record.rating))
+  const highest = [...ratedRecords]
     .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title))[0];
-  const lowest = [...records]
-    .filter((record) => Number.isFinite(record.rating))
+  const lowest = [...ratedRecords]
     .sort((a, b) => a.rating - b.rating || a.title.localeCompare(b.title))[0];
   const shared = records.filter((record) => record.otherVotes.length > 0).length;
   const mostRecent = datedRecords.at(-1);
+  const highRatings = ratedRecords.filter((record) => record.rating >= 8).length;
+  const lowRatings = ratedRecords.filter((record) => record.rating <= 4).length;
+
+  const distribution = new Map();
+  ratedRecords.forEach((record) => {
+    distribution.set(record.rating, (distribution.get(record.rating) || 0) + 1);
+  });
+  const mode = [...distribution.entries()]
+    .sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0]))[0];
+
+  const average = ratedRecords.length
+    ? ratedRecords.reduce((sum, record) => sum + record.rating, 0) / ratedRecords.length
+    : null;
+  const variance = ratedRecords.length
+    ? ratedRecords.reduce((sum, record) => sum + (record.rating - average) ** 2, 0) / ratedRecords.length
+    : null;
+  const stdDev = Number.isFinite(variance) ? Math.sqrt(variance) : null;
+
+  const sharedPairs = records.flatMap((record) => {
+    if (!Number.isFinite(record.rating)) {
+      return [];
+    }
+    return (record.otherVotes || [])
+      .map((vote) => Number(vote.rating))
+      .filter((rating) => Number.isFinite(rating))
+      .map((rating) => Math.abs(record.rating - rating));
+  });
+  const sharedAgreement = sharedPairs.length
+    ? Math.round(
+        (sharedPairs.reduce((sum, diff) => sum + (1 - diff / 9), 0) / sharedPairs.length) * 100
+      )
+    : null;
+
+  const uniqueDays = [...new Set(
+    datedRecords
+      .map((record) => record.date.toISOString().slice(0, 10))
+      .sort()
+  )];
+  let longestStreak = 0;
+  let currentStreak = 0;
+  let previousDay = null;
+  uniqueDays.forEach((day) => {
+    const date = new Date(`${day}T00:00:00`);
+    if (!previousDay) {
+      currentStreak = 1;
+    } else {
+      const diffDays = Math.round((date.getTime() - previousDay.getTime()) / 86_400_000);
+      currentStreak = diffDays === 1 ? currentStreak + 1 : 1;
+    }
+    previousDay = date;
+    longestStreak = Math.max(longestStreak, currentStreak);
+  });
 
   const items = [
     {
       label: '🏆 Nota más alta',
-      value: highest ? `${highest.rating} · ${highest.title}` : '-'
+      value: highest ? `${highest.rating} · ${highest.title}` : '-',
+      tooltip: 'Mayor nota individual registrada para el usuario y título asociado.'
     },
     {
       label: '🫣 Nota más baja',
-      value: lowest ? `${lowest.rating} · ${lowest.title}` : '-'
+      value: lowest ? `${lowest.rating} · ${lowest.title}` : '-',
+      tooltip: 'Menor nota individual registrada para el usuario y título asociado.'
     },
     {
       label: '🤝 Porcentaje compartido',
-      value: records.length ? `${Math.round((shared / records.length) * 100)}%` : '-'
+      value: records.length ? `${Math.round((shared / records.length) * 100)}%` : '-',
+      tooltip: 'Porcentaje de títulos del usuario que también fueron votados por otros usuarios configurados.'
     },
     {
       label: '🕒 Último voto registrado',
-      value: mostRecent ? formatDate(mostRecent.date, { year: 'numeric', month: 'short', day: 'numeric' }) : '-'
+      value: mostRecent ? formatDate(mostRecent.date, { year: 'numeric', month: 'short', day: 'numeric' }) : '-',
+      tooltip: 'Fecha más reciente con voto detectado para el usuario seleccionado.'
+    },
+    {
+      label: '💎 Notas altas (8-10)',
+      value: ratedRecords.length ? `${Math.round((highRatings / ratedRecords.length) * 100)}%` : '-',
+      tooltip: 'Proporción de votos con nota alta (8, 9 o 10).'
+    },
+    {
+      label: '🌧️ Notas bajas (1-4)',
+      value: ratedRecords.length ? `${Math.round((lowRatings / ratedRecords.length) * 100)}%` : '-',
+      tooltip: 'Proporción de votos con nota baja (1 a 4).'
+    },
+    {
+      label: '🎯 Nota más usada',
+      value: mode ? `${mode[0]} (${mode[1]} veces)` : '-',
+      tooltip: 'Nota que más se repite en el historial del usuario.'
+    },
+    {
+      label: '📏 Consistencia (σ)',
+      value: Number.isFinite(stdDev) ? stdDev.toFixed(2) : '-',
+      tooltip: 'Desviación estándar de las notas. Más bajo = criterio más consistente.'
+    },
+    {
+      label: '🔥 Racha más larga',
+      value: longestStreak ? `${longestStreak} día${longestStreak === 1 ? '' : 's'} seguidos` : '-',
+      tooltip: 'Mayor secuencia de días consecutivos con al menos un voto.'
+    },
+    {
+      label: '🤝 Acuerdo global',
+      value: Number.isFinite(sharedAgreement) ? `${sharedAgreement}%` : '-',
+      tooltip: 'Nivel agregado de cercanía entre notas del usuario activo y notas de otros usuarios en títulos compartidos.'
     }
   ];
 
@@ -432,8 +518,9 @@ function renderInsights(records) {
     card.className = 'insight-card';
 
     const label = document.createElement('span');
-    label.className = 'insight-label';
+    label.className = 'insight-label has-tooltip';
     label.textContent = item.label;
+    label.dataset.tooltip = item.tooltip;
 
     const value = document.createElement('strong');
     value.className = 'insight-value';
@@ -540,22 +627,55 @@ function renderOverlapGrid(records) {
       const overlapCount = items.length;
       const totalGap = items.reduce((sum, item) => sum + item.diff, 0);
       const avgGap = overlapCount ? totalGap / overlapCount : null;
+      const bias = overlapCount
+        ? items.reduce((sum, item) => sum + (item.mine - item.theirs), 0) / overlapCount
+        : null;
       const exactMatches = items.filter((item) => item.diff === 0).length;
+      const exactRate = overlapCount ? Math.round((exactMatches / overlapCount) * 100) : null;
       const agreementScore = overlapCount
         ? Math.round(
             (items.reduce((sum, item) => sum + (1 - item.diff / 9), 0) / overlapCount) * 100
           )
         : null;
+      const strongDisagreements = items.filter((item) => item.diff >= 4).length;
       const disagreements = [...items]
         .sort((a, b) => b.diff - a.diff || a.title.localeCompare(b.title))
         .slice(0, 4);
+      const topAgreements = [...items]
+        .sort((a, b) => a.diff - b.diff || a.title.localeCompare(b.title))
+        .slice(0, 3);
+
+      const meanMine = overlapCount
+        ? items.reduce((sum, item) => sum + item.mine, 0) / overlapCount
+        : null;
+      const meanTheirs = overlapCount
+        ? items.reduce((sum, item) => sum + item.theirs, 0) / overlapCount
+        : null;
+      const covariance = overlapCount
+        ? items.reduce((sum, item) => sum + (item.mine - meanMine) * (item.theirs - meanTheirs), 0)
+        : null;
+      const varianceMine = overlapCount
+        ? items.reduce((sum, item) => sum + (item.mine - meanMine) ** 2, 0)
+        : null;
+      const varianceTheirs = overlapCount
+        ? items.reduce((sum, item) => sum + (item.theirs - meanTheirs) ** 2, 0)
+        : null;
+      const pearson =
+        overlapCount && varianceMine > 0 && varianceTheirs > 0
+          ? Number((covariance / Math.sqrt(varianceMine * varianceTheirs)).toFixed(2))
+          : null;
 
       return {
         name,
         overlapCount,
         avgGap,
+        bias,
         exactMatches,
+        exactRate,
         agreementScore,
+        pearson,
+        strongDisagreements,
+        topAgreements,
         disagreements
       };
     })
@@ -590,6 +710,19 @@ function renderOverlapGrid(records) {
     return 'Muy baja';
   }
 
+  function describeConfidence(overlap) {
+    if (overlap >= 120) {
+      return 'Alta';
+    }
+    if (overlap >= 50) {
+      return 'Media';
+    }
+    if (overlap >= 15) {
+      return 'Baja';
+    }
+    return 'Muy baja';
+  }
+
   ranking.forEach((item) => {
     const card = document.createElement('article');
     card.className = 'overlap-card agreement-card';
@@ -602,11 +735,13 @@ function renderOverlapGrid(records) {
     metrics.className = 'agreement-metrics';
 
     const scoreBadge = document.createElement('span');
-    scoreBadge.className = 'agreement-score';
+    scoreBadge.className = 'agreement-score has-tooltip';
     scoreBadge.textContent =
       item.agreementScore === null
         ? '🧩 Sin datos compartidos'
         : `🤝 ${item.agreementScore}% de compatibilidad`;
+    scoreBadge.dataset.tooltip =
+      'Afinidad normalizada entre 0% y 100% según la distancia media entre notas en títulos compartidos.';
 
     const summary = document.createElement('span');
     summary.className = 'agreement-summary';
@@ -619,23 +754,124 @@ function renderOverlapGrid(records) {
     chips.className = 'agreement-chips';
 
     const overlapChip = document.createElement('span');
-    overlapChip.className = 'agreement-chip';
+    overlapChip.className = 'agreement-chip has-tooltip';
     overlapChip.textContent = `🎬 En comun: ${item.overlapCount}`;
+    overlapChip.dataset.tooltip =
+      'Número de títulos donde ambos usuarios tienen voto y se puede comparar.';
 
     const gapChip = document.createElement('span');
-    gapChip.className = 'agreement-chip';
+    gapChip.className = 'agreement-chip has-tooltip';
     gapChip.textContent = `📏 Gap medio: ${
       item.avgGap === null ? '-' : item.avgGap.toFixed(2)
     }`;
+    gapChip.dataset.tooltip =
+      'Diferencia absoluta media entre ambas notas. Más bajo = mayor cercanía.';
 
     const exactChip = document.createElement('span');
-    exactChip.className = 'agreement-chip';
+    exactChip.className = 'agreement-chip has-tooltip';
     exactChip.textContent = `✅ Exactas: ${item.exactMatches}`;
+    exactChip.dataset.tooltip = 'Cantidad de títulos donde ambos usuarios pusieron exactamente la misma nota.';
 
-    chips.append(overlapChip, gapChip, exactChip);
+    const exactRateChip = document.createElement('span');
+    exactRateChip.className = 'agreement-chip has-tooltip';
+    exactRateChip.textContent = `📌 Exactitud: ${item.exactRate ?? '-'}%`;
+    exactRateChip.dataset.tooltip = 'Porcentaje de coincidencias exactas sobre el total de títulos compartidos.';
+
+    const confidenceChip = document.createElement('span');
+    confidenceChip.className = 'agreement-chip has-tooltip';
+    confidenceChip.textContent = `🧪 Confianza: ${describeConfidence(item.overlapCount)}`;
+    confidenceChip.dataset.tooltip = 'Nivel orientativo basado en tamaño de muestra: más títulos compartidos = más confianza.';
+
+    const biasChip = document.createElement('span');
+    biasChip.className = 'agreement-chip has-tooltip';
+    if (item.bias === null) {
+      biasChip.textContent = '↕️ Sesgo: -';
+    } else if (item.bias > 0.2) {
+      biasChip.textContent = `⬆️ Sesgo: usuario activo +${item.bias.toFixed(2)}`;
+    } else if (item.bias < -0.2) {
+      biasChip.textContent = `⬇️ Sesgo: ${item.name} +${Math.abs(item.bias).toFixed(2)}`;
+    } else {
+      biasChip.textContent = '↔️ Sesgo: equilibrado';
+    }
+    biasChip.dataset.tooltip =
+      'Diferencia media firmada: indica qué usuario suele puntuar más alto en los mismos títulos.';
+
+    const corrChip = document.createElement('span');
+    corrChip.className = 'agreement-chip has-tooltip';
+    corrChip.textContent = `📈 Correlación: ${item.pearson ?? '-'}`;
+    corrChip.dataset.tooltip =
+      'Correlación de Pearson entre ambas series de notas. 1 = patrón muy parecido, 0 = sin relación, -1 = patrón inverso.';
+
+    const disagreementChip = document.createElement('span');
+    disagreementChip.className = 'agreement-chip has-tooltip';
+    disagreementChip.textContent = `⚠️ Desacuerdos fuertes: ${item.strongDisagreements}`;
+    disagreementChip.dataset.tooltip =
+      'Cantidad de títulos con diferencia de 4 puntos o más entre ambos usuarios.';
+
+    chips.append(
+      overlapChip,
+      gapChip,
+      exactChip,
+      exactRateChip,
+      confidenceChip,
+      biasChip,
+      corrChip,
+      disagreementChip
+    );
 
     metrics.append(scoreBadge, summary, chips);
     card.append(user, metrics);
+
+    if (item.topAgreements.length) {
+      const agreementTitle = document.createElement('p');
+      agreementTitle.className = 'agreement-list-title agreement-list-title-good';
+      agreementTitle.textContent = '💚 Donde mejor encajais';
+      card.appendChild(agreementTitle);
+
+      const bestList = document.createElement('ol');
+      bestList.className = 'agreement-list agreement-list-good';
+
+      item.topAgreements.forEach((entry) => {
+        const li = document.createElement('li');
+        li.className = 'agreement-item';
+
+        if (entry.posterUrl) {
+          const thumb = document.createElement('img');
+          thumb.className = 'agreement-thumb';
+          thumb.src = entry.posterUrl;
+          thumb.alt = `Portada de ${entry.title}`;
+          thumb.loading = 'lazy';
+          li.appendChild(thumb);
+        } else {
+          const thumbFallback = document.createElement('span');
+          thumbFallback.className = 'agreement-thumb-fallback';
+          thumbFallback.textContent = '🎞️';
+          li.appendChild(thumbFallback);
+        }
+
+        const main = document.createElement('div');
+        main.className = 'agreement-main';
+
+        const film = document.createElement(entry.url ? 'a' : 'span');
+        film.className = 'agreement-film';
+        film.textContent = entry.title;
+        if (entry.url) {
+          film.href = entry.url;
+          film.target = '_blank';
+          film.rel = 'noreferrer';
+        }
+
+        const numbers = document.createElement('span');
+        numbers.className = 'agreement-gap agreement-gap-good';
+        numbers.textContent = `Nota usuario activo ${entry.mine} · Nota ${item.name} ${entry.theirs} · Diferencia ${entry.diff}`;
+
+        main.append(film, numbers);
+        li.appendChild(main);
+        bestList.appendChild(li);
+      });
+
+      card.appendChild(bestList);
+    }
 
     if (item.disagreements.length) {
       const disagreementTitle = document.createElement('p');

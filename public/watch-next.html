@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FilmAffinity Explorer Qué ver</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-block">
+          <a class="brand-mark" href="/">FilmAffinity Explorer</a>
+        </div>
+
+        <nav class="top-links" aria-label="Primary">
+          <a data-nav-target="home" href="/">🎬 Biblioteca</a>
+          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a class="is-active" data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
+          <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
+        </nav>
+
+        <label class="field topbar-user-field">
+          <select id="global-user-selector"></select>
+        </label>
+      </div>
+    </header>
+
+    <div class="page-shell">
+      <header class="hero panel">
+        <p class="panel-kicker">Recomendaciones</p>
+        <h1 id="watch-next-title">🍿 Qué ver</h1>
+        <p id="watch-next-subtitle" class="hero-copy">
+          Sugerencias basadas en afinidad con otros usuarios y títulos no vistos por el usuario seleccionado.
+        </p>
+      </header>
+
+      <main class="layout layout-single">
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Top sugerencias</p>
+              <h2>Qué ver a continuación</h2>
+            </div>
+          </div>
+
+          <div class="filters-inline">
+            <label class="field small-field year-filter-field">
+              <span>📅 Año</span>
+              <div class="rating-filter">
+                <select id="watch-next-year-filter">
+                  <option value="all" selected>Todos los años</option>
+                </select>
+              </div>
+            </label>
+          </div>
+
+          <p id="watch-next-status" class="status-text"></p>
+          <div id="watch-next-meta" class="results-meta"></div>
+          <div id="watch-next-results" class="watch-next-grid"></div>
+          <div id="watch-next-pagination" class="pagination" hidden>
+            <button id="watch-next-prev-page" class="ghost-button" type="button">Anterior</button>
+            <span id="watch-next-page-info" class="page-info"></span>
+            <button id="watch-next-next-page" class="ghost-button" type="button">Siguiente</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="watch-next-template">
+      <article class="watch-next-card">
+        <a class="watch-next-poster-link" href="" target="_blank" rel="noreferrer">
+          <img class="watch-next-poster" src="" alt="" loading="lazy" />
+        </a>
+        <div class="watch-next-body">
+          <div class="watch-next-topline">
+            <span class="watch-next-score"></span>
+            <span class="watch-next-year"></span>
+          </div>
+          <h3 class="watch-next-title"></h3>
+          <p class="watch-next-rationale"></p>
+          <div class="watch-next-chips"></div>
+        </div>
+      </article>
+    </template>
+
+    <script src="/watch-next.js"></script>
+  </body>
+</html>
