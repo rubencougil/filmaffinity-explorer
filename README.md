@@ -1,67 +1,73 @@
-# Filmaffinity Browser
+# 🎬 Filmaffinity Explorer
 
-Small local website to search the films you have rated on Filmaffinity.
+A local web app to browse, sync, and analyze FilmAffinity ratings for one or more users.
 
-## Run it
+![Filmaffinity Explorer preview](public/readme/preview-home.png)
 
-Install dependencies and create your local config first:
+## ✨ What you can do
+
+- Browse the selected user library with fast search and filters
+- Compare shared titles and votes across configured users
+- Open a dedicated Sync page with live progress + logs
+- Explore a full Stats page with charts and agreement analytics
+- Keep data cached locally for quick startup
+
+## 🚀 Quick start
 
 ```bash
 npm install
 cp config.example.json config.json
-```
-
-Then start the app:
-
-```bash
 npm start
 ```
 
-Then open `http://127.0.0.1:3000`.
+Open: `http://127.0.0.1:3000`
 
-## Configure the account
+## ⚙️ Configure users
 
-Edit your local [`config.json`](/Users/cougil/hack/Filmaffinity%20Browser/config.json) (created from [`config.example.json`](/Users/cougil/hack/Filmaffinity%20Browser/config.example.json)) and set:
+Edit local `config.json` (created from `config.example.json`):
 
 ```json
 {
   "filmaffinity": {
-    "defaultUser": "Rubén Cougil",
+    "defaultUser": "Usuario Principal",
     "users": [
-      { "name": "Rubén Cougil", "userId": "297627" },
-      { "name": "fiunchinho", "userId": "602754" }
+      { "name": "Usuario Principal", "userId": "123456" },
+      { "name": "Usuario Secundario", "userId": "654321" }
     ]
   }
 }
 ```
 
-## Sync behavior
+## 🔄 How sync works
 
-1. Start the server.
-2. On startup, the server loads cached libraries from JSON files in `data/libraries`.
-3. Open the app in your browser.
-4. Choose a configured user by name from the dropdown.
-5. The page loads the latest cached ratings for that user from the server without starting a new sync on reload.
-6. Use `Sincronizar ahora` only when you want to refresh a specific user manually.
-7. After a successful sync, the server writes one JSON file per user so the next server start reuses that data immediately.
+1. The server loads cached libraries from `data/libraries` on startup.
+2. Sync runs only when you trigger it from the Sync page.
+3. After a successful run, one JSON cache file is updated per user.
+4. Next startup reuses cached data instantly.
 
-The synced libraries are kept in server memory while the app is running and persisted to `data/libraries/*.json`.
-
-## Search behavior
-
-The search box works on the currently selected user's library. Each card can also show ratings from other configured users for the same title when those users have already been synced and cached locally.
-
-## GitHub-safe files
-
-The project includes a `.gitignore` so personal/local data is not uploaded:
-
-- `data/libraries/*.json` (scraped user libraries)
-- `config.json` (local user setup)
-- `.playwright/` (persistent browser profile/cookies)
-- `node_modules/`
-
-## Challenge fallback
+### 🛡️ Challenge / CAPTCHA fallback
 
 Sync starts in headless Chrome using a persistent Playwright profile.
 
-If Filmaffinity shows a challenge, CAPTCHA, or temporary block, sync automatically retries in visible Chrome with the same profile so you can complete the verification manually. Once the ratings page becomes available, scraping continues automatically.
+If FilmAffinity blocks with challenge/CAPTCHA, sync retries automatically in visible Chrome so you can pass verification manually. After verification, scraping continues automatically.
+
+## 🧭 Pages
+
+- `/` → Library explorer
+- `/stats.html` → Stats and agreement analytics
+- `/sync.html` → Sync controls and live logs
+
+## 🔒 Privacy-friendly by default
+
+This repo is prepared to avoid uploading personal local data:
+
+- `config.json` is ignored
+- `data/libraries/*.json` is ignored
+- `.playwright/` browser profile/cookies are ignored
+- `node_modules/` is ignored
+
+## 📦 Tech stack
+
+- Node.js
+- Playwright
+- Vanilla HTML/CSS/JS
