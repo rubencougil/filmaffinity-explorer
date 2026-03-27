@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FilmAffinity Explorer Sync</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-block">
+          <a class="brand-mark" href="/">FilmAffinity Explorer</a>
+        </div>
+
+        <nav class="top-links" aria-label="Primary">
+          <a data-nav-target="home" href="/">🎬 Biblioteca</a>
+          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a class="is-active" data-nav-target="sync" href="/sync.html">⚡ Sync</a>
+        </nav>
+
+        <label class="field topbar-user-field">
+          <select id="global-user-selector"></select>
+        </label>
+      </div>
+    </header>
+
+    <div class="page-shell">
+      <header class="hero panel">
+        <p class="panel-kicker">Sincronización</p>
+        <h1>⚡ Gestión de sincronización</h1>
+        <p class="hero-copy">
+          Actualiza la biblioteca del usuario seleccionado y revisa el estado en tiempo real.
+        </p>
+      </header>
+
+      <main class="sync-layout">
+        <section class="panel import-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Control</p>
+              <h2>Estado de la biblioteca del usuario</h2>
+            </div>
+          </div>
+
+          <p id="config-summary" class="hint">Selecciona el usuario que quieres sincronizar.</p>
+
+          <div class="sync-card">
+            <div class="sync-card-row">
+              <span class="sync-label">Estado actual</span>
+              <span id="sync-state-pill" class="sync-state-pill">Preparando</span>
+            </div>
+            <div class="progress-block" aria-live="polite">
+              <div class="progress-track">
+                <div id="sync-progress-bar" class="progress-bar" style="width: 0%"></div>
+              </div>
+              <div class="progress-meta">
+                <span id="sync-progress-text">Esperando datos...</span>
+                <span id="sync-progress-percent">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="sync-button" type="button">✨ Sincronizar ahora</button>
+          </div>
+
+          <p id="import-status" class="status-text"></p>
+          <p id="access-status" class="status-text access-status"></p>
+
+          <details class="fallback-box" open>
+            <summary>🛠️ Detalles de sincronización</summary>
+            <div id="sync-log" class="sync-log" aria-live="polite"></div>
+          </details>
+        </section>
+      </main>
+    </div>
+
+    <script src="/sync.js"></script>
+  </body>
+</html>

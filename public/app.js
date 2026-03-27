@@ -1,0 +1,483 @@
+const PAGE_SIZE = 24;
+const SELECTED_USER_KEY = 'filmaffinity-browser-selected-user';
+const USER_QUERY_KEY = 'userName';
+
+const elements = {
+  searchInput: document.querySelector('#search-input'),
+  minRating: document.querySelector('#min-rating'),
+  sharedOnly: document.querySelector('#shared-only'),
+  userSelector: document.querySelector('#global-user-selector'),
+  navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
+  resultsTitle: document.querySelector('#results-title'),
+  results: document.querySelector('#results'),
+  resultsMeta: document.querySelector('#results-meta'),
+  pagination: document.querySelector('#pagination'),
+  prevPage: document.querySelector('#prev-page'),
+  nextPage: document.querySelector('#next-page'),
+  pageInfo: document.querySelector('#page-info'),
+  importStatus: document.querySelector('#import-status'),
+  statsCount: document.querySelector('#stats-count'),
+  statsAverage: document.querySelector('#stats-average'),
+  statsLatest: document.querySelector('#stats-latest'),
+  resultTemplate: document.querySelector('#result-template')
+};
+
+const SPANISH_MONTHS = {
+  enero: 0,
+  febrero: 1,
+  marzo: 2,
+  abril: 3,
+  mayo: 4,
+  junio: 5,
+  julio: 6,
+  agosto: 7,
+  septiembre: 8,
+  setiembre: 8,
+  octubre: 9,
+  noviembre: 10,
+  diciembre: 11
+};
+
+let library = [];
+let currentPage = 1;
+let configuredUsers = [];
+let selectedUserName = '';
+
+function updateNavLinks() {
+  const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
+  const byTarget = {
+    home: `/${userParam}`,
+    stats: `/stats.html${userParam}`,
+    sync: `/sync.html${userParam}`
+  };
+
+  elements.navLinks.forEach((link) => {
+    const target = link.dataset.navTarget;
+    if (!target || !byTarget[target]) {
+      return;
+    }
+    link.href = byTarget[target];
+  });
+}
+
+function updateQueryString() {
+  const url = new URL(window.location.href);
+  if (selectedUserName) {
+    url.searchParams.set(USER_QUERY_KEY, selectedUserName);
+  } else {
+    url.searchParams.delete(USER_QUERY_KEY);
+  }
+  window.history.replaceState({}, '', url);
+}
+
+function createLoader(message = 'Cargando...') {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'loading-block';
+
+  const spinner = document.createElement('div');
+  spinner.className = 'loading-spinner';
+  spinner.setAttribute('aria-hidden', 'true');
+
+  const text = document.createElement('p');
+  text.className = 'loading-text';
+  text.textContent = message;
+
+  wrapper.append(spinner, text);
+  return wrapper;
+}
+
+function showLibraryLoader(message = 'Cargando biblioteca...') {
+  elements.results.innerHTML = '';
+  elements.results.appendChild(createLoader(message));
+  elements.resultsMeta.textContent = 'Cargando datos...';
+  elements.pagination.hidden = true;
+  elements.statsCount.textContent = '-';
+  elements.statsAverage.textContent = '-';
+  elements.statsLatest.textContent = '-';
+}
+
+function saveLibrary(records) {
+  library = records;
+  currentPage = 1;
+  render();
+}
+
+function normalizeRecord(record) {
+  return {
+    title: String(record.title || '').trim(),
+    year: String(record.year || '').trim(),
+    rating: Number.isFinite(Number(record.rating)) ? Number(record.rating) : null,
+    averageRating: Number.isFinite(Number(record.averageRating)) ? Number(record.averageRating) : null,
+    ratedAt: String(record.ratedAt || '').trim(),
+    url: String(record.url || '').trim(),
+    posterUrl: String(record.posterUrl || '').trim(),
+    otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
+  };
+}
+
+function parseFlexibleDate(value) {
+  const text = String(value || '').trim();
+  if (!text) {
+    return null;
+  }
+
+  const direct = new Date(text);
+  if (!Number.isNaN(direct.getTime())) {
+    return direct;
+  }
+
+  const spanishMatch = text
+    .toLowerCase()
+    .match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/i);
+
+  if (!spanishMatch) {
+    return null;
+  }
+
+  const day = Number(spanishMatch[1]);
+  const monthName = spanishMatch[2]
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const year = Number(spanishMatch[3]);
+  const month = SPANISH_MONTHS[monthName];
+
+  if (month === undefined) {
+    return null;
+  }
+
+  return new Date(year, month, day);
+}
+
+function dedupeRecords(records) {
+  const seen = new Set();
+  const normalized = [];
+
+  for (const rawRecord of records) {
+    const record = normalizeRecord(rawRecord);
+    if (!record.title) {
+      continue;
+    }
+
+    const key = record.url || `${record.title}|${record.rating || ''}|${record.ratedAt || ''}`;
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    normalized.push(record);
+  }
+
+  return normalized.sort((a, b) => {
+    const aDate = parseFlexibleDate(a.ratedAt);
+    const bDate = parseFlexibleDate(b.ratedAt);
+    const dateDiff = (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0);
+    if (dateDiff !== 0) {
+      return dateDiff;
+    }
+
+    return a.title.localeCompare(b.title);
+  });
+}
+
+function formatDate(value) {
+  if (!value) {
+    return 'Fecha no disponible';
+  }
+
+  const parsed = parseFlexibleDate(value);
+  if (!parsed) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }).format(parsed);
+}
+
+function setStatus(message, isError = false) {
+  elements.importStatus.textContent = message;
+  elements.importStatus.style.color = isError ? '#8a1f11' : '';
+}
+
+function renderStats(records) {
+  elements.statsCount.textContent = String(records.length);
+
+  const rated = records.filter((record) => Number.isFinite(record.rating));
+  const average = rated.length
+    ? (rated.reduce((sum, record) => sum + record.rating, 0) / rated.length).toFixed(1)
+    : '-';
+  elements.statsAverage.textContent = average;
+
+  const latest = records
+    .filter((record) => parseFlexibleDate(record.ratedAt))
+    .sort((a, b) => parseFlexibleDate(b.ratedAt) - parseFlexibleDate(a.ratedAt))[0];
+  elements.statsLatest.textContent = latest ? formatDate(latest.ratedAt) : '-';
+}
+
+function updateSelectedUserLabel() {
+  elements.resultsTitle.textContent = selectedUserName
+    ? `🎬 Votaciones de ${selectedUserName}`
+    : '🎬 Votaciones del usuario seleccionado';
+}
+
+function renderResults(records) {
+  elements.results.innerHTML = '';
+
+  if (!records.length) {
+    const emptyState = document.createElement('p');
+    emptyState.className = 'status-text';
+    emptyState.textContent = library.length
+      ? 'No hay resultados para los filtros actuales.'
+      : 'Todavía no hay títulos cargados para este usuario. Ve a la pestaña Sync para actualizar.';
+    elements.results.appendChild(emptyState);
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  for (const record of records) {
+    const node = elements.resultTemplate.content.firstElementChild.cloneNode(true);
+    const posterLink = node.querySelector('.poster-link');
+    const poster = node.querySelector('.result-poster');
+    const comparisonList = node.querySelector('.comparison-list');
+    const yearNode = node.querySelector('.result-year');
+    const averageNode = node.querySelector('.fa-average-pill');
+    node.querySelector('.vote-pill').textContent = record.rating ?? '-';
+    if (Number.isFinite(record.averageRating)) {
+      averageNode.textContent = `FA ${record.averageRating.toFixed(1)}`;
+    } else {
+      averageNode.remove();
+    }
+    yearNode.textContent = record.year || '';
+    yearNode.hidden = !record.year;
+    node.querySelector('.result-title').textContent = record.title;
+    node.querySelector('.result-date').textContent = `Votada: ${formatDate(record.ratedAt)}`;
+
+    posterLink.href = record.url || '#';
+    poster.alt = record.title ? `Poster for ${record.title}` : 'Film poster';
+
+    if (record.posterUrl) {
+      poster.src = record.posterUrl;
+    } else {
+      poster.removeAttribute('src');
+      poster.alt = '';
+      poster.style.visibility = 'hidden';
+      posterLink.style.background = 'linear-gradient(180deg, #d7e1eb, #edf2f7)';
+    }
+
+    if (!record.url) {
+      posterLink.removeAttribute('href');
+      posterLink.style.pointerEvents = 'none';
+    }
+
+    for (const vote of record.otherVotes) {
+      const row = document.createElement('div');
+      row.className = 'comparison-row';
+
+      const user = document.createElement('span');
+      user.className = 'comparison-user';
+      user.textContent = vote.userName;
+
+      const value = document.createElement('span');
+      value.className = 'comparison-value';
+      const otherRating = Number(vote.rating);
+      const currentRating = Number(record.rating);
+      let marker = '';
+
+      if (Number.isFinite(otherRating) && Number.isFinite(currentRating)) {
+        if (otherRating > currentRating) {
+          marker = '↑';
+          value.classList.add('is-higher');
+        } else if (otherRating < currentRating) {
+          marker = '↓';
+          value.classList.add('is-lower');
+        }
+      }
+
+      value.textContent = marker ? `${marker} ${vote.rating}` : String(vote.rating);
+
+      row.append(user, value);
+      comparisonList.appendChild(row);
+    }
+
+    fragment.appendChild(node);
+  }
+
+  elements.results.appendChild(fragment);
+}
+
+function renderPagination(totalResults) {
+  const totalPages = Math.max(1, Math.ceil(totalResults / PAGE_SIZE));
+
+  if (totalResults <= PAGE_SIZE) {
+    elements.pagination.hidden = true;
+    elements.pageInfo.textContent = '';
+    return;
+  }
+
+  elements.pagination.hidden = false;
+  elements.prevPage.disabled = currentPage <= 1;
+  elements.nextPage.disabled = currentPage >= totalPages;
+  elements.pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+}
+
+function filterRecords() {
+  const query = elements.searchInput.value.trim().toLowerCase();
+  const minRating = Number(elements.minRating.value);
+  const sharedOnly = Boolean(elements.sharedOnly.checked);
+
+  const filtered = library.filter((record) => {
+    const haystack = `${record.title} ${record.year} ${record.url}`.toLowerCase();
+    const queryMatch = !query || haystack.includes(query);
+    const ratingMatch = !minRating || (record.rating ?? -Infinity) >= minRating;
+    const sharedMatch = !sharedOnly || record.otherVotes.length > 0;
+    return queryMatch && ratingMatch && sharedMatch;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  currentPage = Math.min(currentPage, totalPages);
+  const startIndex = filtered.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
+  const endIndex = Math.min(currentPage * PAGE_SIZE, filtered.length);
+  const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  elements.resultsMeta.textContent = filtered.length
+    ? `${startIndex}-${endIndex} de ${filtered.length} resultado${filtered.length === 1 ? '' : 's'} · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`
+    : `0 resultados · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`;
+
+  updateSelectedUserLabel();
+  renderStats(library);
+  renderResults(visible);
+  renderPagination(filtered.length);
+}
+
+function render() {
+  filterRecords();
+}
+
+async function loadLibraryForSelectedUser() {
+  if (!selectedUserName) {
+    return;
+  }
+
+  showLibraryLoader(`Cargando la biblioteca del usuario ${selectedUserName}...`);
+  const response = await fetch(`/api/library?userName=${encodeURIComponent(selectedUserName)}`);
+  const payload = await response.json();
+
+  if (!response.ok) {
+    throw new Error(payload.error || 'No se pudo cargar la biblioteca.');
+  }
+
+  const records = dedupeRecords(payload.ratings || []);
+  saveLibrary(records);
+
+  const hasAnyPersonalRating = records.some(
+    (record) => record.rating !== null && record.rating !== undefined
+  );
+  if (!hasAnyPersonalRating && Number(elements.minRating.value) > 0) {
+    elements.minRating.value = '0';
+    render();
+    setStatus(
+      `La biblioteca de ${selectedUserName} no incluye nota personal en los datos actuales. Mostrando todos los titulos.`
+    );
+    return;
+  }
+
+  if (payload.status === 'running') {
+    setStatus(`Sincronización en marcha para ${selectedUserName}.`);
+  } else if (payload.lastSyncedAt) {
+    setStatus(`Última sincronización de ${selectedUserName}: ${formatDate(payload.lastSyncedAt)}.`);
+  } else if (payload.status === 'failed') {
+    setStatus(payload.error || `La sincronización falló para ${selectedUserName}.`, true);
+  } else if (payload.status === 'idle') {
+    setStatus(`Todavía no hay datos guardados para ${selectedUserName}. Ve a Sync para sincronizar.`);
+  } else {
+    setStatus(`Biblioteca cargada para ${selectedUserName}.`);
+  }
+}
+
+async function loadConfig() {
+  const response = await fetch('/api/config');
+  const payload = await response.json();
+  configuredUsers = Array.isArray(payload?.filmaffinity?.users) ? payload.filmaffinity.users : [];
+  const queryUser = new URLSearchParams(window.location.search).get(USER_QUERY_KEY) || '';
+  const savedUser = localStorage.getItem(SELECTED_USER_KEY) || '';
+  const defaultUser = String(payload?.filmaffinity?.defaultUser || '').trim();
+  const selected =
+    configuredUsers.find((user) => user.name === queryUser) ||
+    configuredUsers.find((user) => user.name === savedUser) ||
+    configuredUsers.find((user) => user.name === defaultUser) ||
+    configuredUsers[0];
+
+  elements.userSelector.innerHTML = '';
+
+  for (const user of configuredUsers) {
+    const option = document.createElement('option');
+    option.value = user.name;
+    option.textContent = user.name;
+    elements.userSelector.appendChild(option);
+  }
+
+  if (selected) {
+    selectedUserName = selected.name;
+    elements.userSelector.value = selected.name;
+    localStorage.setItem(SELECTED_USER_KEY, selected.name);
+  } else {
+    selectedUserName = '';
+  }
+
+  updateQueryString();
+  updateNavLinks();
+  updateSelectedUserLabel();
+}
+
+elements.searchInput.addEventListener('input', () => {
+  currentPage = 1;
+  render();
+});
+elements.minRating.addEventListener('change', () => {
+  currentPage = 1;
+  render();
+});
+elements.sharedOnly.addEventListener('change', () => {
+  currentPage = 1;
+  render();
+});
+  elements.userSelector.addEventListener('change', () => {
+  selectedUserName = elements.userSelector.value;
+  localStorage.setItem(SELECTED_USER_KEY, selectedUserName);
+  updateQueryString();
+  updateNavLinks();
+  currentPage = 1;
+  library = [];
+  showLibraryLoader(`Cargando la biblioteca del usuario ${selectedUserName}...`);
+  setStatus(`Usuario activo: ${selectedUserName}. Cargando biblioteca...`);
+  loadLibraryForSelectedUser().catch((error) => {
+    setStatus(error.message || 'No se pudo cargar la biblioteca.', true);
+  });
+});
+elements.prevPage.addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage -= 1;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+elements.nextPage.addEventListener('click', () => {
+  currentPage += 1;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+async function boot() {
+  showLibraryLoader('Cargando biblioteca...');
+  await loadConfig();
+  if (selectedUserName) {
+    await loadLibraryForSelectedUser();
+  } else {
+    setStatus('Falta configurar usuarios en config.json.', true);
+  }
+}
+
+boot();

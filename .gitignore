@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Local browser profile/session (contains cookies/local state)
+.playwright/
+
+# User-specific configuration
+config.json
+
+# User scraped libraries / personal data
+data/libraries/*.json
+
+# Logs / misc
+*.log
+.DS_Store

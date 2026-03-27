@@ -1,0 +1,15 @@
+{
+  "filmaffinity": {
+    "defaultUser": "Usuario Principal",
+    "users": [
+      {
+        "name": "Usuario Principal",
+        "userId": "123456"
+      },
+      {
+        "name": "Usuario Secundario",
+        "userId": "654321"
+      }
+    ]
+  }
+}

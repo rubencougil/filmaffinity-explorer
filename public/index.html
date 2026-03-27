@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FilmAffinity Explorer</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-block">
+          <a class="brand-mark" href="/">FilmAffinity Explorer</a>
+        </div>
+
+        <nav class="top-links" aria-label="Primary">
+          <a class="is-active" data-nav-target="home" href="/">🎬 Biblioteca</a>
+          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
+        </nav>
+
+        <label class="field topbar-user-field">
+          <select id="global-user-selector"></select>
+        </label>
+      </div>
+    </header>
+
+    <div class="page-shell">
+      <main class="layout">
+        <section id="results-section" class="panel search-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Explorar</p>
+              <h2 id="results-title">Votaciones del usuario seleccionado</h2>
+            </div>
+          </div>
+
+          <div class="browse-user-bar">
+            <p id="import-status" class="status-text browse-status"></p>
+          </div>
+
+          <div class="search-controls">
+            <label class="field search-field">
+              <span>🔎 Búsqueda rápida</span>
+              <div class="search-pill">
+                <input
+                  id="search-input"
+                  type="search"
+                  placeholder="Escribe aquí para encontrar cualquier título en segundos ✨"
+                />
+              </div>
+            </label>
+            <label class="field small-field">
+              <span>⭐ Nota mínima</span>
+              <div class="rating-filter">
+                <select id="min-rating">
+                  <option value="0" selected>Todas (incluye sin nota)</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                  <option value="5">5+</option>
+                  <option value="6">6+</option>
+                  <option value="7">7+</option>
+                  <option value="8">8+</option>
+                  <option value="9">9+</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+            </label>
+            <label class="field small-field">
+              <span>👥 Votos comunes</span>
+              <div class="toggle-field">
+                <input id="shared-only" type="checkbox" />
+                <span>Solo títulos compartidos</span>
+              </div>
+            </label>
+          </div>
+
+          <div id="results-meta" class="results-meta">Todavía no hay votaciones importadas.</div>
+          <div id="results" class="results-grid"></div>
+          <div id="pagination" class="pagination" hidden>
+            <button id="prev-page" class="ghost-button" type="button">Anterior</button>
+            <span id="page-info" class="page-info"></span>
+            <button id="next-page" class="ghost-button" type="button">Siguiente</button>
+          </div>
+        </section>
+
+        <aside class="panel summary-panel">
+          <div class="panel-header">
+            <div>
+              <p class="panel-kicker">Resumen</p>
+              <h2>Actividad</h2>
+            </div>
+          </div>
+          <div class="stats-grid stats-grid-side">
+            <article class="stat-card">
+              <span class="stat-label">🎟️ Votaciones guardadas</span>
+              <strong id="stats-count">0</strong>
+            </article>
+            <article class="stat-card">
+              <span class="stat-label">⭐ Nota media</span>
+              <strong id="stats-average">-</strong>
+            </article>
+            <article class="stat-card">
+              <span class="stat-label">🗓️ Última votación</span>
+              <strong id="stats-latest">-</strong>
+            </article>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <template id="result-template">
+      <article class="result-card">
+        <a class="poster-link" href="" target="_blank" rel="noreferrer">
+          <img class="result-poster" src="" alt="" loading="lazy" />
+        </a>
+        <div class="result-body">
+          <div class="result-topline">
+            <div class="result-rating-meta">
+              <span class="vote-pill"></span>
+              <span class="fa-average-pill"></span>
+            </div>
+            <span class="result-year"></span>
+          </div>
+          <h3 class="result-title"></h3>
+          <p class="result-date"></p>
+          <div class="comparison-list"></div>
+        </div>
+      </article>
+    </template>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

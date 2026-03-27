@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FilmAffinity Explorer Stats</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand-block">
+          <a class="brand-mark" href="/">FilmAffinity Explorer</a>
+        </div>
+
+        <nav class="top-links" aria-label="Primary">
+          <a data-nav-target="home" href="/">🎬 Biblioteca</a>
+          <a class="is-active" data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
+        </nav>
+
+        <label class="field topbar-user-field">
+          <select id="global-user-selector"></select>
+        </label>
+      </div>
+    </header>
+
+    <div class="page-shell">
+      <header class="hero panel">
+        <div class="stats-page-header">
+          <div>
+            <p class="panel-kicker">Analítica por usuario</p>
+            <h1 id="stats-title">📊 Estadísticas por usuario</h1>
+            <p id="stats-subtitle" class="hero-copy">
+              Explora cómo evoluciona el historial de votos del usuario seleccionado.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="stats-grid stats-grid-large">
+          <article class="stat-card">
+            <span class="stat-label">🎟️ Votos totales</span>
+            <strong id="stats-total-votes">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">⭐ Nota media global</span>
+            <strong id="stats-average-rating">-</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">🔥 Año más activo</span>
+            <strong id="stats-busiest-year">-</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">🤝 Títulos compartidos</span>
+            <strong id="stats-shared-count">0</strong>
+          </article>
+        </div>
+      </header>
+
+      <main>
+        <nav class="stats-tabs" aria-label="Secciones de estadísticas">
+          <button id="stats-tab-overview" class="stats-tab is-active" data-stats-tab="resumen" type="button" aria-selected="true">
+            📊 Resumen
+          </button>
+          <button id="stats-tab-affinity" class="stats-tab" data-stats-tab="afinidad" type="button" aria-selected="false">
+            🤝 Afinidad
+          </button>
+        </nav>
+
+        <section id="stats-tabpanel-resumen" class="stats-tabpanel">
+          <div class="stats-layout">
+            <section class="panel chart-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Actividad</p>
+                  <h2>🗓️ Votos a través del tiempo</h2>
+                </div>
+              </div>
+              <p class="chart-caption">Cantidad de títulos votados por mes.</p>
+              <div id="timeline-chart" class="chart-surface"></div>
+            </section>
+
+            <section class="panel chart-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Calidad media</p>
+                  <h2>⭐ Nota media por año</h2>
+                </div>
+              </div>
+              <p class="chart-caption">Cómo cambia la nota media del usuario según el año de votación.</p>
+              <div id="average-by-year-chart" class="chart-surface"></div>
+            </section>
+
+            <section class="panel chart-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Distribución</p>
+                  <h2>🎚️ Reparto de notas</h2>
+                </div>
+              </div>
+              <p class="chart-caption">Cuántas veces usas cada puntuación del 1 al 10.</p>
+              <div id="rating-distribution-chart" class="chart-surface"></div>
+            </section>
+
+            <section class="panel chart-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Coincidencias</p>
+                  <h2>👥 Votos compartidos por año</h2>
+                </div>
+              </div>
+              <p class="chart-caption">Títulos de la biblioteca del usuario con voto de otros usuarios.</p>
+              <div id="shared-by-year-chart" class="chart-surface"></div>
+            </section>
+
+            <section class="panel chart-panel chart-panel-wide">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Lectura rápida</p>
+                  <h2>🧠 Hallazgos rápidos</h2>
+                </div>
+              </div>
+              <div id="insights-grid" class="insights-grid"></div>
+            </section>
+
+            <section class="panel chart-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Top 10</p>
+                  <h2>🏆 Mejores votadas</h2>
+                </div>
+              </div>
+              <ol id="top-best-list" class="ranking-list"></ol>
+            </section>
+
+            <section class="panel chart-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-kicker">Top 10</p>
+                  <h2>💥 Peores votadas</h2>
+                </div>
+              </div>
+              <ol id="top-worst-list" class="ranking-list"></ol>
+            </section>
+          </div>
+        </section>
+
+        <section id="stats-tabpanel-afinidad" class="stats-tabpanel" hidden>
+          <section class="panel chart-panel chart-panel-wide">
+            <div class="panel-header">
+              <div>
+                <p class="panel-kicker">Afinidad</p>
+                <h2>🤝 Compatibilidad entre usuarios</h2>
+              </div>
+            </div>
+            <p class="chart-caption">Vista rapida de afinidad por persona y titulos donde mas difieren las notas.</p>
+            <div id="overlap-grid" class="overlap-grid"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="/stats.js"></script>
+  </body>
+</html>
