@@ -79,7 +79,7 @@ a:hover {
 .brand-mark {
   color: #f8fbfe;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 2rem;
+  font-size: 1.72rem;
   font-style: italic;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -390,6 +390,65 @@ select:focus {
 
 .year-filter-field {
   width: min(240px, 100%);
+}
+
+.affinity-panel .panel-header {
+  margin-bottom: 12px;
+}
+
+.affinity-toolbar {
+  justify-content: flex-start;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #cddceb;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at top right, rgba(204, 233, 187, 0.45), transparent 42%),
+    linear-gradient(180deg, #fcfeff, #f2f8fc);
+}
+
+.affinity-toolbar .year-filter-field {
+  width: min(320px, 100%);
+}
+
+.affinity-toolbar .field span {
+  color: #38556f;
+  font-weight: 700;
+}
+
+.affinity-status {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border: 1px solid #d4e1ee;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f9fcff, #f1f7fb);
+}
+
+.affinity-content {
+  display: grid;
+  gap: 14px;
+}
+
+.affinity-summary-card {
+  border-width: 1px;
+  border-color: #bfd3e6;
+  background:
+    radial-gradient(circle at top right, rgba(186, 221, 160, 0.26), transparent 32%),
+    linear-gradient(180deg, #ffffff, #f5f9fd);
+  box-shadow: 0 12px 24px rgba(38, 62, 87, 0.08);
+}
+
+.affinity-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.affinity-list-block {
+  padding: 12px;
+  border: 1px solid #d4e1ee;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fbfdff, #f3f8fc);
 }
 
 .browse-user-bar {
@@ -1399,6 +1458,10 @@ button:disabled {
     grid-template-columns: 1fr 1fr;
     width: 100%;
   }
+
+  .affinity-lists-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1529,6 +1592,14 @@ button:disabled {
 
   .year-filter-field {
     width: 100%;
+  }
+
+  .affinity-toolbar {
+    padding: 10px;
+  }
+
+  .affinity-list-block {
+    padding: 10px;
   }
 
   .pagination {

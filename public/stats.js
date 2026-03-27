@@ -1,18 +1,11 @@
 const SELECTED_USER_KEY = 'filmaffinity-browser-selected-user';
 const USER_QUERY_KEY = 'userName';
-const TAB_QUERY_KEY = 'tab';
-const DEFAULT_TAB = 'resumen';
 
 const elements = {
   title: document.querySelector('#stats-title'),
   subtitle: document.querySelector('#stats-subtitle'),
   userSelector: document.querySelector('#global-user-selector'),
   navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
-  tabButtons: Array.from(document.querySelectorAll('[data-stats-tab]')),
-  tabPanels: {
-    resumen: document.querySelector('#stats-tabpanel-resumen'),
-    afinidad: document.querySelector('#stats-tabpanel-afinidad')
-  },
   totalVotes: document.querySelector('#stats-total-votes'),
   averageRating: document.querySelector('#stats-average-rating'),
   busiestYear: document.querySelector('#stats-busiest-year'),
@@ -23,8 +16,7 @@ const elements = {
   sharedByYearChart: document.querySelector('#shared-by-year-chart'),
   insightsGrid: document.querySelector('#insights-grid'),
   topBestList: document.querySelector('#top-best-list'),
-  topWorstList: document.querySelector('#top-worst-list'),
-  overlapGrid: document.querySelector('#overlap-grid')
+  topWorstList: document.querySelector('#top-worst-list')
 };
 
 const SPANISH_MONTHS = {
@@ -46,13 +38,13 @@ const SPANISH_MONTHS = {
 let configuredUsers = [];
 let selectedUserName = '';
 let library = [];
-let activeTab = DEFAULT_TAB;
 
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
   const byTarget = {
     home: `/${userParam}`,
     stats: `/stats.html${userParam}`,
+    affinity: `/affinity.html${userParam}`,
     sync: `/sync.html${userParam}`,
     watchnext: `/watch-next.html${userParam}`
   };
@@ -64,32 +56,6 @@ function updateNavLinks() {
     }
     link.href = byTarget[target];
   });
-}
-
-function normalizeTab(value) {
-  const tab = String(value || '').trim().toLowerCase();
-  return tab === 'afinidad' ? 'afinidad' : DEFAULT_TAB;
-}
-
-function setActiveTab(tab, { updateUrl = true } = {}) {
-  activeTab = normalizeTab(tab);
-
-  elements.tabButtons.forEach((button) => {
-    const isActive = button.dataset.statsTab === activeTab;
-    button.classList.toggle('is-active', isActive);
-    button.setAttribute('aria-selected', String(isActive));
-  });
-
-  Object.entries(elements.tabPanels).forEach(([key, panel]) => {
-    if (!panel) {
-      return;
-    }
-    panel.hidden = key !== activeTab;
-  });
-
-  if (updateUrl) {
-    updateQueryString();
-  }
 }
 
 function createLoader(message = 'Cargando...') {
@@ -130,8 +96,6 @@ function showStatsLoader(message = 'Cargando estadísticas...') {
   elements.topBestList.appendChild(createLoader(message));
   elements.topWorstList.innerHTML = '';
   elements.topWorstList.appendChild(createLoader(message));
-  elements.overlapGrid.innerHTML = '';
-  elements.overlapGrid.appendChild(createLoader(message));
 }
 
 function parseFlexibleDate(value) {
@@ -995,7 +959,6 @@ function buildStatistics(records) {
   renderInsights(records);
   renderRankingList(elements.topBestList, topBest, 'Sin suficientes votos para mostrar un top.');
   renderRankingList(elements.topWorstList, topWorst, 'Sin suficientes votos para mostrar un top.');
-  renderOverlapGrid(records);
 }
 
 async function loadConfig() {
@@ -1051,20 +1014,9 @@ function updateQueryString() {
   } else {
     url.searchParams.delete(USER_QUERY_KEY);
   }
-  if (activeTab === DEFAULT_TAB) {
-    url.searchParams.delete(TAB_QUERY_KEY);
-  } else {
-    url.searchParams.set(TAB_QUERY_KEY, activeTab);
-  }
   window.history.replaceState({}, '', url);
   updateNavLinks();
 }
-
-elements.tabButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    setActiveTab(button.dataset.statsTab || DEFAULT_TAB);
-  });
-});
 
 elements.userSelector.addEventListener('change', async () => {
   selectedUserName = elements.userSelector.value;
@@ -1074,8 +1026,6 @@ elements.userSelector.addEventListener('change', async () => {
 });
 
 async function boot() {
-  const queryTab = new URLSearchParams(window.location.search).get(TAB_QUERY_KEY) || DEFAULT_TAB;
-  setActiveTab(queryTab, { updateUrl: false });
   await loadConfig();
   updateQueryString();
   showStatsLoader('Cargando estadísticas...');

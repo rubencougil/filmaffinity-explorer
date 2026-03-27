@@ -16,6 +16,7 @@
         <nav class="top-links" aria-label="Primary">
           <a data-nav-target="home" href="/">🎬 Biblioteca</a>
           <a class="is-active" data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
+          <a data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
           <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
           <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
         </nav>
@@ -60,15 +61,6 @@
       </header>
 
       <main>
-        <nav class="stats-tabs" aria-label="Secciones de estadísticas">
-          <button id="stats-tab-overview" class="stats-tab is-active" data-stats-tab="resumen" type="button" aria-selected="true">
-            📊 Resumen
-          </button>
-          <button id="stats-tab-affinity" class="stats-tab" data-stats-tab="afinidad" type="button" aria-selected="false">
-            🤝 Afinidad
-          </button>
-        </nav>
-
         <section id="stats-tabpanel-resumen" class="stats-tabpanel">
           <div class="stats-layout">
             <section class="panel chart-panel">
@@ -145,19 +137,6 @@
               <ol id="top-worst-list" class="ranking-list"></ol>
             </section>
           </div>
-        </section>
-
-        <section id="stats-tabpanel-afinidad" class="stats-tabpanel" hidden>
-          <section class="panel chart-panel chart-panel-wide">
-            <div class="panel-header">
-              <div>
-                <p class="panel-kicker">Afinidad</p>
-                <h2>🤝 Compatibilidad entre usuarios</h2>
-              </div>
-            </div>
-            <p class="chart-caption">Vista rapida de afinidad por persona y titulos donde mas difieren las notas.</p>
-            <div id="overlap-grid" class="overlap-grid"></div>
-          </section>
         </section>
       </main>
     </div>
