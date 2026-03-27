@@ -921,16 +921,14 @@ button:disabled {
 }
 
 .results-grid {
-  grid-template-columns: repeat(auto-fill, minmax(196px, 220px));
-  justify-content: start;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
   margin-top: 14px;
 }
 
 .watch-next-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(196px, 220px));
-  justify-content: start;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
   margin-top: 14px;
 }
