@@ -6,6 +6,8 @@ const elements = {
   searchInput: document.querySelector('#search-input'),
   minRating: document.querySelector('#min-rating'),
   yearFilter: document.querySelector('#year-filter'),
+  genreFilter: document.querySelector('#genre-filter'),
+  genreFilterHint: document.querySelector('#genre-filter-hint'),
   sharedOnly: document.querySelector('#shared-only'),
   userSelector: document.querySelector('#global-user-selector'),
   navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
@@ -17,7 +19,11 @@ const elements = {
   nextPage: document.querySelector('#next-page'),
   pageInfo: document.querySelector('#page-info'),
   importStatus: document.querySelector('#import-status'),
-  resultTemplate: document.querySelector('#result-template')
+  resultTemplate: document.querySelector('#result-template'),
+  trailerModal: document.querySelector('#trailer-modal'),
+  trailerFrame: document.querySelector('#trailer-frame'),
+  trailerTitle: document.querySelector('#trailer-title'),
+  trailerClose: document.querySelector('#trailer-close')
 };
 
 const SPANISH_MONTHS = {
@@ -40,6 +46,33 @@ let library = [];
 let currentPage = 1;
 let configuredUsers = [];
 let selectedUserName = '';
+
+function normalizeToken(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
+function normalizeGenres(value) {
+  const source = Array.isArray(value) ? value : [value];
+  const tokens = source
+    .flatMap((item) => String(item || '').split(/[|/,;]+/))
+    .map((item) => normalizeToken(item))
+    .filter(Boolean);
+  return [...new Set(tokens)];
+}
+
+function pickRecordGenres(record) {
+  const list = [
+    ...normalizeGenres(record.genres),
+    ...normalizeGenres(record.genre),
+    ...normalizeGenres(record.generos),
+    ...normalizeGenres(record.genero)
+  ];
+  return [...new Set(list)];
+}
 
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
@@ -108,6 +141,7 @@ function normalizeRecord(record) {
     ratedAt: String(record.ratedAt || '').trim(),
     url: String(record.url || '').trim(),
     posterUrl: String(record.posterUrl || '').trim(),
+    genres: pickRecordGenres(record),
     otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
   };
 }
@@ -287,6 +321,113 @@ function updateSelectedUserLabel() {
     : '🎬 Votaciones del usuario seleccionado';
 }
 
+function buildTrailerEmbedUrl(title, year) {
+  const query = [title, year, 'trailer'].filter(Boolean).join(' ');
+  return `/api/youtube-trailer?q=${encodeURIComponent(query)}`;
+}
+
+async function openTrailerModal(record) {
+  if (!elements.trailerModal || !elements.trailerFrame) {
+    return;
+  }
+
+  const safeTitle = String(record?.title || '').trim() || 'Trailer';
+  const safeYear = String(record?.year || '').trim();
+  elements.trailerFrame.src = '';
+  if (elements.trailerTitle) {
+    elements.trailerTitle.textContent = `Buscando trailer · ${safeTitle}`;
+  }
+  elements.trailerModal.hidden = false;
+  document.body.classList.add('modal-open');
+  elements.trailerModal.focus({ preventScroll: true });
+
+  try {
+    const response = await fetch(buildTrailerEmbedUrl(safeTitle, safeYear));
+    const payload = await response.json();
+    if (!response.ok || !payload?.embedUrl) {
+      throw new Error(payload?.error || 'No se encontró trailer');
+    }
+
+    elements.trailerFrame.src = payload.embedUrl;
+    if (elements.trailerTitle) {
+      elements.trailerTitle.textContent = `Trailer · ${safeTitle}`;
+    }
+  } catch (error) {
+    if (elements.trailerTitle) {
+      elements.trailerTitle.textContent = `No se encontró trailer · ${safeTitle}`;
+    }
+    setStatus('No se pudo cargar el trailer en YouTube para este título.', true);
+  }
+}
+
+function closeTrailerModal() {
+  if (!elements.trailerModal || !elements.trailerFrame) {
+    return;
+  }
+  elements.trailerModal.hidden = true;
+  elements.trailerFrame.src = '';
+  document.body.classList.remove('modal-open');
+}
+
+function initTrailerModal() {
+  if (!elements.trailerModal) {
+    return;
+  }
+
+  elements.trailerModal.setAttribute('tabindex', '-1');
+
+  if (elements.trailerClose) {
+    elements.trailerClose.addEventListener('click', closeTrailerModal);
+  }
+
+  elements.trailerModal.addEventListener('click', (event) => {
+    if (event.target === elements.trailerModal) {
+      closeTrailerModal();
+    }
+  });
+
+  window.addEventListener(
+    'keydown',
+    (event) => {
+    if (event.key === 'Escape' && !elements.trailerModal.hidden) {
+      event.preventDefault();
+      closeTrailerModal();
+    }
+    },
+    true
+  );
+}
+
+function updateGenreFilterState(records) {
+  if (!elements.genreFilter) {
+    return;
+  }
+
+  const hasGenreData = records.some((record) => Array.isArray(record.genres) && record.genres.length > 0);
+  elements.genreFilter.disabled = !hasGenreData;
+  if (!hasGenreData) {
+    elements.genreFilter.value = 'all';
+  }
+
+  if (elements.genreFilterHint) {
+    elements.genreFilterHint.textContent = hasGenreData
+      ? ''
+      : 'Este filtro se activará cuando el sync guarde géneros.';
+  }
+}
+
+function matchGenre(record, selectedGenre) {
+  if (selectedGenre === 'all') {
+    return true;
+  }
+
+  if (!Array.isArray(record.genres) || !record.genres.length) {
+    return false;
+  }
+
+  return record.genres.some((genre) => normalizeToken(genre) === selectedGenre);
+}
+
 function renderResults(records) {
   elements.results.innerHTML = '';
 
@@ -322,6 +463,20 @@ function renderResults(records) {
 
     posterLink.href = record.url || '#';
     poster.alt = record.title ? `Poster for ${record.title}` : 'Film poster';
+
+    const trailerButton = document.createElement('button');
+    trailerButton.type = 'button';
+    trailerButton.className = 'trailer-button';
+    trailerButton.textContent = '▶';
+    trailerButton.setAttribute('aria-label', `Ver trailer de ${record.title}`);
+    trailerButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openTrailerModal(record).catch(() => {
+        setStatus('No se pudo abrir el trailer.', true);
+      });
+    });
+    posterLink.appendChild(trailerButton);
 
     if (record.posterUrl) {
       setPosterSource(poster, record.posterUrl);
@@ -392,15 +547,17 @@ function filterRecords() {
   const query = elements.searchInput.value.trim().toLowerCase();
   const minRating = Number(elements.minRating.value);
   const selectedYear = elements.yearFilter.value || 'all';
+  const selectedGenre = elements.genreFilter ? elements.genreFilter.value || 'all' : 'all';
   const sharedOnly = Boolean(elements.sharedOnly.checked);
 
   const filtered = library.filter((record) => {
-    const haystack = `${record.title} ${record.year} ${record.url}`.toLowerCase();
+    const haystack = `${record.title} ${record.year} ${record.url} ${(record.genres || []).join(' ')}`.toLowerCase();
     const queryMatch = !query || haystack.includes(query);
     const ratingMatch = !minRating || (record.rating ?? -Infinity) >= minRating;
     const yearMatch = selectedYear === 'all' || record.year === selectedYear;
+    const genreMatch = matchGenre(record, selectedGenre);
     const sharedMatch = !sharedOnly || record.otherVotes.length > 0;
-    return queryMatch && ratingMatch && yearMatch && sharedMatch;
+    return queryMatch && ratingMatch && yearMatch && genreMatch && sharedMatch;
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -437,6 +594,7 @@ async function loadLibraryForSelectedUser() {
 
   const records = dedupeRecords(payload.ratings || []);
   updateYearFilterOptions(records);
+  updateGenreFilterState(records);
   saveLibrary(records);
 
   const hasAnyPersonalRating = records.some(
@@ -511,6 +669,12 @@ elements.yearFilter.addEventListener('change', () => {
   currentPage = 1;
   render();
 });
+if (elements.genreFilter) {
+  elements.genreFilter.addEventListener('change', () => {
+    currentPage = 1;
+    render();
+  });
+}
 elements.sharedOnly.addEventListener('change', () => {
   currentPage = 1;
   render();
@@ -543,6 +707,7 @@ elements.nextPage.addEventListener('click', () => {
 
 async function boot() {
   showLibraryLoader('Cargando biblioteca...');
+  initTrailerModal();
   await loadConfig();
   if (selectedUserName) {
     await loadLibraryForSelectedUser();

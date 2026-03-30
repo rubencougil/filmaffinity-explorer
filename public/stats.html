@@ -6,7 +6,7 @@
     <title>FilmAffinity Explorer Stats</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body>
+  <body class="stats-page">
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -15,9 +15,9 @@
 
         <nav class="top-links" aria-label="Primary">
           <a data-nav-target="home" href="/">🎬 Biblioteca</a>
-          <a class="is-active" data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
-          <a data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
           <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
+          <a data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
+          <a class="is-active" data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
           <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
         </nav>
 
@@ -29,18 +29,16 @@
 
     <div class="page-shell">
       <header class="hero panel">
-        <div class="stats-page-header">
+        <div class="stats-hero-head">
           <div>
             <p class="panel-kicker">Analítica por usuario</p>
-            <h1 id="stats-title">📊 Estadísticas por usuario</h1>
             <p id="stats-subtitle" class="hero-copy">
               Explora cómo evoluciona el historial de votos del usuario seleccionado.
             </p>
           </div>
-
         </div>
 
-        <div class="stats-grid stats-grid-large">
+        <div class="stats-grid stats-grid-large stats-kpi-grid">
           <article class="stat-card">
             <span class="stat-label has-tooltip" data-tooltip="Cantidad total de títulos con voto personal del usuario seleccionado.">🎟️ Votos totales</span>
             <strong id="stats-total-votes">0</strong>

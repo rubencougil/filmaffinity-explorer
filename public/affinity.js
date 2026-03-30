@@ -3,8 +3,6 @@ const USER_QUERY_KEY = 'userName';
 const COMPARE_QUERY_KEY = 'compareUser';
 
 const elements = {
-  title: document.querySelector('#affinity-title'),
-  subtitle: document.querySelector('#affinity-subtitle'),
   status: document.querySelector('#affinity-status'),
   userSelector: document.querySelector('#global-user-selector'),
   peerSelector: document.querySelector('#affinity-peer-selector'),
@@ -137,6 +135,22 @@ function describeConfidence(overlap) {
   return 'Muy baja';
 }
 
+function getAffinityTone(score) {
+  if (!Number.isFinite(score)) {
+    return 'is-unknown';
+  }
+  if (score >= 85) {
+    return 'is-excellent';
+  }
+  if (score >= 70) {
+    return 'is-high';
+  }
+  if (score >= 55) {
+    return 'is-medium';
+  }
+  return 'is-low';
+}
+
 function buildAffinityData(records, peerName) {
   const items = records.flatMap((record) => {
     if (!Number.isFinite(record.rating)) {
@@ -232,6 +246,13 @@ function renderAgreementList(titleText, entries, { positive = false } = {}) {
   entries.forEach((entry) => {
     const li = document.createElement('li');
     li.className = 'agreement-item';
+    if (!positive) {
+      if (entry.diff >= 6) {
+        li.classList.add('is-gap-severe');
+      } else if (entry.diff >= 4) {
+        li.classList.add('is-gap-strong');
+      }
+    }
 
     if (entry.posterUrl) {
       const thumb = document.createElement('img');
@@ -272,6 +293,30 @@ function renderAgreementList(titleText, entries, { positive = false } = {}) {
   return wrapper;
 }
 
+function createMetricCard(label, value, hint = '') {
+  const card = document.createElement('article');
+  card.className = 'affinity-kpi-card';
+
+  const labelNode = document.createElement('span');
+  labelNode.className = 'affinity-kpi-label';
+  labelNode.textContent = label;
+
+  const valueNode = document.createElement('strong');
+  valueNode.className = 'affinity-kpi-value';
+  valueNode.textContent = value;
+
+  card.append(labelNode, valueNode);
+
+  if (hint) {
+    const hintNode = document.createElement('span');
+    hintNode.className = 'affinity-kpi-hint';
+    hintNode.textContent = hint;
+    card.appendChild(hintNode);
+  }
+
+  return card;
+}
+
 function renderAffinity() {
   elements.content.innerHTML = '';
 
@@ -285,8 +330,9 @@ function renderAffinity() {
   }
 
   const affinity = buildAffinityData(library, selectedPeerName);
+  const tone = getAffinityTone(affinity.agreementScore);
   const card = document.createElement('article');
-  card.className = 'overlap-card agreement-card affinity-summary-card';
+  card.className = `overlap-card agreement-card affinity-summary-card ${tone}`;
 
   const user = document.createElement('span');
   user.className = 'overlap-user';
@@ -295,6 +341,23 @@ function renderAffinity() {
 
   const metrics = document.createElement('div');
   metrics.className = 'agreement-metrics';
+
+  const heroMetric = document.createElement('div');
+  heroMetric.className = 'affinity-hero-metric';
+
+  const heroValue = document.createElement('strong');
+  heroValue.className = 'affinity-hero-value';
+  heroValue.textContent =
+    affinity.agreementScore === null ? '--' : `${affinity.agreementScore}%`;
+
+  const heroLabel = document.createElement('span');
+  heroLabel.className = 'affinity-hero-label';
+  heroLabel.textContent =
+    affinity.agreementScore === null
+      ? 'Sin datos para estimar compatibilidad'
+      : `Compatibilidad ${describeCompatibility(affinity.agreementScore)}`;
+
+  heroMetric.append(heroValue, heroLabel);
 
   const scoreBadge = document.createElement('span');
   scoreBadge.className = 'agreement-score';
@@ -363,9 +426,45 @@ function renderAffinity() {
     corrChip,
     disagreementChip
   );
-  metrics.append(scoreBadge, summary, chips);
+  metrics.append(heroMetric, scoreBadge, summary, chips);
   card.appendChild(metrics);
   elements.content.appendChild(card);
+
+  const kpiGrid = document.createElement('div');
+  kpiGrid.className = 'affinity-kpi-grid';
+  kpiGrid.append(
+    createMetricCard(
+      'Compatibilidad',
+      affinity.agreementScore === null ? '-' : `${affinity.agreementScore}%`,
+      describeCompatibility(affinity.agreementScore ?? 0)
+    ),
+    createMetricCard(
+      'Títulos en común',
+      String(affinity.overlapCount),
+      `Confianza ${describeConfidence(affinity.overlapCount)}`
+    ),
+    createMetricCard(
+      'Coincidencias exactas',
+      affinity.exactRate === null ? '-' : `${affinity.exactRate}%`,
+      `${affinity.exactMatches} títulos`
+    ),
+    createMetricCard(
+      'Correlación',
+      affinity.pearson === null ? '-' : String(affinity.pearson),
+      'Escala -1 a 1'
+    ),
+    createMetricCard(
+      'Gap medio',
+      affinity.avgGap === null ? '-' : affinity.avgGap.toFixed(2),
+      'Menor es mejor'
+    ),
+    createMetricCard(
+      'Desacuerdos fuertes',
+      String(affinity.strongDisagreements),
+      'Diferencia de 4+ puntos'
+    )
+  );
+  elements.content.appendChild(kpiGrid);
 
   const listsGrid = document.createElement('div');
   listsGrid.className = 'affinity-lists-grid';
@@ -462,11 +561,6 @@ async function loadLibrary() {
   const payload = await response.json();
   library = dedupeRecords(payload.ratings || []);
 
-  elements.title.textContent = `🤝 Afinidad de ${selectedUserName}`;
-  elements.subtitle.textContent = selectedPeerName
-    ? `Comparativa directa de ${selectedUserName} con ${selectedPeerName}.`
-    : 'Selecciona otro usuario para comparar afinidad.';
-
   renderAffinity();
 }
 
@@ -481,9 +575,6 @@ elements.userSelector.addEventListener('change', async () => {
 
 elements.peerSelector.addEventListener('change', () => {
   selectedPeerName = elements.peerSelector.value;
-  elements.subtitle.textContent = selectedPeerName
-    ? `Comparativa directa de ${selectedUserName} con ${selectedPeerName}.`
-    : 'Selecciona otro usuario para comparar afinidad.';
   updateQueryString();
   renderAffinity();
 });

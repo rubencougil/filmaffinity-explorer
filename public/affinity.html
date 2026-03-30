@@ -15,9 +15,9 @@
 
         <nav class="top-links" aria-label="Primary">
           <a data-nav-target="home" href="/">🎬 Biblioteca</a>
-          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
-          <a class="is-active" data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
           <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
+          <a class="is-active" data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
+          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
           <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
         </nav>
 
@@ -28,24 +28,19 @@
     </header>
 
     <div class="page-shell">
-      <header class="hero panel">
-        <p class="panel-kicker">Afinidad entre usuarios</p>
-        <h1 id="affinity-title">🤝 Afinidad de usuario</h1>
-        <p id="affinity-subtitle" class="hero-copy">
-          Compara el usuario seleccionado con otra persona para ver compatibilidad, acuerdos y discrepancias.
-        </p>
-      </header>
-
       <main class="layout layout-single">
         <section class="panel affinity-panel">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">Comparador</p>
-              <h2>Usuario a comparar</h2>
+              <h2>Afinidad entre usuarios</h2>
+              <p class="hero-copy affinity-lead">
+                Compara compatibilidad, sesgo y discrepancias para detectar con quién coincides más.
+              </p>
             </div>
           </div>
 
-          <div class="filters-inline affinity-toolbar">
+          <div class="affinity-toolbar">
             <label class="field small-field year-filter-field">
               <span>👤 Comparar con</span>
               <div class="rating-filter">

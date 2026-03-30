@@ -2,7 +2,6 @@ const SELECTED_USER_KEY = 'filmaffinity-browser-selected-user';
 const USER_QUERY_KEY = 'userName';
 
 const elements = {
-  title: document.querySelector('#stats-title'),
   subtitle: document.querySelector('#stats-subtitle'),
   userSelector: document.querySelector('#global-user-selector'),
   navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
@@ -999,7 +998,6 @@ async function loadLibrary() {
   const payload = await response.json();
   library = dedupeRecords(payload.ratings || []);
 
-  elements.title.textContent = `📊 Estadísticas de ${selectedUserName}`;
   elements.subtitle.textContent = library.length
     ? `Lectura rápida de ${library.length} votos guardados para este usuario.`
     : 'Este usuario todavía no tiene votos guardados para analizar.';

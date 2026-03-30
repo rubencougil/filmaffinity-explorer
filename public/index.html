@@ -15,9 +15,9 @@
 
         <nav class="top-links" aria-label="Primary">
           <a class="is-active" data-nav-target="home" href="/">🎬 Biblioteca</a>
-          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
-          <a data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
           <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
+          <a data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
+          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
           <a data-nav-target="sync" href="/sync.html">⚡ Sync</a>
         </nav>
 
@@ -28,7 +28,7 @@
     </header>
 
     <div class="page-shell">
-      <main class="layout layout-single">
+      <main class="layout library-layout">
         <section id="results-section" class="panel search-panel">
           <div class="panel-header">
             <div>
@@ -41,7 +41,24 @@
             <p id="import-status" class="status-text browse-status"></p>
           </div>
 
-          <div class="search-controls">
+          <div id="results-meta" class="results-meta">Todavía no hay votaciones importadas.</div>
+          <div id="results" class="results-grid"></div>
+          <div id="pagination" class="pagination" hidden>
+            <button id="prev-page" class="ghost-button" type="button">Anterior</button>
+            <span id="page-info" class="page-info"></span>
+            <button id="next-page" class="ghost-button" type="button">Siguiente</button>
+          </div>
+        </section>
+
+        <aside class="panel filter-sidebar" aria-label="Filtros">
+          <div class="panel-header sidebar-header">
+            <div>
+              <p class="panel-kicker">Filtros</p>
+              <h2>Buscar y filtrar</h2>
+            </div>
+          </div>
+
+          <div class="search-controls sidebar-controls">
             <label class="field search-field">
               <span>🔎 Búsqueda rápida</span>
               <div class="search-pill">
@@ -52,6 +69,7 @@
                 />
               </div>
             </label>
+
             <label class="field small-field">
               <span>⭐ Nota mínima</span>
               <div class="rating-filter">
@@ -70,6 +88,7 @@
                 </select>
               </div>
             </label>
+
             <label class="field small-field">
               <span>📅 Año</span>
               <div class="rating-filter">
@@ -78,6 +97,36 @@
                 </select>
               </div>
             </label>
+
+            <label class="field small-field">
+              <span>🎭 Género</span>
+              <div class="rating-filter">
+                <select id="genre-filter">
+                  <option value="all" selected>Todos los géneros</option>
+                  <option value="terror">Terror</option>
+                  <option value="accion">Acción</option>
+                  <option value="drama">Drama</option>
+                  <option value="animacion">Animación</option>
+                  <option value="aventuras">Aventuras</option>
+                  <option value="belico">Bélico</option>
+                  <option value="ciencia ficcion">Ciencia ficción</option>
+                  <option value="cine negro">Cine negro</option>
+                  <option value="comedia">Comedia</option>
+                  <option value="desconocido">Desconocido</option>
+                  <option value="documental">Documental</option>
+                  <option value="fantastico">Fantástico</option>
+                  <option value="infantil">Infantil</option>
+                  <option value="intriga">Intriga</option>
+                  <option value="musical">Musical</option>
+                  <option value="romance">Romance</option>
+                  <option value="serie de tv">Serie de TV</option>
+                  <option value="thriller">Thriller</option>
+                  <option value="western">Western</option>
+                </select>
+              </div>
+              <small id="genre-filter-hint" class="hint genre-hint"></small>
+            </label>
+
             <label class="field small-field">
               <span>👥 Votos comunes</span>
               <div class="toggle-field">
@@ -86,15 +135,7 @@
               </div>
             </label>
           </div>
-
-          <div id="results-meta" class="results-meta">Todavía no hay votaciones importadas.</div>
-          <div id="results" class="results-grid"></div>
-          <div id="pagination" class="pagination" hidden>
-            <button id="prev-page" class="ghost-button" type="button">Anterior</button>
-            <span id="page-info" class="page-info"></span>
-            <button id="next-page" class="ghost-button" type="button">Siguiente</button>
-          </div>
-        </section>
+        </aside>
       </main>
     </div>
 
@@ -117,6 +158,27 @@
         </div>
       </article>
     </template>
+
+    <div id="trailer-modal" class="trailer-modal" hidden>
+      <div class="trailer-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trailer-title">
+        <div class="trailer-modal-header">
+          <h3 id="trailer-title">Trailer</h3>
+          <button id="trailer-close" class="ghost-button trailer-close" type="button" aria-label="Cerrar trailer">
+            ✕
+          </button>
+        </div>
+        <div class="trailer-frame-wrap">
+          <iframe
+            id="trailer-frame"
+            title="Trailer de YouTube"
+            src=""
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+    </div>
 
     <script src="/app.js"></script>
   </body>

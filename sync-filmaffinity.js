@@ -6,6 +6,27 @@ const BASE_URL = 'https://www.filmaffinity.com/es/userratings.php';
 const MAX_PAGES = 200;
 const HEADLESS_WAIT_MS = 3 * 60 * 1000;
 const MANUAL_WAIT_MS = 10 * 60 * 1000;
+const TARGET_GENRE_FILTERS = [
+  { code: 'AC', label: 'Acción' },
+  { code: 'AN', label: 'Animación' },
+  { code: 'AV', label: 'Aventuras' },
+  { code: 'BE', label: 'Bélico' },
+  { code: 'C-F', label: 'Ciencia ficción' },
+  { code: 'F-N', label: 'Cine negro' },
+  { code: 'CO', label: 'Comedia' },
+  { code: 'DESC', label: 'Desconocido' },
+  { code: 'DO', label: 'Documental' },
+  { code: 'DR', label: 'Drama' },
+  { code: 'FAN', label: 'Fantástico' },
+  { code: 'INF', label: 'Infantil' },
+  { code: 'INT', label: 'Intriga' },
+  { code: 'MU', label: 'Musical' },
+  { code: 'RO', label: 'Romance' },
+  { code: 'TV_SE', label: 'Serie de TV' },
+  { code: 'TE', label: 'Terror' },
+  { code: 'TH', label: 'Thriller' },
+  { code: 'WE', label: 'Western' }
+];
 
 const SPANISH_MONTHS = {
   enero: 0,
@@ -42,8 +63,24 @@ function extractUserId(value) {
   return directDigits ? directDigits[0] : '';
 }
 
-function buildRatingsUrl(userId, pageNumber = 1) {
-  return `${BASE_URL}?user_id=${encodeURIComponent(userId)}&orderby=rating-date&chv=list&p=${pageNumber}`;
+function buildRatingsUrl(userId, pageNumber = 1, options = {}) {
+  const {
+    orderBy = 'rating-date',
+    view = 'list',
+    filterBy = ''
+  } = options;
+
+  const url = new URL(BASE_URL);
+  url.searchParams.set('user_id', String(userId || '').trim());
+  url.searchParams.set('orderby', orderBy);
+  url.searchParams.set('chv', view);
+  url.searchParams.set('p', String(pageNumber));
+
+  if (filterBy) {
+    url.searchParams.set('filterby', filterBy);
+  }
+
+  return url.toString();
 }
 
 function buildRequestHeaders() {
@@ -188,6 +225,10 @@ function parseSpanishDate(text) {
   const isoMonth = String(finalDate.getMonth() + 1).padStart(2, '0');
   const isoDay = String(finalDate.getDate()).padStart(2, '0');
   return `${finalDate.getFullYear()}-${isoMonth}-${isoDay}`;
+}
+
+function getItemKey(item) {
+  return String(item?.url || item?.filmId || item?.title || '').trim();
 }
 
 async function dismissCookieBanner(page) {
@@ -370,6 +411,125 @@ async function scrapeCurrentPage(page) {
   }, new Date().toISOString().slice(0, 10));
 }
 
+async function readFilteredCount(page) {
+  return page.evaluate(() => {
+    const text = document.querySelector('.active-filter .count')?.textContent || '';
+    const match = String(text).match(/\d{1,3}(?:[.\s]\d{3})*|\d+/);
+    const normalized = String(match?.[0] || '').replace(/[.\s]/g, '');
+    const value = Number.parseInt(normalized, 10);
+    return Number.isFinite(value) ? value : 0;
+  });
+}
+
+async function ensureRatingsPageIsReady(page, userId, onProgress, allowManualChallengeBypass) {
+  await dismissCookieBanner(page);
+  const challenge = await detectChallenge(page);
+  if (!challenge) {
+    return;
+  }
+
+  onProgress(`Aviso: ${challenge.message}`);
+  if (!allowManualChallengeBypass) {
+    throw new Error(challenge.message);
+  }
+
+  await waitForRatingsPage(page, userId, onProgress, {
+    allowManualChallengeBypass: true,
+    timeoutMs: MANUAL_WAIT_MS
+  });
+}
+
+async function enrichGenresFromFilters(page, userId, items, onProgress, options = {}) {
+  const { allowManualChallengeBypass = false } = options;
+
+  if (!Array.isArray(items) || !items.length) {
+    return;
+  }
+
+  const recordsByKey = new Map();
+  for (const item of items) {
+    const key = getItemKey(item);
+    if (!key) {
+      continue;
+    }
+    recordsByKey.set(key, item);
+  }
+
+  const targetFilters = TARGET_GENRE_FILTERS;
+
+  if (!targetFilters.length) {
+    onProgress('No se han detectado filtros de género compatibles en FilmAffinity.');
+    return;
+  }
+
+  onProgress(
+    `Enriqueciendo géneros (${targetFilters.map((item) => item.label).join(', ')})...`
+  );
+
+  for (const filter of targetFilters) {
+    const seenSignatures = new Set();
+    const filterBy = `genre:${filter.code}`;
+
+    await page.goto(buildRatingsUrl(userId, 1, { filterBy }), {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000
+    });
+    await ensureRatingsPageIsReady(page, userId, onProgress, allowManualChallengeBypass);
+
+    const total = await readFilteredCount(page);
+    if (!total) {
+      continue;
+    }
+
+    onProgress(`Género ${filter.label}: ${total} títulos detectados.`);
+
+    const totalPages = Math.min(MAX_PAGES, Math.max(1, Math.ceil(total / 50)));
+    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
+      if (pageNumber > 1) {
+        await page.goto(buildRatingsUrl(userId, pageNumber, { filterBy }), {
+          waitUntil: 'domcontentloaded',
+          timeout: 60000
+        });
+        await ensureRatingsPageIsReady(page, userId, onProgress, allowManualChallengeBypass);
+        await page.waitForTimeout(800);
+      }
+
+      const pageItems = (await scrapeCurrentPage(page)).filter((item) => item.title && item.url);
+      if (!pageItems.length) {
+        break;
+      }
+
+      const pageSignature = `${pageItems[0]?.filmId || 'none'}:${pageItems.length}:${pageItems.at(-1)?.filmId || 'none'}`;
+      if (seenSignatures.has(pageSignature)) {
+        break;
+      }
+      seenSignatures.add(pageSignature);
+
+      for (const filteredItem of pageItems) {
+        const key = getItemKey(filteredItem);
+        const target = recordsByKey.get(key);
+        if (!target) {
+          continue;
+        }
+        if (!Array.isArray(target.genres)) {
+          target.genres = [];
+        }
+        if (!target.genres.includes(filter.label)) {
+          target.genres.push(filter.label);
+        }
+      }
+    }
+  }
+
+  for (const item of items) {
+    if (!Array.isArray(item.genres)) {
+      item.genres = [];
+      continue;
+    }
+    item.genres = [...new Set(item.genres)].sort((a, b) => a.localeCompare(b, 'es'));
+  }
+}
+
 async function launchContext(userId, options = {}) {
   const { headless = true } = options;
   const context = await chromium.launchPersistentContext(buildProfileDir(userId), {
@@ -445,6 +605,10 @@ async function collectRatings(context, userId, onProgress, options = {}) {
       items.push(item);
     }
   }
+
+  await enrichGenresFromFilters(page, userId, items, onProgress, {
+    allowManualChallengeBypass
+  });
 
   onProgress(`Imported ${items.length} ratings from Filmaffinity.`);
 
