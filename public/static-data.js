@@ -14,26 +14,46 @@
     }
 
     loaded = (async () => {
-      const [configRes, librariesRes] = await Promise.all([
-        fetch(toUrl(CONFIG_PATH)),
-        fetch(toUrl(LIBRARIES_PATH))
-      ]);
-
-      if (!configRes.ok) {
-        throw new Error('No se pudo cargar data/config.json');
-      }
+      const librariesRes = await fetch(toUrl(LIBRARIES_PATH));
       if (!librariesRes.ok) {
         throw new Error('No se pudo cargar data/libraries.json');
       }
 
-      const configPayload = await configRes.json();
       const librariesPayload = await librariesRes.json();
-      const users = Array.isArray(configPayload?.filmaffinity?.users)
-        ? configPayload.filmaffinity.users
-        : [];
       const libraries = Array.isArray(librariesPayload?.libraries)
         ? librariesPayload.libraries
         : [];
+      const usersFromLibraries = libraries
+        .map((entry) => ({
+          name: String(entry?.userName || '').trim(),
+          userId: String(entry?.userId || '').trim()
+        }))
+        .filter((user) => user.name && user.userId);
+
+      let configPayload = null;
+      try {
+        const configRes = await fetch(toUrl(CONFIG_PATH));
+        if (configRes.ok) {
+          configPayload = await configRes.json();
+        }
+      } catch (error) {
+        // Fallback handled below.
+      }
+
+      const configUsers = Array.isArray(configPayload?.filmaffinity?.users)
+        ? configPayload.filmaffinity.users
+        : [];
+      const users = configUsers.length ? configUsers : usersFromLibraries;
+      if (!configPayload || !configUsers.length) {
+        configPayload = {
+          filmaffinity: {
+            configured: users.length > 0,
+            defaultUser: users[0]?.name || '',
+            users
+          },
+          generatedAt: String(librariesPayload?.generatedAt || '')
+        };
+      }
 
       return {
         configPayload,
