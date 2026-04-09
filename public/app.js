@@ -321,12 +321,6 @@ async function openTrailerModal(record) {
     const response = await fetch(buildTrailerApiUrl(safeTitle, safeYear));
     const payload = await response.json();
 
-    if (payload?.static && payload?.searchUrl) {
-      closeTrailerModal();
-      window.open(payload.searchUrl, '_blank', 'noopener,noreferrer');
-      return;
-    }
-
     if (!response.ok || !payload?.embedUrl) {
       throw new Error(payload?.error || 'No se encontró trailer');
     }

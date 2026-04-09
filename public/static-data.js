@@ -168,10 +168,13 @@
 
     if (urlObj.pathname.endsWith('/api/youtube-trailer')) {
       const q = String(urlObj.searchParams.get('q') || '').trim();
-      const searchUrl = q
-        ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
-        : 'https://www.youtube.com/';
-      return createJsonResponse({ static: true, searchUrl }, 200);
+      const embedUrl = q
+        ? `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(q)}&autoplay=1&rel=0`
+        : null;
+      if (!embedUrl) {
+        return createJsonResponse({ error: 'Missing query' }, 400);
+      }
+      return createJsonResponse({ query: q, embedUrl }, 200);
     }
 
     return null;
