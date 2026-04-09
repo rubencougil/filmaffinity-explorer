@@ -21,10 +21,6 @@ const elements = {
   pageInfo: document.querySelector('#page-info'),
   importStatus: document.querySelector('#import-status'),
   resultTemplate: document.querySelector('#result-template'),
-  trailerModal: document.querySelector('#trailer-modal'),
-  trailerFrame: document.querySelector('#trailer-frame'),
-  trailerTitle: document.querySelector('#trailer-title'),
-  trailerClose: document.querySelector('#trailer-close')
 };
 
 const SPANISH_MONTHS = {
@@ -294,86 +290,16 @@ function updateSelectedUserLabel() {
 }
 
 function buildTrailerQuery(title, year) {
-  const query = [title, year, 'trailer'].filter(Boolean).join(' ');
-  return query;
+  return [title, year, 'trailer'].filter(Boolean).join(' ');
 }
 
-function buildTrailerApiUrl(title, year) {
-  return `/api/youtube-trailer?q=${encodeURIComponent(buildTrailerQuery(title, year))}`;
-}
-
-async function openTrailerModal(record) {
-  if (!elements.trailerModal || !elements.trailerFrame) {
-    return;
-  }
-
+function openTrailer(record) {
   const safeTitle = String(record?.title || '').trim() || 'Trailer';
   const safeYear = String(record?.year || '').trim();
-  elements.trailerFrame.src = '';
-  if (elements.trailerTitle) {
-    elements.trailerTitle.textContent = `Buscando trailer · ${safeTitle}`;
-  }
-  elements.trailerModal.hidden = false;
-  document.body.classList.add('modal-open');
-  elements.trailerModal.focus({ preventScroll: true });
-
-  try {
-    const response = await fetch(buildTrailerApiUrl(safeTitle, safeYear));
-    const payload = await response.json();
-
-    if (!response.ok || !payload?.embedUrl) {
-      throw new Error(payload?.error || 'No se encontró trailer');
-    }
-
-    elements.trailerFrame.src = payload.embedUrl;
-    if (elements.trailerTitle) {
-      elements.trailerTitle.textContent = `Trailer · ${safeTitle}`;
-    }
-  } catch (error) {
-    closeTrailerModal();
-    window.open(
-      `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-  }
-}
-
-function closeTrailerModal() {
-  if (!elements.trailerModal || !elements.trailerFrame) {
-    return;
-  }
-  elements.trailerModal.hidden = true;
-  elements.trailerFrame.src = '';
-  document.body.classList.remove('modal-open');
-}
-
-function initTrailerModal() {
-  if (!elements.trailerModal) {
-    return;
-  }
-
-  elements.trailerModal.setAttribute('tabindex', '-1');
-
-  if (elements.trailerClose) {
-    elements.trailerClose.addEventListener('click', closeTrailerModal);
-  }
-
-  elements.trailerModal.addEventListener('click', (event) => {
-    if (event.target === elements.trailerModal) {
-      closeTrailerModal();
-    }
-  });
-
-  window.addEventListener(
-    'keydown',
-    (event) => {
-    if (event.key === 'Escape' && !elements.trailerModal.hidden) {
-      event.preventDefault();
-      closeTrailerModal();
-    }
-    },
-    true
+  window.open(
+    `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
+    '_blank',
+    'noopener,noreferrer'
   );
 }
 
@@ -421,9 +347,7 @@ function renderResults(records) {
     trailerButton.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      openTrailerModal(record).catch(() => {
-        setStatus('No se pudo abrir el trailer.', true);
-      });
+      openTrailer(record);
     });
     posterLink.appendChild(trailerButton);
 
@@ -710,7 +634,6 @@ elements.nextPage.addEventListener('click', () => {
 
 async function boot() {
   showLibraryLoader('Cargando biblioteca...');
-  initTrailerModal();
   await loadConfig();
   if (selectedUserName) {
     await loadLibraryForSelectedUser();

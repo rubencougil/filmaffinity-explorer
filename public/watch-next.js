@@ -23,10 +23,6 @@ const elements = {
   nextPage: document.querySelector('#watch-next-next-page'),
   pageInfo: document.querySelector('#watch-next-page-info'),
   template: document.querySelector('#watch-next-template'),
-  trailerModal: document.querySelector('#trailer-modal'),
-  trailerFrame: document.querySelector('#trailer-frame'),
-  trailerTitle: document.querySelector('#trailer-title'),
-  trailerClose: document.querySelector('#trailer-close')
 };
 
 let configuredUsers = [];
@@ -85,86 +81,16 @@ function setStatus(message, isError = false) {
 }
 
 function buildTrailerQuery(title, year) {
-  const query = [title, year, 'trailer'].filter(Boolean).join(' ');
-  return query;
+  return [title, year, 'trailer'].filter(Boolean).join(' ');
 }
 
-function buildTrailerApiUrl(title, year) {
-  return `/api/youtube-trailer?q=${encodeURIComponent(buildTrailerQuery(title, year))}`;
-}
-
-async function openTrailerModal(item) {
-  if (!elements.trailerModal || !elements.trailerFrame) {
-    return;
-  }
-
+function openTrailer(item) {
   const safeTitle = String(item?.title || '').trim() || 'Trailer';
   const safeYear = String(item?.year || '').trim();
-  elements.trailerFrame.src = '';
-  if (elements.trailerTitle) {
-    elements.trailerTitle.textContent = `Buscando trailer · ${safeTitle}`;
-  }
-  elements.trailerModal.hidden = false;
-  document.body.classList.add('modal-open');
-  elements.trailerModal.focus({ preventScroll: true });
-
-  try {
-    const response = await fetch(buildTrailerApiUrl(safeTitle, safeYear));
-    const payload = await response.json();
-
-    if (!response.ok || !payload?.embedUrl) {
-      throw new Error(payload?.error || 'No se encontró trailer');
-    }
-
-    elements.trailerFrame.src = payload.embedUrl;
-    if (elements.trailerTitle) {
-      elements.trailerTitle.textContent = `Trailer · ${safeTitle}`;
-    }
-  } catch (error) {
-    closeTrailerModal();
-    window.open(
-      `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-  }
-}
-
-function closeTrailerModal() {
-  if (!elements.trailerModal || !elements.trailerFrame) {
-    return;
-  }
-  elements.trailerModal.hidden = true;
-  elements.trailerFrame.src = '';
-  document.body.classList.remove('modal-open');
-}
-
-function initTrailerModal() {
-  if (!elements.trailerModal) {
-    return;
-  }
-
-  elements.trailerModal.setAttribute('tabindex', '-1');
-
-  if (elements.trailerClose) {
-    elements.trailerClose.addEventListener('click', closeTrailerModal);
-  }
-
-  elements.trailerModal.addEventListener('click', (event) => {
-    if (event.target === elements.trailerModal) {
-      closeTrailerModal();
-    }
-  });
-
-  window.addEventListener(
-    'keydown',
-    (event) => {
-      if (event.key === 'Escape' && !elements.trailerModal.hidden) {
-        event.preventDefault();
-        closeTrailerModal();
-      }
-    },
-    true
+  window.open(
+    `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
+    '_blank',
+    'noopener,noreferrer'
   );
 }
 
@@ -615,9 +541,7 @@ function renderRecommendations(items, startRank = 1) {
     trailerButton.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      openTrailerModal(item).catch(() => {
-        setStatus('No se pudo abrir el trailer.', true);
-      });
+      openTrailer(item);
     });
     posterLink.appendChild(trailerButton);
 
