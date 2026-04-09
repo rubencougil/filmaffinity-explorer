@@ -121,10 +121,12 @@ async function openTrailerModal(item) {
       elements.trailerTitle.textContent = `Trailer · ${safeTitle}`;
     }
   } catch (error) {
-    if (elements.trailerTitle) {
-      elements.trailerTitle.textContent = `No se encontró trailer · ${safeTitle}`;
-    }
-    setStatus('No se pudo cargar el trailer en YouTube para este título.', true);
+    closeTrailerModal();
+    window.open(
+      `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
+      '_blank',
+      'noopener,noreferrer'
+    );
   }
 }
 

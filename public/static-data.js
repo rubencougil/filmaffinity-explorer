@@ -135,51 +135,6 @@
     };
   }
 
-  async function searchVideoId(q) {
-    const encoded = encodeURIComponent(q);
-    const apis = [
-      {
-        url: `https://pipedapi.kavin.rocks/search?q=${encoded}&filter=videos`,
-        extract(data) {
-          const item = Array.isArray(data?.items)
-            ? data.items.find((i) => typeof i.url === 'string' && i.url.includes('watch?v='))
-            : null;
-          if (!item) return null;
-          const m = item.url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
-          return m ? m[1] : null;
-        }
-      },
-      {
-        url: `https://iv.datura.network/api/v1/search?q=${encoded}&type=video`,
-        extract(data) {
-          const item = Array.isArray(data) ? data.find((i) => i.videoId) : null;
-          return item ? item.videoId : null;
-        }
-      },
-      {
-        url: `https://invidious.nerdvpn.de/api/v1/search?q=${encoded}&type=video`,
-        extract(data) {
-          const item = Array.isArray(data) ? data.find((i) => i.videoId) : null;
-          return item ? item.videoId : null;
-        }
-      }
-    ];
-
-    for (const api of apis) {
-      try {
-        const res = await originalFetch(api.url, { signal: AbortSignal.timeout(5000) });
-        if (!res.ok) continue;
-        const data = await res.json();
-        const videoId = api.extract(data);
-        if (videoId) return videoId;
-      } catch {
-        // try next
-      }
-    }
-
-    return null;
-  }
-
   async function handleStaticApi(urlObj) {
     const staticData = await loadStaticFiles();
 
@@ -211,21 +166,6 @@
       );
     }
 
-    if (urlObj.pathname.endsWith('/api/youtube-trailer')) {
-      const q = String(urlObj.searchParams.get('q') || '').trim();
-      if (!q) {
-        return createJsonResponse({ error: 'Missing query' }, 400);
-      }
-
-      const videoId = await searchVideoId(q);
-      if (!videoId) {
-        return createJsonResponse({ error: 'No trailer found' }, 404);
-      }
-
-      const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
-      return createJsonResponse({ query: q, videoId, embedUrl }, 200);
-    }
-
     return null;
   }
 
@@ -245,16 +185,6 @@
       if (response) {
         return response;
       }
-    }
-
-    if (requestUrl.includes('/api/youtube-trailer')) {
-      try {
-        const serverResponse = await originalFetch(input, init);
-        if (serverResponse.ok) return serverResponse;
-      } catch {}
-      const urlObj = new URL(requestUrl, window.location.href);
-      const response = await handleStaticApi(urlObj);
-      if (response) return response;
     }
 
     return originalFetch(input, init);
