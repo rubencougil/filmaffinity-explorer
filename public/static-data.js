@@ -239,16 +239,22 @@
           ? input.toString()
           : String(input && input.url ? input.url : '');
 
-    if (
-      requestUrl.includes('/api/config') ||
-      requestUrl.includes('/api/library') ||
-      requestUrl.includes('/api/youtube-trailer')
-    ) {
+    if (requestUrl.includes('/api/config') || requestUrl.includes('/api/library')) {
       const urlObj = new URL(requestUrl, window.location.href);
       const response = await handleStaticApi(urlObj);
       if (response) {
         return response;
       }
+    }
+
+    if (requestUrl.includes('/api/youtube-trailer')) {
+      try {
+        const serverResponse = await originalFetch(input, init);
+        if (serverResponse.ok) return serverResponse;
+      } catch {}
+      const urlObj = new URL(requestUrl, window.location.href);
+      const response = await handleStaticApi(urlObj);
+      if (response) return response;
     }
 
     return originalFetch(input, init);
