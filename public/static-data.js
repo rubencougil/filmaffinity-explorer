@@ -166,6 +166,14 @@
       );
     }
 
+    if (urlObj.pathname.endsWith('/api/youtube-trailer')) {
+      const q = String(urlObj.searchParams.get('q') || '').trim();
+      const searchUrl = q
+        ? `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`
+        : 'https://www.youtube.com/';
+      return createJsonResponse({ static: true, searchUrl }, 200);
+    }
+
     return null;
   }
 
@@ -179,7 +187,11 @@
           ? input.toString()
           : String(input && input.url ? input.url : '');
 
-    if (requestUrl.includes('/api/config') || requestUrl.includes('/api/library')) {
+    if (
+      requestUrl.includes('/api/config') ||
+      requestUrl.includes('/api/library') ||
+      requestUrl.includes('/api/youtube-trailer')
+    ) {
       const urlObj = new URL(requestUrl, window.location.href);
       const response = await handleStaticApi(urlObj);
       if (response) {
