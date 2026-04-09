@@ -135,6 +135,51 @@
     };
   }
 
+  async function searchVideoId(q) {
+    const encoded = encodeURIComponent(q);
+    const apis = [
+      {
+        url: `https://pipedapi.kavin.rocks/search?q=${encoded}&filter=videos`,
+        extract(data) {
+          const item = Array.isArray(data?.items)
+            ? data.items.find((i) => typeof i.url === 'string' && i.url.includes('watch?v='))
+            : null;
+          if (!item) return null;
+          const m = item.url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+          return m ? m[1] : null;
+        }
+      },
+      {
+        url: `https://iv.datura.network/api/v1/search?q=${encoded}&type=video`,
+        extract(data) {
+          const item = Array.isArray(data) ? data.find((i) => i.videoId) : null;
+          return item ? item.videoId : null;
+        }
+      },
+      {
+        url: `https://invidious.nerdvpn.de/api/v1/search?q=${encoded}&type=video`,
+        extract(data) {
+          const item = Array.isArray(data) ? data.find((i) => i.videoId) : null;
+          return item ? item.videoId : null;
+        }
+      }
+    ];
+
+    for (const api of apis) {
+      try {
+        const res = await originalFetch(api.url, { signal: AbortSignal.timeout(5000) });
+        if (!res.ok) continue;
+        const data = await res.json();
+        const videoId = api.extract(data);
+        if (videoId) return videoId;
+      } catch {
+        // try next
+      }
+    }
+
+    return null;
+  }
+
   async function handleStaticApi(urlObj) {
     const staticData = await loadStaticFiles();
 
@@ -172,15 +217,7 @@
         return createJsonResponse({ error: 'Missing query' }, 400);
       }
 
-      const apiKey = String(staticData.configPayload?.youtubeApiKey || '').trim();
-      if (!apiKey) {
-        return createJsonResponse({ error: 'No YouTube API key configured' }, 503);
-      }
-
-      const ytUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&maxResults=1&key=${encodeURIComponent(apiKey)}`;
-      const ytResponse = await originalFetch(ytUrl);
-      const ytData = await ytResponse.json();
-      const videoId = ytData?.items?.[0]?.id?.videoId;
+      const videoId = await searchVideoId(q);
       if (!videoId) {
         return createJsonResponse({ error: 'No trailer found' }, 404);
       }
