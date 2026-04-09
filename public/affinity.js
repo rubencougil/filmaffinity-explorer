@@ -18,11 +18,10 @@ let library = [];
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
   const byTarget = {
-    home: `/${userParam}`,
-    stats: `/stats.html${userParam}`,
-    affinity: `/affinity.html${userParam}`,
-    sync: `/sync.html${userParam}`,
-    watchnext: `/watch-next.html${userParam}`
+    home: `index.html${userParam}`,
+    stats: `stats.html${userParam}`,
+    affinity: `affinity.html${userParam}`,
+    watchnext: `watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {
@@ -68,7 +67,7 @@ function createLoader(message = 'Cargando afinidad...') {
 
 function setStatus(message, isError = false) {
   elements.status.textContent = message;
-  elements.status.style.color = isError ? '#8a1f11' : '';
+  elements.status.style.color = isError ? 'var(--fa-error)' : '';
 }
 
 function normalizeRecord(record) {

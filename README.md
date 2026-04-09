@@ -2,31 +2,19 @@
 
 [![CI](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml)
 
-A local web app to browse, sync, and analyze FilmAffinity ratings for one or more users.
+Web app to browse and analyze FilmAffinity ratings for one or more users.
 
-![Filmaffinity Explorer preview](public/readme/preview-home.jpg)
+## ✨ Features
 
-## ✨ What you can do
+- Biblioteca con búsqueda y filtros
+- Recomendaciones "Qué ver" por afinidad entre usuarios
+- Vista de Afinidad y Estadísticas
+- Modal de trailer (YouTube)
+- Deploy estático en GitHub Pages
 
-- Browse the selected user library with fast search and filters
-- Compare shared titles and votes across configured users
-- Open a dedicated Sync page with live progress + logs
-- Explore a full Stats page with charts and agreement analytics
-- Keep data cached locally for quick startup
+## ⚙️ Configuración
 
-## 🚀 Quick start
-
-```bash
-npm install
-cp config.example.json config.json
-npm start
-```
-
-Open: `http://127.0.0.1:3000`
-
-## ⚙️ Configure users
-
-Edit local `config.json` (created from `config.example.json`):
+Crea `config.json` desde `config.example.json`:
 
 ```json
 {
@@ -40,36 +28,44 @@ Edit local `config.json` (created from `config.example.json`):
 }
 ```
 
-## 🔄 How sync works
+## 🔄 Sync local (CLI)
 
-1. The server loads cached libraries from `data/libraries` on startup.
-2. Sync runs only when you trigger it from the Sync page.
-3. After a successful run, one JSON cache file is updated per user.
-4. Next startup reuses cached data instantly.
+La web publicada en GitHub Pages no tiene backend, así que el sync se hace en local:
 
-### 🛡️ Challenge / CAPTCHA fallback
+```bash
+npm install
+npm run sync:static
+```
 
-Sync starts in headless Chrome using a persistent Playwright profile.
+Esto actualiza:
 
-If FilmAffinity blocks with challenge/CAPTCHA, sync retries automatically in visible Chrome so you can pass verification manually. After verification, scraping continues automatically.
+- `public/data/config.json`
+- `public/data/libraries.json`
 
-## 🧭 Pages
+## 🧪 Probar la versión estática en local
 
-- `/` → Library explorer
-- `/stats.html` → Stats and agreement analytics
-- `/sync.html` → Sync controls and live logs
+```bash
+npm run serve:static
+```
 
-## 🔒 Privacy-friendly by default
+Abre la URL que te muestre `serve`.
 
-This repo is prepared to avoid uploading personal local data:
+## 🚀 Publicar en GitHub Pages
 
-- `config.json` is ignored
-- `data/libraries/*.json` is ignored
-- `.playwright/` browser profile/cookies are ignored
-- `node_modules/` is ignored
+1. Ejecuta `npm run sync:static`.
+2. Haz commit de los cambios (incluyendo `public/data/*.json`).
+3. Push a `main`.
+4. El workflow `.github/workflows/pages.yml` desplegará `public/` en Pages.
 
-## 📦 Tech stack
+## 🧭 Rutas
 
-- Node.js
-- Playwright
+- `index.html` → Biblioteca
+- `watch-next.html` → Qué ver
+- `affinity.html` → Afinidad
+- `stats.html` → Estadísticas
+- `sync.html` → Instrucciones de sync local
+
+## 📦 Stack
+
 - Vanilla HTML/CSS/JS
+- Node.js + Playwright (solo para sync local)

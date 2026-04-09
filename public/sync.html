@@ -3,81 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
+    <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
     <title>FilmAffinity Explorer Sync</title>
-    <link rel="stylesheet" href="/styles.css" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
-          <a class="brand-mark" href="/">FilmAffinity Explorer</a>
+          <a class="brand-mark" href="index.html">FilmAffinity Explorer</a>
         </div>
 
         <nav class="top-links" aria-label="Primary">
-          <a data-nav-target="home" href="/">🎬 Biblioteca</a>
-          <a data-nav-target="watchnext" href="/watch-next.html">🍿 Qué ver</a>
-          <a data-nav-target="affinity" href="/affinity.html">🤝 Afinidad</a>
-          <a data-nav-target="stats" href="/stats.html">📊 Estadísticas</a>
-          <a class="is-active" data-nav-target="sync" href="/sync.html">⚡ Sync</a>
+          <a data-nav-target="home" href="index.html">🎬 Biblioteca</a>
+          <a data-nav-target="watchnext" href="watch-next.html">🍿 Qué ver</a>
+          <a data-nav-target="affinity" href="affinity.html">🤝 Afinidad</a>
+          <a data-nav-target="stats" href="stats.html">📊 Estadísticas</a>
         </nav>
 
-        <label class="field topbar-user-field">
-          <select id="global-user-selector"></select>
-        </label>
+        <div class="topbar-controls">
+          <button id="global-theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" aria-pressed="false">
+            <span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span>
+            <span class="theme-toggle-text">Claro</span>
+          </button>
+        </div>
       </div>
     </header>
 
     <div class="page-shell">
-      <header class="hero panel">
-        <p class="panel-kicker">Sincronización</p>
-        <h1>⚡ Gestión de sincronización</h1>
-        <p class="hero-copy">
-          Actualiza la biblioteca del usuario seleccionado y revisa el estado en tiempo real.
-        </p>
-      </header>
-
-      <main class="sync-layout">
-        <section class="panel import-panel">
+      <main class="layout layout-single">
+        <section class="panel">
           <div class="panel-header">
             <div>
-              <p class="panel-kicker">Control</p>
-              <h2>Estado de la biblioteca del usuario</h2>
+              <p class="panel-kicker">Modo GitHub Pages</p>
+              <h2>Sync local por línea de comandos</h2>
             </div>
           </div>
 
-          <p id="config-summary" class="hint">Selecciona el usuario que quieres sincronizar.</p>
+          <p class="hero-copy">
+            La sincronización desde navegador está desactivada en la versión estática. Para actualizar datos, ejecuta el sync local y vuelve a publicar.
+          </p>
 
-          <div class="sync-card">
-            <div class="sync-card-row">
-              <span class="sync-label">Estado actual</span>
-              <span id="sync-state-pill" class="sync-state-pill">Preparando</span>
-            </div>
-            <div class="progress-block" aria-live="polite">
-              <div class="progress-track">
-                <div id="sync-progress-bar" class="progress-bar" style="width: 0%"></div>
-              </div>
-              <div class="progress-meta">
-                <span id="sync-progress-text">Esperando datos...</span>
-                <span id="sync-progress-percent">0%</span>
-              </div>
-            </div>
-          </div>
+          <pre class="sync-log" aria-label="Comando de sincronización"><code>npm run sync:static</code></pre>
 
-          <div class="actions">
-            <button id="sync-button" type="button">✨ Sincronizar ahora</button>
-          </div>
-
-          <p id="import-status" class="status-text"></p>
-          <p id="access-status" class="status-text access-status"></p>
-
-          <details class="fallback-box" open>
-            <summary>🛠️ Detalles de sincronización</summary>
-            <div id="sync-log" class="sync-log" aria-live="polite"></div>
-          </details>
+          <p class="hint">
+            Este comando genera/actualiza <code>public/data/config.json</code> y <code>public/data/libraries.json</code>, que son los ficheros usados por GitHub Pages.
+          </p>
         </section>
       </main>
     </div>
 
-    <script src="/sync.js"></script>
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+        <p class="site-footer-line">🎬 Proyecto creado por <strong>Rubén Cougil</strong> ✨</p>
+        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">🌐 ruben.cougil.com</a>
+      </div>
+    </footer>
+    <script src="theme.js"></script>
   </body>
 </html>

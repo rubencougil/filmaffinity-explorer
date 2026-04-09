@@ -37,13 +37,19 @@ function sendFile(res, filePath) {
     }
 
     const ext = path.extname(filePath).toLowerCase();
-    res.writeHead(200, { 'Content-Type': MIME_TYPES[ext] || 'application/octet-stream' });
+    res.writeHead(200, {
+      'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
+      'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet, noimageindex'
+    });
     res.end(data);
   });
 }
 
 function sendJson(res, statusCode, payload) {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.writeHead(statusCode, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet, noimageindex'
+  });
   res.end(JSON.stringify(payload));
 }
 
@@ -336,6 +342,7 @@ function startSyncForUser(configuredUser) {
 
   syncFilmaffinity({
     source,
+    existingRatings: getLibraryState(userName).ratings || [],
     onProgress(message) {
       appendJobLog(jobId, message);
     }

@@ -8,8 +8,12 @@ const elements = {
   searchInput: document.querySelector('#watch-next-search-input'),
   minRating: document.querySelector('#watch-next-min-rating'),
   yearFilter: document.querySelector('#watch-next-year-filter'),
-  genreFilter: document.querySelector('#watch-next-genre-filter'),
-  genreHint: document.querySelector('#watch-next-genre-hint'),
+  minFaRating: document.querySelector('#watch-next-min-fa-rating'),
+  ratedWindow: document.querySelector('#watch-next-rated-window'),
+  minScore: document.querySelector('#watch-next-min-score'),
+  minSupport: document.querySelector('#watch-next-min-support'),
+  minAgreement: document.querySelector('#watch-next-min-agreement'),
+  sortBy: document.querySelector('#watch-next-sort-by'),
   sharedOnly: document.querySelector('#watch-next-shared-only'),
   status: document.querySelector('#watch-next-status'),
   meta: document.querySelector('#watch-next-meta'),
@@ -30,31 +34,29 @@ let selectedUserName = '';
 let allRecommendations = [];
 let currentPage = 1;
 
-function normalizeToken(value) {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
-
-function normalizeGenres(value) {
-  const source = Array.isArray(value) ? value : [value];
-  const tokens = source
-    .flatMap((item) => String(item || '').split(/[|/,;]+/))
-    .map((item) => normalizeToken(item))
-    .filter(Boolean);
-  return [...new Set(tokens)];
-}
+const SPANISH_MONTHS = {
+  enero: 0,
+  febrero: 1,
+  marzo: 2,
+  abril: 3,
+  mayo: 4,
+  junio: 5,
+  julio: 6,
+  agosto: 7,
+  septiembre: 8,
+  setiembre: 8,
+  octubre: 9,
+  noviembre: 10,
+  diciembre: 11
+};
 
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
   const byTarget = {
-    home: `/${userParam}`,
-    stats: `/stats.html${userParam}`,
-    affinity: `/affinity.html${userParam}`,
-    sync: `/sync.html${userParam}`,
-    watchnext: `/watch-next.html${userParam}`
+    home: `index.html${userParam}`,
+    stats: `stats.html${userParam}`,
+    affinity: `affinity.html${userParam}`,
+    watchnext: `watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {
@@ -79,12 +81,16 @@ function updateQueryString() {
 
 function setStatus(message, isError = false) {
   elements.status.textContent = message;
-  elements.status.style.color = isError ? '#8a1f11' : '';
+  elements.status.style.color = isError ? 'var(--fa-error)' : '';
 }
 
-function buildTrailerEmbedUrl(title, year) {
+function buildTrailerQuery(title, year) {
   const query = [title, year, 'trailer'].filter(Boolean).join(' ');
-  return `/api/youtube-trailer?q=${encodeURIComponent(query)}`;
+  return query;
+}
+
+function buildTrailerApiUrl(title, year) {
+  return `/api/youtube-trailer?q=${encodeURIComponent(buildTrailerQuery(title, year))}`;
 }
 
 async function openTrailerModal(item) {
@@ -103,7 +109,7 @@ async function openTrailerModal(item) {
   elements.trailerModal.focus({ preventScroll: true });
 
   try {
-    const response = await fetch(buildTrailerEmbedUrl(safeTitle, safeYear));
+    const response = await fetch(buildTrailerApiUrl(safeTitle, safeYear));
     const payload = await response.json();
     if (!response.ok || !payload?.embedUrl) {
       throw new Error(payload?.error || 'No se encontró trailer');
@@ -164,6 +170,39 @@ function getYearSortValue(yearText) {
   return match ? Number(match[0]) : Number.NEGATIVE_INFINITY;
 }
 
+function parseFlexibleDate(value) {
+  const text = String(value || '').trim();
+  if (!text) {
+    return null;
+  }
+
+  const direct = new Date(text);
+  if (!Number.isNaN(direct.getTime())) {
+    return direct;
+  }
+
+  const spanishMatch = text
+    .toLowerCase()
+    .match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/i);
+
+  if (!spanishMatch) {
+    return null;
+  }
+
+  const day = Number(spanishMatch[1]);
+  const monthName = spanishMatch[2]
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const year = Number(spanishMatch[3]);
+  const month = SPANISH_MONTHS[monthName];
+
+  if (month === undefined) {
+    return null;
+  }
+
+  return new Date(year, month, day);
+}
+
 function createLoader(message = 'Cargando recomendaciones...') {
   const wrapper = document.createElement('div');
   wrapper.className = 'loading-block';
@@ -185,9 +224,10 @@ function normalizeRecord(record) {
     title: String(record.title || '').trim(),
     year: String(record.year || '').trim(),
     rating: Number.isFinite(Number(record.rating)) ? Number(record.rating) : null,
+    averageRating: Number.isFinite(Number(record.averageRating)) ? Number(record.averageRating) : null,
+    ratedAt: String(record.ratedAt || '').trim(),
     url: String(record.url || '').trim(),
-    posterUrl: String(record.posterUrl || '').trim(),
-    genres: normalizeGenres(record.genres || record.genre || record.generos || record.genero)
+    posterUrl: String(record.posterUrl || '').trim()
   };
 }
 
@@ -318,7 +358,6 @@ function buildRecommendations(activeUserName, librariesByUser) {
           year: peerRecord.year,
           url: peerRecord.url,
           posterUrl: peerRecord.posterUrl,
-          genres: [],
           weightedScore: 0,
           totalWeight: 0,
           supportUsers: [],
@@ -330,11 +369,12 @@ function buildRecommendations(activeUserName, librariesByUser) {
         current.supportUsers.push({
           userName: peerName,
           rating: peerRecord.rating,
+          averageRating: Number.isFinite(peerRecord.averageRating) ? peerRecord.averageRating : null,
+          ratedAt: peerRecord.ratedAt || '',
           overlap: affinity.overlap,
           agreement: affinity.agreement
         });
         current.overlapAvg += affinity.overlap;
-        current.genres = [...new Set([...current.genres, ...(peerRecord.genres || [])])];
 
         candidates.set(key, current);
       });
@@ -347,6 +387,16 @@ function buildRecommendations(activeUserName, librariesByUser) {
       const supportAvgRating = supportCount
         ? item.supportUsers.reduce((sum, support) => sum + support.rating, 0) / supportCount
         : 0;
+      const faValues = item.supportUsers
+        .map((support) => Number(support.averageRating))
+        .filter((value) => Number.isFinite(value));
+      const supportAvgFaRating = faValues.length
+        ? faValues.reduce((sum, value) => sum + value, 0) / faValues.length
+        : null;
+      const mostRecentSupportVoteAt = item.supportUsers
+        .map((support) => parseFlexibleDate(support.ratedAt))
+        .filter(Boolean)
+        .sort((a, b) => b.getTime() - a.getTime())[0] || null;
       const overlapAvg = supportCount ? item.overlapAvg / supportCount : 0;
       const strongestSupport = [...item.supportUsers].sort((a, b) => b.agreement - a.agreement)[0];
       const rankScore = predicted + supportCount * 0.18 + supportAvgRating * 0.02;
@@ -356,6 +406,8 @@ function buildRecommendations(activeUserName, librariesByUser) {
         predicted,
         supportCount,
         supportAvgRating,
+        supportAvgFaRating,
+        mostRecentSupportVoteAt,
         overlapAvg,
         strongestSupport,
         rankScore
@@ -404,36 +456,71 @@ function getFilteredRecommendations() {
   const query = elements.searchInput?.value.trim().toLowerCase() || '';
   const minRating = Number(elements.minRating?.value || 0);
   const selectedYear = elements.yearFilter.value || 'all';
-  const selectedGenre = elements.genreFilter?.value || 'all';
+  const minFaRating = Number(elements.minFaRating?.value || 0);
+  const ratedWindowDays = Number(elements.ratedWindow?.value || 0);
+  const minScore = Number(elements.minScore?.value || 0);
+  const minSupport = Number(elements.minSupport?.value || 1);
+  const minAgreement = Number(elements.minAgreement?.value || 0);
+  const sortBy = String(elements.sortBy?.value || 'rank');
   const sharedOnly = Boolean(elements.sharedOnly?.checked);
+  const now = Date.now();
 
-  return allRecommendations.filter((item) => {
+  const filtered = allRecommendations.filter((item) => {
     const yearMatch = selectedYear === 'all' || String(item.year || '').trim() === selectedYear;
     const titleMatch = !query || String(item.title || '').toLowerCase().includes(query);
     const ratingMatch = !minRating || Number(item.supportAvgRating || 0) >= minRating;
+    const faMatch = !minFaRating || Number(item.supportAvgFaRating || -Infinity) >= minFaRating;
+    const windowMatch =
+      !ratedWindowDays ||
+      (item.mostRecentSupportVoteAt &&
+        now - item.mostRecentSupportVoteAt.getTime() <= ratedWindowDays * 24 * 60 * 60 * 1000);
+    const scoreMatch = !minScore || Number(item.predicted || 0) >= minScore;
+    const supportMatch = Number(item.supportCount || 0) >= minSupport;
+    const agreementMatch =
+      !minAgreement || Number(item.strongestSupport?.agreement || 0) >= minAgreement;
     const sharedMatch = !sharedOnly || Number(item.supportCount || 0) > 1;
-    const genreMatch =
-      selectedGenre === 'all' ||
-      (item.genres || []).some((genre) => normalizeToken(genre) === selectedGenre);
-    return yearMatch && titleMatch && ratingMatch && sharedMatch && genreMatch;
+    return (
+      yearMatch &&
+      titleMatch &&
+      ratingMatch &&
+      faMatch &&
+      windowMatch &&
+      scoreMatch &&
+      supportMatch &&
+      agreementMatch &&
+      sharedMatch
+    );
   });
-}
 
-function updateGenreFilterState(items) {
-  if (!elements.genreFilter) {
-    return;
-  }
+  filtered.sort((a, b) => {
+    if (sortBy === 'score-desc') {
+      return Number(b.predicted || 0) - Number(a.predicted || 0) || a.title.localeCompare(b.title);
+    }
+    if (sortBy === 'support-desc') {
+      return (
+        Number(b.supportCount || 0) - Number(a.supportCount || 0) ||
+        Number(b.predicted || 0) - Number(a.predicted || 0) ||
+        a.title.localeCompare(b.title)
+      );
+    }
+    if (sortBy === 'agreement-desc') {
+      return (
+        Number(b.strongestSupport?.agreement || 0) - Number(a.strongestSupport?.agreement || 0) ||
+        Number(b.predicted || 0) - Number(a.predicted || 0) ||
+        a.title.localeCompare(b.title)
+      );
+    }
+    if (sortBy === 'year-desc') {
+      const yearDiff = getYearSortValue(b.year) - getYearSortValue(a.year);
+      return yearDiff || Number(b.predicted || 0) - Number(a.predicted || 0) || a.title.localeCompare(b.title);
+    }
+    if (sortBy === 'title-asc') {
+      return a.title.localeCompare(b.title);
+    }
+    return Number(b.rankScore || 0) - Number(a.rankScore || 0) || a.title.localeCompare(b.title);
+  });
 
-  const hasGenreData = items.some((item) => Array.isArray(item.genres) && item.genres.length > 0);
-  elements.genreFilter.disabled = !hasGenreData;
-  if (!hasGenreData) {
-    elements.genreFilter.value = 'all';
-  }
-  if (elements.genreHint) {
-    elements.genreHint.textContent = hasGenreData
-      ? ''
-      : 'Este filtro se activará cuando haya géneros en los datos sincronizados.';
-  }
+  return filtered;
 }
 
 function renderPagination(totalResults) {
@@ -502,8 +589,10 @@ function renderRecommendations(items, startRank = 1) {
 
     poster.alt = item.title ? `Poster de ${item.title}` : 'Poster';
     if (item.posterUrl) {
+      posterLink.classList.remove('is-empty');
       setPosterSource(poster, item.posterUrl);
     } else {
+      posterLink.classList.add('is-empty');
       poster.removeAttribute('src');
       poster.style.visibility = 'hidden';
     }
@@ -614,7 +703,6 @@ async function loadRecommendations() {
   allRecommendations = recommendations;
   currentPage = 1;
   updateYearFilterOptions(recommendations);
-  updateGenreFilterState(recommendations);
 
   if (!recommendations.length) {
     setStatus('No se encontraron sugerencias con la señal de afinidad actual.');
@@ -650,8 +738,38 @@ if (elements.minRating) {
     applyYearFilterAndRender();
   });
 }
-if (elements.genreFilter) {
-  elements.genreFilter.addEventListener('change', () => {
+if (elements.minFaRating) {
+  elements.minFaRating.addEventListener('change', () => {
+    currentPage = 1;
+    applyYearFilterAndRender();
+  });
+}
+if (elements.ratedWindow) {
+  elements.ratedWindow.addEventListener('change', () => {
+    currentPage = 1;
+    applyYearFilterAndRender();
+  });
+}
+if (elements.minScore) {
+  elements.minScore.addEventListener('change', () => {
+    currentPage = 1;
+    applyYearFilterAndRender();
+  });
+}
+if (elements.minSupport) {
+  elements.minSupport.addEventListener('change', () => {
+    currentPage = 1;
+    applyYearFilterAndRender();
+  });
+}
+if (elements.minAgreement) {
+  elements.minAgreement.addEventListener('change', () => {
+    currentPage = 1;
+    applyYearFilterAndRender();
+  });
+}
+if (elements.sortBy) {
+  elements.sortBy.addEventListener('change', () => {
     currentPage = 1;
     applyYearFilterAndRender();
   });

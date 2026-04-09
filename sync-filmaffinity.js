@@ -6,27 +6,10 @@ const BASE_URL = 'https://www.filmaffinity.com/es/userratings.php';
 const MAX_PAGES = 200;
 const HEADLESS_WAIT_MS = 3 * 60 * 1000;
 const MANUAL_WAIT_MS = 10 * 60 * 1000;
-const TARGET_GENRE_FILTERS = [
-  { code: 'AC', label: 'Acción' },
-  { code: 'AN', label: 'Animación' },
-  { code: 'AV', label: 'Aventuras' },
-  { code: 'BE', label: 'Bélico' },
-  { code: 'C-F', label: 'Ciencia ficción' },
-  { code: 'F-N', label: 'Cine negro' },
-  { code: 'CO', label: 'Comedia' },
-  { code: 'DESC', label: 'Desconocido' },
-  { code: 'DO', label: 'Documental' },
-  { code: 'DR', label: 'Drama' },
-  { code: 'FAN', label: 'Fantástico' },
-  { code: 'INF', label: 'Infantil' },
-  { code: 'INT', label: 'Intriga' },
-  { code: 'MU', label: 'Musical' },
-  { code: 'RO', label: 'Romance' },
-  { code: 'TV_SE', label: 'Serie de TV' },
-  { code: 'TE', label: 'Terror' },
-  { code: 'TH', label: 'Thriller' },
-  { code: 'WE', label: 'Western' }
-];
+const PAGE_SIZE = 50;
+const PAGE_DELAY_MS = 900;
+const PAGE_DELAY_JITTER_MS = 500;
+const EARLY_STOP_PAGES_WITHOUT_NEW = 2;
 
 const SPANISH_MONTHS = {
   enero: 0,
@@ -46,6 +29,10 @@ const SPANISH_MONTHS = {
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function getPageDelayMs() {
+  return PAGE_DELAY_MS + Math.floor(Math.random() * PAGE_DELAY_JITTER_MS);
 }
 
 function extractUserId(value) {
@@ -231,6 +218,35 @@ function getItemKey(item) {
   return String(item?.url || item?.filmId || item?.title || '').trim();
 }
 
+function normalizeExistingRatingRecord(record) {
+  return {
+    ...record,
+    title: String(record?.title || '').trim(),
+    year: String(record?.year || '').trim(),
+    rating: Number.isFinite(Number(record?.rating)) ? Number(record.rating) : null,
+    averageRating: Number.isFinite(Number(record?.averageRating))
+      ? Number(record.averageRating)
+      : null,
+    ratedAt: String(record?.ratedAt || '').trim(),
+    url: String(record?.url || '').trim(),
+    posterUrl: String(record?.posterUrl || '').trim(),
+    filmId: String(record?.filmId || '').trim()
+  };
+}
+
+function sortRatingsByRecent(records) {
+  return records.sort((a, b) => {
+    const aDate = parseSpanishDate(a?.ratedAt);
+    const bDate = parseSpanishDate(b?.ratedAt);
+    const aTime = aDate ? new Date(aDate).getTime() : 0;
+    const bTime = bDate ? new Date(bDate).getTime() : 0;
+    if (bTime !== aTime) {
+      return bTime - aTime;
+    }
+    return String(a?.title || '').localeCompare(String(b?.title || ''));
+  });
+}
+
 async function dismissCookieBanner(page) {
   const acceptButtons = [
     page.getByRole('button', { name: /acepto/i }),
@@ -411,125 +427,6 @@ async function scrapeCurrentPage(page) {
   }, new Date().toISOString().slice(0, 10));
 }
 
-async function readFilteredCount(page) {
-  return page.evaluate(() => {
-    const text = document.querySelector('.active-filter .count')?.textContent || '';
-    const match = String(text).match(/\d{1,3}(?:[.\s]\d{3})*|\d+/);
-    const normalized = String(match?.[0] || '').replace(/[.\s]/g, '');
-    const value = Number.parseInt(normalized, 10);
-    return Number.isFinite(value) ? value : 0;
-  });
-}
-
-async function ensureRatingsPageIsReady(page, userId, onProgress, allowManualChallengeBypass) {
-  await dismissCookieBanner(page);
-  const challenge = await detectChallenge(page);
-  if (!challenge) {
-    return;
-  }
-
-  onProgress(`Aviso: ${challenge.message}`);
-  if (!allowManualChallengeBypass) {
-    throw new Error(challenge.message);
-  }
-
-  await waitForRatingsPage(page, userId, onProgress, {
-    allowManualChallengeBypass: true,
-    timeoutMs: MANUAL_WAIT_MS
-  });
-}
-
-async function enrichGenresFromFilters(page, userId, items, onProgress, options = {}) {
-  const { allowManualChallengeBypass = false } = options;
-
-  if (!Array.isArray(items) || !items.length) {
-    return;
-  }
-
-  const recordsByKey = new Map();
-  for (const item of items) {
-    const key = getItemKey(item);
-    if (!key) {
-      continue;
-    }
-    recordsByKey.set(key, item);
-  }
-
-  const targetFilters = TARGET_GENRE_FILTERS;
-
-  if (!targetFilters.length) {
-    onProgress('No se han detectado filtros de género compatibles en FilmAffinity.');
-    return;
-  }
-
-  onProgress(
-    `Enriqueciendo géneros (${targetFilters.map((item) => item.label).join(', ')})...`
-  );
-
-  for (const filter of targetFilters) {
-    const seenSignatures = new Set();
-    const filterBy = `genre:${filter.code}`;
-
-    await page.goto(buildRatingsUrl(userId, 1, { filterBy }), {
-      waitUntil: 'domcontentloaded',
-      timeout: 60000
-    });
-    await ensureRatingsPageIsReady(page, userId, onProgress, allowManualChallengeBypass);
-
-    const total = await readFilteredCount(page);
-    if (!total) {
-      continue;
-    }
-
-    onProgress(`Género ${filter.label}: ${total} títulos detectados.`);
-
-    const totalPages = Math.min(MAX_PAGES, Math.max(1, Math.ceil(total / 50)));
-    for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
-      if (pageNumber > 1) {
-        await page.goto(buildRatingsUrl(userId, pageNumber, { filterBy }), {
-          waitUntil: 'domcontentloaded',
-          timeout: 60000
-        });
-        await ensureRatingsPageIsReady(page, userId, onProgress, allowManualChallengeBypass);
-        await page.waitForTimeout(800);
-      }
-
-      const pageItems = (await scrapeCurrentPage(page)).filter((item) => item.title && item.url);
-      if (!pageItems.length) {
-        break;
-      }
-
-      const pageSignature = `${pageItems[0]?.filmId || 'none'}:${pageItems.length}:${pageItems.at(-1)?.filmId || 'none'}`;
-      if (seenSignatures.has(pageSignature)) {
-        break;
-      }
-      seenSignatures.add(pageSignature);
-
-      for (const filteredItem of pageItems) {
-        const key = getItemKey(filteredItem);
-        const target = recordsByKey.get(key);
-        if (!target) {
-          continue;
-        }
-        if (!Array.isArray(target.genres)) {
-          target.genres = [];
-        }
-        if (!target.genres.includes(filter.label)) {
-          target.genres.push(filter.label);
-        }
-      }
-    }
-  }
-
-  for (const item of items) {
-    if (!Array.isArray(item.genres)) {
-      item.genres = [];
-      continue;
-    }
-    item.genres = [...new Set(item.genres)].sort((a, b) => a.localeCompare(b, 'es'));
-  }
-}
-
 async function launchContext(userId, options = {}) {
   const { headless = true } = options;
   const context = await chromium.launchPersistentContext(buildProfileDir(userId), {
@@ -542,11 +439,31 @@ async function launchContext(userId, options = {}) {
 }
 
 async function collectRatings(context, userId, onProgress, options = {}) {
-  const { allowManualChallengeBypass = false } = options;
+  const {
+    allowManualChallengeBypass = false,
+    existingRatings = []
+  } = options;
   const page = context.pages()[0] || (await context.newPage());
-  const items = [];
+  const mergedByKey = new Map();
   const seenKeys = new Set();
   const seenPageSignatures = new Set();
+  const newKeysInThisRun = new Set();
+  const existingKeys = new Set();
+  let pagesWithoutNew = 0;
+
+  for (const existingRecord of existingRatings) {
+    const normalized = normalizeExistingRatingRecord(existingRecord);
+    const key = getItemKey(normalized);
+    if (!key) {
+      continue;
+    }
+    mergedByKey.set(key, normalized);
+    existingKeys.add(key);
+  }
+
+  if (existingKeys.size) {
+    onProgress(`Biblioteca cache detectada: ${existingKeys.size} títulos. Activando sync incremental.`);
+  }
 
   await page.goto(buildRatingsUrl(userId, 1), { waitUntil: 'domcontentloaded', timeout: 60000 });
   await waitForRatingsPage(page, userId, onProgress, {
@@ -562,7 +479,7 @@ async function collectRatings(context, userId, onProgress, options = {}) {
         timeout: 60000
       });
       await dismissCookieBanner(page);
-      await page.waitForTimeout(1200);
+      await page.waitForTimeout(getPageDelayMs());
     }
 
     const challenge = await detectChallenge(page);
@@ -595,31 +512,55 @@ async function collectRatings(context, userId, onProgress, options = {}) {
     }
     seenPageSignatures.add(pageSignature);
 
+    let newOnPage = 0;
     for (const item of pageItems) {
-      const key = item.url || item.filmId || item.title;
+      const key = getItemKey(item);
       if (seenKeys.has(key)) {
         continue;
       }
 
       seenKeys.add(key);
-      items.push(item);
+      const previous = mergedByKey.get(key);
+      mergedByKey.set(key, {
+        ...previous,
+        ...item
+      });
+
+      if (!existingKeys.has(key)) {
+        newOnPage += 1;
+        newKeysInThisRun.add(key);
+      }
+    }
+
+    if (existingKeys.size) {
+      if (newOnPage === 0) {
+        pagesWithoutNew += 1;
+      } else {
+        pagesWithoutNew = 0;
+      }
+
+      if (pagesWithoutNew >= EARLY_STOP_PAGES_WITHOUT_NEW && pageNumber >= 2) {
+        onProgress('No se detectan votos nuevos en páginas recientes. Finalizando sync incremental.');
+        break;
+      }
     }
   }
 
-  await enrichGenresFromFilters(page, userId, items, onProgress, {
-    allowManualChallengeBypass
-  });
+  const mergedItems = sortRatingsByRecent([...mergedByKey.values()]);
+  if (!newKeysInThisRun.size) {
+    onProgress('No hay títulos nuevos. Finalizando sync incremental.');
+  }
 
-  onProgress(`Imported ${items.length} ratings from Filmaffinity.`);
+  onProgress(`Imported ${mergedItems.length} ratings from Filmaffinity.`);
 
   return {
     userId,
-    count: items.length,
-    ratings: items
+    count: mergedItems.length,
+    ratings: mergedItems
   };
 }
 
-async function syncFilmaffinity({ source, onProgress = () => {} }) {
+async function syncFilmaffinity({ source, existingRatings = [], onProgress = () => {} }) {
   const userId = extractUserId(source);
   if (!userId) {
     throw new Error('Enter a valid Filmaffinity user ID or ratings URL.');
@@ -631,7 +572,8 @@ async function syncFilmaffinity({ source, onProgress = () => {} }) {
     onProgress('Opening headless Chrome and connecting to Filmaffinity...');
     context = await launchContext(userId, { headless: true });
     return await collectRatings(context, userId, onProgress, {
-      allowManualChallengeBypass: false
+      allowManualChallengeBypass: false,
+      existingRatings
     });
   } catch (error) {
     const message = String(error?.message || '');
@@ -651,7 +593,8 @@ async function syncFilmaffinity({ source, onProgress = () => {} }) {
 
     context = await launchContext(userId, { headless: false });
     return await collectRatings(context, userId, onProgress, {
-      allowManualChallengeBypass: true
+      allowManualChallengeBypass: true,
+      existingRatings
     });
   } finally {
     if (context) {

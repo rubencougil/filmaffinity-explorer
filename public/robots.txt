@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /
+
+# Extra crawlers
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+User-agent: Yandex
+Disallow: /

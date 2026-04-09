@@ -6,8 +6,9 @@ const elements = {
   searchInput: document.querySelector('#search-input'),
   minRating: document.querySelector('#min-rating'),
   yearFilter: document.querySelector('#year-filter'),
-  genreFilter: document.querySelector('#genre-filter'),
-  genreFilterHint: document.querySelector('#genre-filter-hint'),
+  minFaRating: document.querySelector('#min-fa-rating'),
+  ratedWindow: document.querySelector('#rated-window'),
+  sortBy: document.querySelector('#sort-by'),
   sharedOnly: document.querySelector('#shared-only'),
   userSelector: document.querySelector('#global-user-selector'),
   navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
@@ -47,41 +48,13 @@ let currentPage = 1;
 let configuredUsers = [];
 let selectedUserName = '';
 
-function normalizeToken(value) {
-  return String(value || '')
-    .trim()
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-}
-
-function normalizeGenres(value) {
-  const source = Array.isArray(value) ? value : [value];
-  const tokens = source
-    .flatMap((item) => String(item || '').split(/[|/,;]+/))
-    .map((item) => normalizeToken(item))
-    .filter(Boolean);
-  return [...new Set(tokens)];
-}
-
-function pickRecordGenres(record) {
-  const list = [
-    ...normalizeGenres(record.genres),
-    ...normalizeGenres(record.genre),
-    ...normalizeGenres(record.generos),
-    ...normalizeGenres(record.genero)
-  ];
-  return [...new Set(list)];
-}
-
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
   const byTarget = {
-    home: `/${userParam}`,
-    stats: `/stats.html${userParam}`,
-    affinity: `/affinity.html${userParam}`,
-    sync: `/sync.html${userParam}`,
-    watchnext: `/watch-next.html${userParam}`
+    home: `index.html${userParam}`,
+    stats: `stats.html${userParam}`,
+    affinity: `affinity.html${userParam}`,
+    watchnext: `watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {
@@ -141,7 +114,6 @@ function normalizeRecord(record) {
     ratedAt: String(record.ratedAt || '').trim(),
     url: String(record.url || '').trim(),
     posterUrl: String(record.posterUrl || '').trim(),
-    genres: pickRecordGenres(record),
     otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
   };
 }
@@ -282,7 +254,7 @@ function formatDate(value) {
 
 function setStatus(message, isError = false) {
   elements.importStatus.textContent = message;
-  elements.importStatus.style.color = isError ? '#8a1f11' : '';
+  elements.importStatus.style.color = isError ? 'var(--fa-error)' : '';
 }
 
 function getYearSortValue(yearText) {
@@ -321,9 +293,13 @@ function updateSelectedUserLabel() {
     : '🎬 Votaciones del usuario seleccionado';
 }
 
-function buildTrailerEmbedUrl(title, year) {
+function buildTrailerQuery(title, year) {
   const query = [title, year, 'trailer'].filter(Boolean).join(' ');
-  return `/api/youtube-trailer?q=${encodeURIComponent(query)}`;
+  return query;
+}
+
+function buildTrailerApiUrl(title, year) {
+  return `/api/youtube-trailer?q=${encodeURIComponent(buildTrailerQuery(title, year))}`;
 }
 
 async function openTrailerModal(record) {
@@ -342,7 +318,7 @@ async function openTrailerModal(record) {
   elements.trailerModal.focus({ preventScroll: true });
 
   try {
-    const response = await fetch(buildTrailerEmbedUrl(safeTitle, safeYear));
+    const response = await fetch(buildTrailerApiUrl(safeTitle, safeYear));
     const payload = await response.json();
     if (!response.ok || !payload?.embedUrl) {
       throw new Error(payload?.error || 'No se encontró trailer');
@@ -398,36 +374,6 @@ function initTrailerModal() {
   );
 }
 
-function updateGenreFilterState(records) {
-  if (!elements.genreFilter) {
-    return;
-  }
-
-  const hasGenreData = records.some((record) => Array.isArray(record.genres) && record.genres.length > 0);
-  elements.genreFilter.disabled = !hasGenreData;
-  if (!hasGenreData) {
-    elements.genreFilter.value = 'all';
-  }
-
-  if (elements.genreFilterHint) {
-    elements.genreFilterHint.textContent = hasGenreData
-      ? ''
-      : 'Este filtro se activará cuando el sync guarde géneros.';
-  }
-}
-
-function matchGenre(record, selectedGenre) {
-  if (selectedGenre === 'all') {
-    return true;
-  }
-
-  if (!Array.isArray(record.genres) || !record.genres.length) {
-    return false;
-  }
-
-  return record.genres.some((genre) => normalizeToken(genre) === selectedGenre);
-}
-
 function renderResults(records) {
   elements.results.innerHTML = '';
 
@@ -479,12 +425,13 @@ function renderResults(records) {
     posterLink.appendChild(trailerButton);
 
     if (record.posterUrl) {
+      posterLink.classList.remove('is-empty');
       setPosterSource(poster, record.posterUrl);
     } else {
+      posterLink.classList.add('is-empty');
       poster.removeAttribute('src');
       poster.alt = '';
       poster.style.visibility = 'hidden';
-      posterLink.style.background = 'linear-gradient(180deg, #d7e1eb, #edf2f7)';
     }
 
     if (!record.url) {
@@ -547,17 +494,59 @@ function filterRecords() {
   const query = elements.searchInput.value.trim().toLowerCase();
   const minRating = Number(elements.minRating.value);
   const selectedYear = elements.yearFilter.value || 'all';
-  const selectedGenre = elements.genreFilter ? elements.genreFilter.value || 'all' : 'all';
+  const minFaRating = Number(elements.minFaRating?.value || 0);
+  const ratedWindowDays = Number(elements.ratedWindow?.value || 0);
+  const sortBy = String(elements.sortBy?.value || 'recent');
   const sharedOnly = Boolean(elements.sharedOnly.checked);
+  const now = Date.now();
 
   const filtered = library.filter((record) => {
-    const haystack = `${record.title} ${record.year} ${record.url} ${(record.genres || []).join(' ')}`.toLowerCase();
+    const haystack = `${record.title} ${record.year} ${record.url}`.toLowerCase();
     const queryMatch = !query || haystack.includes(query);
     const ratingMatch = !minRating || (record.rating ?? -Infinity) >= minRating;
     const yearMatch = selectedYear === 'all' || record.year === selectedYear;
-    const genreMatch = matchGenre(record, selectedGenre);
+    const faMatch = !minFaRating || (record.averageRating ?? -Infinity) >= minFaRating;
+    const parsedDate = parseFlexibleDate(record.ratedAt);
+    const windowMatch =
+      !ratedWindowDays ||
+      (parsedDate && now - parsedDate.getTime() <= ratedWindowDays * 24 * 60 * 60 * 1000);
     const sharedMatch = !sharedOnly || record.otherVotes.length > 0;
-    return queryMatch && ratingMatch && yearMatch && genreMatch && sharedMatch;
+    return queryMatch && ratingMatch && yearMatch && faMatch && windowMatch && sharedMatch;
+  });
+
+  filtered.sort((a, b) => {
+    if (sortBy === 'rating-desc') {
+      return (b.rating ?? -Infinity) - (a.rating ?? -Infinity) || a.title.localeCompare(b.title);
+    }
+    if (sortBy === 'rating-asc') {
+      return (a.rating ?? Infinity) - (b.rating ?? Infinity) || a.title.localeCompare(b.title);
+    }
+    if (sortBy === 'fa-desc') {
+      return (
+        (b.averageRating ?? -Infinity) - (a.averageRating ?? -Infinity) ||
+        a.title.localeCompare(b.title)
+      );
+    }
+    if (sortBy === 'fa-asc') {
+      return (
+        (a.averageRating ?? Infinity) - (b.averageRating ?? Infinity) ||
+        a.title.localeCompare(b.title)
+      );
+    }
+    if (sortBy === 'year-desc') {
+      const diff = getYearSortValue(b.year) - getYearSortValue(a.year);
+      return diff || a.title.localeCompare(b.title);
+    }
+    if (sortBy === 'year-asc') {
+      const diff = getYearSortValue(a.year) - getYearSortValue(b.year);
+      return diff || a.title.localeCompare(b.title);
+    }
+    if (sortBy === 'title-asc') {
+      return a.title.localeCompare(b.title);
+    }
+    const aDate = parseFlexibleDate(a.ratedAt);
+    const bDate = parseFlexibleDate(b.ratedAt);
+    return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0) || a.title.localeCompare(b.title);
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -594,7 +583,6 @@ async function loadLibraryForSelectedUser() {
 
   const records = dedupeRecords(payload.ratings || []);
   updateYearFilterOptions(records);
-  updateGenreFilterState(records);
   saveLibrary(records);
 
   const hasAnyPersonalRating = records.some(
@@ -669,8 +657,20 @@ elements.yearFilter.addEventListener('change', () => {
   currentPage = 1;
   render();
 });
-if (elements.genreFilter) {
-  elements.genreFilter.addEventListener('change', () => {
+if (elements.minFaRating) {
+  elements.minFaRating.addEventListener('change', () => {
+    currentPage = 1;
+    render();
+  });
+}
+if (elements.ratedWindow) {
+  elements.ratedWindow.addEventListener('change', () => {
+    currentPage = 1;
+    render();
+  });
+}
+if (elements.sortBy) {
+  elements.sortBy.addEventListener('change', () => {
     currentPage = 1;
     render();
   });

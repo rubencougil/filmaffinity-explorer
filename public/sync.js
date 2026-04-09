@@ -22,11 +22,10 @@ let configuredUsers = [];
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
   const byTarget = {
-    home: `/${userParam}`,
-    stats: `/stats.html${userParam}`,
-    affinity: `/affinity.html${userParam}`,
-    sync: `/sync.html${userParam}`,
-    watchnext: `/watch-next.html${userParam}`
+    home: `index.html${userParam}`,
+    stats: `stats.html${userParam}`,
+    affinity: `affinity.html${userParam}`,
+    watchnext: `watch-next.html${userParam}`
   };
 
   elements.navLinks.forEach((link) => {
@@ -51,7 +50,7 @@ function updateQueryString() {
 
 function setStatus(message, isError = false) {
   elements.importStatus.textContent = message;
-  elements.importStatus.style.color = isError ? '#8a1f11' : '';
+  elements.importStatus.style.color = isError ? 'var(--fa-error)' : '';
 }
 
 function setAccessStatus(message = '', tone = '') {

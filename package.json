@@ -4,7 +4,9 @@
   "private": true,
   "description": "Search your rated Filmaffinity films locally.",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "sync:static": "node scripts/sync-static-data.js",
+    "serve:static": "npx serve public"
   },
   "dependencies": {
     "playwright": "^1.58.2"

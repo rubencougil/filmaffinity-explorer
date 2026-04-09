@@ -1,0 +1,172 @@
+(function () {
+  const CONFIG_PATH = 'data/config.json';
+  const LIBRARIES_PATH = 'data/libraries.json';
+
+  let loaded = null;
+
+  function toUrl(pathname) {
+    return new URL(pathname, window.location.href).toString();
+  }
+
+  async function loadStaticFiles() {
+    if (loaded) {
+      return loaded;
+    }
+
+    loaded = (async () => {
+      const [configRes, librariesRes] = await Promise.all([
+        fetch(toUrl(CONFIG_PATH)),
+        fetch(toUrl(LIBRARIES_PATH))
+      ]);
+
+      if (!configRes.ok) {
+        throw new Error('No se pudo cargar data/config.json');
+      }
+      if (!librariesRes.ok) {
+        throw new Error('No se pudo cargar data/libraries.json');
+      }
+
+      const configPayload = await configRes.json();
+      const librariesPayload = await librariesRes.json();
+      const users = Array.isArray(configPayload?.filmaffinity?.users)
+        ? configPayload.filmaffinity.users
+        : [];
+      const libraries = Array.isArray(librariesPayload?.libraries)
+        ? librariesPayload.libraries
+        : [];
+
+      return {
+        configPayload,
+        librariesPayload,
+        users,
+        libraries,
+        byName: new Map(libraries.map((entry) => [String(entry.userName || '').trim(), entry]))
+      };
+    })();
+
+    return loaded;
+  }
+
+  function createJsonResponse(payload, status) {
+    return Promise.resolve(
+      new Response(JSON.stringify(payload), {
+        status,
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8'
+        }
+      })
+    );
+  }
+
+  function resolveRequestedUser(searchParams, users) {
+    const requestedName = String(searchParams.get('userName') || '').trim();
+    const requestedUserId = String(searchParams.get('userId') || '').trim();
+
+    if (requestedName) {
+      return users.find((user) => String(user.name || '').trim() === requestedName) || null;
+    }
+
+    if (requestedUserId) {
+      return users.find((user) => String(user.userId || '').trim() === requestedUserId) || null;
+    }
+
+    return users[0] || null;
+  }
+
+  function buildLibraryResponse(selectedUser, state, users, byName) {
+    const selectedName = String(selectedUser?.name || '').trim();
+    const ratings = (state?.ratings || []).map((rating) => {
+      const key = String(rating.url || rating.title || '').trim();
+      const otherVotes = users
+        .filter((user) => String(user.name || '').trim() !== selectedName)
+        .map((user) => {
+          const otherState = byName.get(String(user.name || '').trim());
+          const match = (otherState?.ratings || []).find(
+            (item) => String(item.url || item.title || '').trim() === key
+          );
+
+          if (!match || !Number.isFinite(Number(match.rating))) {
+            return null;
+          }
+
+          return {
+            userName: user.name,
+            rating: Number(match.rating),
+            ratedAt: String(match.ratedAt || '').trim()
+          };
+        })
+        .filter(Boolean);
+
+      return {
+        ...rating,
+        otherVotes
+      };
+    });
+
+    return {
+      userName: selectedUser.name,
+      userId: selectedUser.userId,
+      ratings,
+      count: ratings.length,
+      status: state?.status || 'completed',
+      error: state?.error || null,
+      lastSyncedAt: state?.lastSyncedAt || null,
+      job: null
+    };
+  }
+
+  async function handleStaticApi(urlObj) {
+    const staticData = await loadStaticFiles();
+
+    if (urlObj.pathname.endsWith('/api/config')) {
+      return createJsonResponse(staticData.configPayload, 200);
+    }
+
+    if (urlObj.pathname.endsWith('/api/library')) {
+      const selectedUser = resolveRequestedUser(urlObj.searchParams, staticData.users);
+      if (!selectedUser) {
+        return createJsonResponse({ error: 'User not found' }, 404);
+      }
+
+      const state =
+        staticData.byName.get(String(selectedUser.name || '').trim()) ||
+        {
+          userName: selectedUser.name,
+          userId: selectedUser.userId,
+          ratings: [],
+          count: 0,
+          status: 'idle',
+          error: null,
+          lastSyncedAt: null
+        };
+
+      return createJsonResponse(
+        buildLibraryResponse(selectedUser, state, staticData.users, staticData.byName),
+        200
+      );
+    }
+
+    return null;
+  }
+
+  const originalFetch = window.fetch.bind(window);
+
+  window.fetch = async function patchedFetch(input, init) {
+    const requestUrl =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.toString()
+          : String(input && input.url ? input.url : '');
+
+    if (requestUrl.includes('/api/config') || requestUrl.includes('/api/library')) {
+      const urlObj = new URL(requestUrl, window.location.href);
+      const response = await handleStaticApi(urlObj);
+      if (response) {
+        return response;
+      }
+    }
+
+    return originalFetch(input, init);
+  };
+})();
