@@ -168,13 +168,25 @@
 
     if (urlObj.pathname.endsWith('/api/youtube-trailer')) {
       const q = String(urlObj.searchParams.get('q') || '').trim();
-      const embedUrl = q
-        ? `https://www.youtube-nocookie.com/embed?listType=search&list=${encodeURIComponent(q)}&autoplay=1&rel=0`
-        : null;
-      if (!embedUrl) {
+      if (!q) {
         return createJsonResponse({ error: 'Missing query' }, 400);
       }
-      return createJsonResponse({ query: q, embedUrl }, 200);
+
+      const apiKey = String(staticData.configPayload?.youtubeApiKey || '').trim();
+      if (!apiKey) {
+        return createJsonResponse({ error: 'No YouTube API key configured' }, 503);
+      }
+
+      const ytUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(q)}&type=video&maxResults=1&key=${encodeURIComponent(apiKey)}`;
+      const ytResponse = await originalFetch(ytUrl);
+      const ytData = await ytResponse.json();
+      const videoId = ytData?.items?.[0]?.id?.videoId;
+      if (!videoId) {
+        return createJsonResponse({ error: 'No trailer found' }, 404);
+      }
+
+      const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+      return createJsonResponse({ query: q, videoId, embedUrl }, 200);
     }
 
     return null;

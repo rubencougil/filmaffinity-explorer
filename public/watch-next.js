@@ -112,6 +112,16 @@ async function openTrailerModal(item) {
     const response = await fetch(buildTrailerApiUrl(safeTitle, safeYear));
     const payload = await response.json();
 
+    if (response.status === 503) {
+      closeTrailerModal();
+      window.open(
+        `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+      return;
+    }
+
     if (!response.ok || !payload?.embedUrl) {
       throw new Error(payload?.error || 'No se encontró trailer');
     }
