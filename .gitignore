@@ -10,6 +10,9 @@ config.json
 # User scraped libraries / personal data
 data/libraries/*.json
 
+# Copilot session files
+copilot-session-*.md
+
 # Logs / misc
 *.log
 .DS_Store
