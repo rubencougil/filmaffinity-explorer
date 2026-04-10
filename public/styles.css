@@ -690,6 +690,22 @@ h2 {
   align-items: start;
 }
 
+/* Search always visible: sits in the sidebar column above the filters panel */
+.search-always-visible {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.library-layout > .filter-sidebar {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.library-layout > section {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
 .sync-layout {
   width: min(820px, 100%);
 }
@@ -2884,6 +2900,11 @@ html[data-theme='dark'] .agreement-list-title-good {
     display: flex;
     flex-direction: column;
     gap: 14px;
+  }
+
+  .search-always-visible {
+    order: 0;
+    width: 100%;
   }
 
   .mobile-filter-toggle {
