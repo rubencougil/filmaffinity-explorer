@@ -46,6 +46,10 @@
             </div>
           </div>
 
+          <button id="mobile-filter-toggle" class="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filter-sidebar">
+            <span class="mobile-filter-toggle-label">🔧 Mostrar filtros</span>
+          </button>
+
           <p id="watch-next-status" class="status-text"></p>
           <div id="watch-next-meta" class="results-meta"></div>
           <div id="watch-next-results" class="watch-next-grid"></div>
@@ -56,7 +60,7 @@
           </div>
         </section>
 
-        <aside class="panel filter-sidebar" aria-label="Filtros recomendaciones">
+        <aside id="filter-sidebar" class="panel filter-sidebar" aria-label="Filtros recomendaciones">
           <div class="panel-header sidebar-header">
             <div>
               <p class="panel-kicker">Filtros</p>

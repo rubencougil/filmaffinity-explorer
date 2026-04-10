@@ -643,3 +643,16 @@ async function boot() {
 }
 
 boot();
+
+(function initMobileFilterToggle() {
+  const toggle = document.getElementById('mobile-filter-toggle');
+  const sidebar = document.getElementById('filter-sidebar');
+  if (!toggle || !sidebar) return;
+  toggle.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.querySelector('.mobile-filter-toggle-label').textContent = isOpen
+      ? '✕ Ocultar filtros'
+      : '🔧 Mostrar filtros';
+  });
+}());

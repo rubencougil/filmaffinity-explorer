@@ -2680,3 +2680,166 @@ html[data-theme='dark'] .affinity-list-block {
 html[data-theme='dark'] .agreement-list-title-good {
   color: #9fd8b9;
 }
+
+/* ─── Mobile filter toggle button ─── */
+.mobile-filter-toggle {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  /* Show the toggle button and hide sidebar by default on mobile */
+  .mobile-filter-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 14px;
+    padding: 10px 16px;
+    border: 1px dashed var(--fa-line-strong);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #f5f9fd, #edf4f9);
+    color: var(--fa-link);
+    font-weight: 700;
+    font-size: 0.93rem;
+    box-shadow: none;
+  }
+
+  .mobile-filter-toggle:hover {
+    background: linear-gradient(180deg, #edf4f9, #e3eef6);
+    transform: none;
+    filter: none;
+  }
+
+  html[data-theme='dark'] .mobile-filter-toggle {
+    border-color: #3a404c;
+    background: linear-gradient(180deg, #1a1e28, #14181f);
+    color: #b8c8e0;
+  }
+
+  /* Hide sidebar by default; show when toggled open */
+  .filter-sidebar {
+    display: none;
+  }
+
+  .filter-sidebar.is-open {
+    display: block;
+  }
+
+  /* ─── Watch-next cards: horizontal layout on mobile ─── */
+  .watch-next-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .watch-next-card {
+    display: grid;
+    grid-template-columns: 100px minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-items: stretch;
+  }
+
+  .watch-next-poster-link {
+    aspect-ratio: auto;
+    height: 100%;
+    border-right: 1px solid var(--fa-line);
+    border-bottom: 0;
+    border-radius: 0;
+    min-height: 150px;
+  }
+
+  .watch-next-poster {
+    min-height: 150px;
+  }
+
+  .watch-next-body {
+    padding: 10px 12px;
+    gap: 5px;
+  }
+
+  .watch-next-title {
+    font-size: 0.93rem;
+  }
+
+  .watch-next-rationale {
+    font-size: 0.78rem;
+  }
+
+  /* ─── Topbar: more compact on mobile ─── */
+  .topbar-inner {
+    padding: 8px 0;
+    gap: 8px;
+  }
+
+  .brand-mark {
+    font-size: 1.45rem;
+  }
+
+  .top-links {
+    gap: 4px;
+  }
+
+  .top-links a {
+    padding: 8px 6px;
+    font-size: 0.83rem;
+    border-radius: 10px;
+  }
+
+  /* ─── Controls row: side by side ─── */
+  .topbar-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .topbar-user-field {
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .theme-toggle,
+  .topbar-user-field select {
+    width: 100%;
+    min-height: 40px;
+  }
+
+  /* ─── Panel padding tighter ─── */
+  .panel {
+    padding: 12px;
+  }
+
+  /* ─── Pagination: centered ─── */
+  .pagination {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Nav links: compact with just emoji + short label */
+  .top-links {
+    gap: 3px;
+  }
+
+  .top-links a {
+    flex-basis: calc(50% - 4px);
+    padding: 8px 4px;
+    font-size: 0.8rem;
+  }
+
+  /* Controls: single column on very small screens */
+  .topbar-controls {
+    grid-template-columns: 1fr;
+  }
+
+  /* Watch-next card: slightly narrower poster */
+  .watch-next-card {
+    grid-template-columns: 84px minmax(0, 1fr);
+  }
+
+  .watch-next-poster-link,
+  .watch-next-poster {
+    min-height: 128px;
+  }
+}

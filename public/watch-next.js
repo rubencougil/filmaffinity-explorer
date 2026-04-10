@@ -723,7 +723,6 @@ elements.nextPage.addEventListener('click', () => {
 });
 
 async function boot() {
-  initTrailerModal();
   await loadConfig();
   if (!selectedUserName) {
     setStatus('Falta configurar usuarios en config.json.', true);
@@ -735,3 +734,16 @@ async function boot() {
 boot().catch((error) => {
   setStatus(error.message || 'Error inicializando la página Qué ver.', true);
 });
+
+(function initMobileFilterToggle() {
+  const toggle = document.getElementById('mobile-filter-toggle');
+  const sidebar = document.getElementById('filter-sidebar');
+  if (!toggle || !sidebar) return;
+  toggle.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.querySelector('.mobile-filter-toggle-label').textContent = isOpen
+      ? '✕ Ocultar filtros'
+      : '🔧 Mostrar filtros';
+  });
+}());
