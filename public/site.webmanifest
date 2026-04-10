@@ -1,0 +1,20 @@
+{
+  "name": "FilmAffinity Explorer",
+  "short_name": "FA Explorer",
+  "description": "Explora, filtra y organiza todas tus valoraciones de FilmAffinity.",
+  "start_url": "/filmaffinity-explorer/",
+  "scope": "/filmaffinity-explorer/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "background_color": "#1f2733",
+  "theme_color": "#1f2733",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
