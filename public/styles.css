@@ -690,20 +690,20 @@ h2 {
   align-items: start;
 }
 
-/* Search always visible: sits in the sidebar column above the filters panel */
-.search-always-visible {
+/* Sidebar column: sticky wrapper for search + filters */
+.sidebar-column {
   grid-column: 2;
   grid-row: 1;
-}
-
-.library-layout > .filter-sidebar {
-  grid-column: 2;
-  grid-row: 2;
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .library-layout > section {
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1;
 }
 
 .sync-layout {
@@ -2900,6 +2900,11 @@ html[data-theme='dark'] .agreement-list-title-good {
     display: flex;
     flex-direction: column;
     gap: 14px;
+  }
+
+  /* Unwrap the sidebar-column so children participate directly in the flex layout */
+  .sidebar-column {
+    display: contents;
   }
 
   .search-always-visible {
