@@ -17,7 +17,13 @@
           <a class="brand-mark" href="index.html">FilmAffinity Explorer</a>
         </div>
 
-        <nav class="top-links" aria-label="Primary">
+        <button class="hamburger-button" id="nav-menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="top-nav">
+          <span class="hamburger-icon" aria-hidden="true"></span>
+          <span class="hamburger-icon" aria-hidden="true"></span>
+          <span class="hamburger-icon" aria-hidden="true"></span>
+        </button>
+
+        <nav class="top-links" id="top-nav" aria-label="Primary">
           <a class="is-active" data-nav-target="home" href="index.html">🎬 Biblioteca</a>
           <a data-nav-target="watchnext" href="watch-next.html">🍿 Qué ver</a>
           <a data-nav-target="affinity" href="affinity.html">🤝 Afinidad</a>
@@ -30,6 +36,7 @@
             <span class="theme-toggle-text">Claro</span>
           </button>
           <label class="field topbar-user-field">
+            <span class="user-selector-label">👤 Usuario</span>
             <select id="global-user-selector"></select>
           </label>
         </div>
@@ -38,6 +45,10 @@
 
     <div class="page-shell">
       <main class="layout library-layout">
+        <button id="mobile-filter-toggle" class="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filter-sidebar">
+          <span class="mobile-filter-toggle-label">🔧 Mostrar filtros</span>
+        </button>
+
         <section id="results-section" class="panel search-panel">
           <div class="panel-header">
             <div>
@@ -45,10 +56,6 @@
               <h2 id="results-title">Votaciones del usuario seleccionado</h2>
             </div>
           </div>
-
-          <button id="mobile-filter-toggle" class="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filter-sidebar">
-            <span class="mobile-filter-toggle-label">🔧 Mostrar filtros</span>
-          </button>
 
           <div class="browse-user-bar">
             <p id="import-status" class="status-text browse-status"></p>

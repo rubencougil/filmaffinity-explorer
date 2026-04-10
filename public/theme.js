@@ -81,9 +81,40 @@
   const initialTheme = applyTheme(getActiveTheme());
   saveTheme(initialTheme);
 
+  function setupHamburger() {
+    const button = document.getElementById('nav-menu-toggle');
+    const nav = document.getElementById('top-nav');
+    if (!button || !nav) return;
+
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = nav.classList.toggle('is-open');
+      button.setAttribute('aria-expanded', String(isOpen));
+      button.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
+    });
+
+    nav.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        nav.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-label', 'Abrir menú');
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!button.contains(e.target) && !nav.contains(e.target)) {
+        nav.classList.remove('is-open');
+        button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-label', 'Abrir menú');
+      }
+    });
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupThemeToggle, { once: true });
+    document.addEventListener('DOMContentLoaded', setupHamburger, { once: true });
   } else {
     setupThemeToggle();
+    setupHamburger();
   }
 })();

@@ -17,7 +17,13 @@
           <a class="brand-mark" href="index.html">FilmAffinity Explorer</a>
         </div>
 
-        <nav class="top-links" aria-label="Primary">
+        <button class="hamburger-button" id="nav-menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="top-nav">
+          <span class="hamburger-icon" aria-hidden="true"></span>
+          <span class="hamburger-icon" aria-hidden="true"></span>
+          <span class="hamburger-icon" aria-hidden="true"></span>
+        </button>
+
+        <nav class="top-links" id="top-nav" aria-label="Primary">
           <a data-nav-target="home" href="index.html">🎬 Biblioteca</a>
           <a data-nav-target="watchnext" href="watch-next.html">🍿 Qué ver</a>
           <a data-nav-target="affinity" href="affinity.html">🤝 Afinidad</a>
@@ -30,6 +36,7 @@
             <span class="theme-toggle-text">Claro</span>
           </button>
           <label class="field topbar-user-field">
+            <span class="user-selector-label">👤 Usuario</span>
             <select id="global-user-selector"></select>
           </label>
         </div>
