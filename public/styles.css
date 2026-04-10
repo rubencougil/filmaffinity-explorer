@@ -2920,6 +2920,9 @@ html[data-theme='dark'] .agreement-list-title-good {
   .filter-sidebar {
     order: 2;
     display: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .filter-sidebar.is-open {
