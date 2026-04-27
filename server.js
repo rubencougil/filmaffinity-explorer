@@ -1,9 +1,9 @@
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const { randomUUID } = require('crypto');
 const { syncFilmaffinity, checkFilmaffinityAccess } = require('./sync-filmaffinity');
+const { resolveYoutubeTrailer } = require('./trailer-resolver');
 
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '127.0.0.1';
@@ -53,57 +53,6 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-function fetchRemoteText(url, redirectsLeft = 4) {
-  return new Promise((resolve, reject) => {
-    const req = https.get(
-      url,
-      {
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-          'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8'
-        }
-      },
-      (res) => {
-        const location = res.headers.location;
-        const code = Number(res.statusCode || 0);
-        if (location && code >= 300 && code < 400 && redirectsLeft > 0) {
-          const nextUrl = new URL(location, url).toString();
-          resolve(fetchRemoteText(nextUrl, redirectsLeft - 1));
-          return;
-        }
-
-        let body = '';
-        res.on('data', (chunk) => {
-          body += chunk;
-        });
-        res.on('end', () => {
-          resolve({
-            statusCode: code,
-            body
-          });
-        });
-      }
-    );
-
-    req.on('error', reject);
-  });
-}
-
-function extractYoutubeVideoId(searchHtml) {
-  const ids = [];
-  const matcher = /"videoId":"([a-zA-Z0-9_-]{11})"/g;
-  let match = matcher.exec(searchHtml);
-  while (match) {
-    const candidate = String(match[1] || '').trim();
-    if (candidate && !ids.includes(candidate)) {
-      ids.push(candidate);
-    }
-    match = matcher.exec(searchHtml);
-  }
-  return ids[0] || '';
-}
-
 async function handleGetYoutubeTrailer(req, res, reqUrl) {
   const url = new URL(reqUrl, `http://${HOST}:${PORT}`);
   const query = String(url.searchParams.get('q') || '').trim().slice(0, 180);
@@ -114,23 +63,16 @@ async function handleGetYoutubeTrailer(req, res, reqUrl) {
   }
 
   try {
-    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-    const result = await fetchRemoteText(searchUrl);
-    if (result.statusCode >= 400 || !result.body) {
-      sendJson(res, 502, { error: 'Failed to reach YouTube search' });
-      return;
-    }
-
-    const videoId = extractYoutubeVideoId(result.body);
-    if (!videoId) {
+    const trailer = await resolveYoutubeTrailer({ query });
+    if (!trailer) {
       sendJson(res, 404, { error: 'No trailer found' });
       return;
     }
 
     sendJson(res, 200, {
       query,
-      videoId,
-      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`
+      videoId: trailer.videoId,
+      embedUrl: trailer.embedUrl
     });
   } catch (error) {
     sendJson(res, 500, { error: 'Could not resolve trailer video' });
