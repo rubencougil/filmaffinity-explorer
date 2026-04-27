@@ -1,10 +1,106 @@
 {
-  "generatedAt": "2026-04-09T15:17:54.616Z",
+  "generatedAt": "2026-04-27T13:49:19.803Z",
   "libraries": [
     {
       "userName": "R.C.",
       "userId": "297627",
       "ratings": [
+        {
+          "filmId": "240424",
+          "title": "Proyecto Salvación",
+          "year": "2026",
+          "rating": 7,
+          "averageRating": 7.4,
+          "ratedAtRaw": "votada 26 de abril de 2026",
+          "ratedAt": "2026-04-26",
+          "url": "https://www.filmaffinity.com/es/film240424.html",
+          "posterUrl": "https://pics.filmaffinity.com/project_hail_mary-366657509-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "624827",
+          "title": "Chernobyl",
+          "year": "2019",
+          "rating": 9,
+          "averageRating": 8.5,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film624827.html",
+          "posterUrl": "https://pics.filmaffinity.com/chernobyl-183665235-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "893369",
+          "title": "Coco",
+          "year": "2017",
+          "rating": 6,
+          "averageRating": 8,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film893369.html",
+          "posterUrl": "https://pics.filmaffinity.com/coco-155051069-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "688371",
+          "title": "Cristal Oscuro: La era de la resistencia",
+          "year": "2019",
+          "rating": 9,
+          "averageRating": 7.8,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film688371.html",
+          "posterUrl": "https://pics.filmaffinity.com/the_dark_crystal_age_of_resistance-820151854-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "721411",
+          "title": "El Gordo y el Flaco (Stan & Ollie)",
+          "year": "2018",
+          "rating": 7,
+          "averageRating": 6.5,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film721411.html",
+          "posterUrl": "https://pics.filmaffinity.com/stan_ollie-707076202-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "427424",
+          "title": "El hoyo",
+          "year": "2019",
+          "rating": 7,
+          "averageRating": 6.4,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film427424.html",
+          "posterUrl": "https://pics.filmaffinity.com/el_hoyo-987825598-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "868058",
+          "title": "Hamnet",
+          "year": "2025",
+          "rating": 4,
+          "averageRating": 7.3,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film868058.html",
+          "posterUrl": "https://pics.filmaffinity.com/hamnet-574491706-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "879405",
+          "title": "La casa de papel",
+          "year": "2017",
+          "rating": 6,
+          "averageRating": 6.9,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film879405.html",
+          "posterUrl": "https://pics.filmaffinity.com/la_casa_de_papel-844739080-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
         {
           "filmId": "330158",
           "title": "Predator: Badlands",
@@ -15,7 +111,7 @@
           "ratedAt": "2026-04-07",
           "url": "https://www.filmaffinity.com/es/film330158.html",
           "posterUrl": "https://pics.filmaffinity.com/predator_badlands-767428270-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -28,7 +124,7 @@
           "ratedAt": "2026-04-06",
           "url": "https://www.filmaffinity.com/es/film990902.html",
           "posterUrl": "https://pics.filmaffinity.com/sing-887137050-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -41,7 +137,7 @@
           "ratedAt": "2026-03-31",
           "url": "https://www.filmaffinity.com/es/film448131.html",
           "posterUrl": "https://pics.filmaffinity.com/elio-639250511-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -54,7 +150,7 @@
           "ratedAt": "2026-03-27",
           "url": "https://www.filmaffinity.com/es/film537467.html",
           "posterUrl": "https://pics.filmaffinity.com/send_help-969900958-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -67,7 +163,7 @@
           "ratedAt": "2026-03-23",
           "url": "https://www.filmaffinity.com/es/film150426.html",
           "posterUrl": "https://pics.filmaffinity.com/hoppers-343289386-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -75,12 +171,12 @@
           "title": "Buena suerte, pásalo bien, no mueras",
           "year": "2025",
           "rating": 6,
-          "averageRating": 6.1,
+          "averageRating": 6.4,
           "ratedAtRaw": "votada 15 de marzo de 2026",
           "ratedAt": "2026-03-15",
           "url": "https://www.filmaffinity.com/es/film739731.html",
           "posterUrl": "https://pics.filmaffinity.com/good_luck_have_fun_don_t_die-220634482-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -93,7 +189,7 @@
           "ratedAt": "2026-03-14",
           "url": "https://www.filmaffinity.com/es/film524192.html",
           "posterUrl": "https://pics.filmaffinity.com/it_s_never_over_jeff_buckley-585323757-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -106,7 +202,7 @@
           "ratedAt": "2026-03-13",
           "url": "https://www.filmaffinity.com/es/film526210.html",
           "posterUrl": "https://pics.filmaffinity.com/keeper-414081978-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -121,7 +217,7 @@
           "ratedAt": "2026-03-03",
           "url": "https://www.filmaffinity.com/es/film951144.html",
           "posterUrl": "https://pics.filmaffinity.com/ozzy_no_escape_from_now-580318513-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -134,7 +230,7 @@
           "ratedAt": "2026-03-02",
           "url": "https://www.filmaffinity.com/es/film534045.html",
           "posterUrl": "https://pics.filmaffinity.com/return_to_silent_hill-741390468-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -149,7 +245,7 @@
           "ratedAt": "2026-02-24",
           "url": "https://www.filmaffinity.com/es/film728310.html",
           "posterUrl": "https://pics.filmaffinity.com/gatillero-860682233-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -162,7 +258,7 @@
           "ratedAt": "2026-02-19",
           "url": "https://www.filmaffinity.com/es/film836464.html",
           "posterUrl": "https://pics.filmaffinity.com/28_years_later_the_bone_temple-579428600-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -177,7 +273,7 @@
           "ratedAt": "2026-02-18",
           "url": "https://www.filmaffinity.com/es/film827752.html",
           "posterUrl": "https://pics.filmaffinity.com/train_dreams-481420493-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -191,8 +287,8 @@
           "ratedAtRaw": "votada 17 de febrero de 2026",
           "ratedAt": "2026-02-17",
           "url": "https://www.filmaffinity.com/es/film871528.html",
-          "posterUrl": "https://pics.filmaffinity.com/the_life_of_chuck-937210700-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "posterUrl": "https://pics.filmaffinity.com/the_life_of_chuck-392244387-large.jpg",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -207,7 +303,7 @@
           "ratedAt": "2026-02-12",
           "url": "https://www.filmaffinity.com/es/film380589.html",
           "posterUrl": "https://pics.filmaffinity.com/marty_supreme-556909146-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -222,7 +318,7 @@
           "ratedAt": "2026-02-09",
           "url": "https://www.filmaffinity.com/es/film964057.html",
           "posterUrl": "https://pics.filmaffinity.com/bugonia-602321624-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -235,7 +331,7 @@
           "ratedAt": "2026-02-09",
           "url": "https://www.filmaffinity.com/es/film582441.html",
           "posterUrl": "https://pics.filmaffinity.com/it_ends-934643189-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -250,7 +346,7 @@
           "ratedAt": "2026-02-05",
           "url": "https://www.filmaffinity.com/es/film935703.html",
           "posterUrl": "https://pics.filmaffinity.com/f1_the_movie-603739796-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción",
             "Drama"
@@ -266,7 +362,7 @@
           "ratedAt": "2025-12-09",
           "url": "https://www.filmaffinity.com/es/film268115.html",
           "posterUrl": "https://pics.filmaffinity.com/it_welcome_to_derry-327973676-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -281,7 +377,7 @@
           "ratedAt": "2025-12-06",
           "url": "https://www.filmaffinity.com/es/film360206.html",
           "posterUrl": "https://pics.filmaffinity.com/the_perfect_neighbor-204114464-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -294,7 +390,7 @@
           "ratedAt": "2025-12-05",
           "url": "https://www.filmaffinity.com/es/film776004.html",
           "posterUrl": "https://pics.filmaffinity.com/entrepreneurs-838980879-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -307,7 +403,7 @@
           "ratedAt": "2025-12-04",
           "url": "https://www.filmaffinity.com/es/film780154.html",
           "posterUrl": "https://pics.filmaffinity.com/sirat-867910558-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -322,7 +418,7 @@
           "ratedAt": "2025-12-04",
           "url": "https://www.filmaffinity.com/es/film910030.html",
           "posterUrl": "https://pics.filmaffinity.com/one_battle_after_another-992235034-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción",
             "Drama"
@@ -338,7 +434,7 @@
           "ratedAt": "2025-12-04",
           "url": "https://www.filmaffinity.com/es/film469874.html",
           "posterUrl": "https://pics.filmaffinity.com/a_house_of_dynamite-564920029-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -353,7 +449,7 @@
           "ratedAt": "2025-12-02",
           "url": "https://www.filmaffinity.com/es/film257097.html",
           "posterUrl": "https://pics.filmaffinity.com/tron_ares-548031766-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -368,7 +464,7 @@
           "ratedAt": "2025-11-15",
           "url": "https://www.filmaffinity.com/es/film231576.html",
           "posterUrl": "https://pics.filmaffinity.com/frankenstein-244825237-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama",
             "Terror"
@@ -384,7 +480,7 @@
           "ratedAt": "2025-11-13",
           "url": "https://www.filmaffinity.com/es/film328932.html",
           "posterUrl": "https://pics.filmaffinity.com/bone_lake-992781914-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -399,7 +495,7 @@
           "ratedAt": "2025-10-28",
           "url": "https://www.filmaffinity.com/es/film783828.html",
           "posterUrl": "https://pics.filmaffinity.com/the_long_walk-633814112-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -414,7 +510,7 @@
           "ratedAt": "2025-10-25",
           "url": "https://www.filmaffinity.com/es/film905016.html",
           "posterUrl": "https://pics.filmaffinity.com/good_boy-840537395-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -424,12 +520,12 @@
           "title": "Shell",
           "year": "2024",
           "rating": 2,
-          "averageRating": 4.5,
+          "averageRating": 4.4,
           "ratedAtRaw": "votada 21 de octubre de 2025",
           "ratedAt": "2025-10-21",
           "url": "https://www.filmaffinity.com/es/film918733.html",
           "posterUrl": "https://pics.filmaffinity.com/shell-991467816-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -444,7 +540,7 @@
           "ratedAt": "2025-10-16",
           "url": "https://www.filmaffinity.com/es/film723265.html",
           "posterUrl": "https://pics.filmaffinity.com/vicious-799999558-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -454,12 +550,12 @@
           "title": "El mejor",
           "year": "2025",
           "rating": 8,
-          "averageRating": 4.9,
+          "averageRating": 4.8,
           "ratedAtRaw": "votada 14 de octubre de 2025",
           "ratedAt": "2025-10-14",
           "url": "https://www.filmaffinity.com/es/film388152.html",
           "posterUrl": "https://pics.filmaffinity.com/him-500005653-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -474,7 +570,7 @@
           "ratedAt": "2025-10-13",
           "url": "https://www.filmaffinity.com/es/film268707.html",
           "posterUrl": "https://pics.filmaffinity.com/the_conjuring_last_rites-547210494-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -484,12 +580,12 @@
           "title": "La hermanastra fea",
           "year": "2025",
           "rating": 7,
-          "averageRating": 6.6,
+          "averageRating": 6.5,
           "ratedAtRaw": "votada 9 de octubre de 2025",
           "ratedAt": "2025-10-09",
           "url": "https://www.filmaffinity.com/es/film288125.html",
           "posterUrl": "https://pics.filmaffinity.com/den_stygge_stesosteren-297950674-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -499,12 +595,12 @@
           "title": "El vengador tóxico",
           "year": "2023",
           "rating": 6,
-          "averageRating": 5.1,
+          "averageRating": 5,
           "ratedAtRaw": "votada 8 de octubre de 2025",
           "ratedAt": "2025-10-08",
           "url": "https://www.filmaffinity.com/es/film537798.html",
           "posterUrl": "https://pics.filmaffinity.com/the_toxic_avenger-971770227-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -519,7 +615,7 @@
           "ratedAt": "2025-10-08",
           "url": "https://www.filmaffinity.com/es/film351457.html",
           "posterUrl": "https://pics.filmaffinity.com/v_h_s_halloween-960789893-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -534,7 +630,7 @@
           "ratedAt": "2025-09-30",
           "url": "https://www.filmaffinity.com/es/film258335.html",
           "posterUrl": "https://pics.filmaffinity.com/caught_stealing-477693290-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -547,7 +643,7 @@
           "ratedAt": "2025-09-25",
           "url": "https://www.filmaffinity.com/es/film770311.html",
           "posterUrl": "https://pics.filmaffinity.com/alien_earth-704746568-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -562,7 +658,7 @@
           "ratedAt": "2025-09-20",
           "url": "https://www.filmaffinity.com/es/film113810.html",
           "posterUrl": "https://pics.filmaffinity.com/solo_a_star_wars_story-540929627-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -575,7 +671,7 @@
           "ratedAt": "2025-09-18",
           "url": "https://www.filmaffinity.com/es/film502224.html",
           "posterUrl": "https://pics.filmaffinity.com/the_rule_of_jenny_pen-993002020-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -590,7 +686,7 @@
           "ratedAt": "2025-09-13",
           "url": "https://www.filmaffinity.com/es/film612876.html",
           "posterUrl": "https://pics.filmaffinity.com/the_naked_gun-495738280-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -605,7 +701,7 @@
           "ratedAt": "2025-09-13",
           "url": "https://www.filmaffinity.com/es/film809089.html",
           "posterUrl": "https://pics.filmaffinity.com/weapons-367021125-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -620,7 +716,7 @@
           "ratedAt": "2025-09-12",
           "url": "https://www.filmaffinity.com/es/film323354.html",
           "posterUrl": "https://pics.filmaffinity.com/nobody_2-447990543-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -635,7 +731,7 @@
           "ratedAt": "2025-09-11",
           "url": "https://www.filmaffinity.com/es/film580001.html",
           "posterUrl": "https://pics.filmaffinity.com/lilo_stitch-929032428-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -648,7 +744,7 @@
           "ratedAt": "2025-09-06",
           "url": "https://www.filmaffinity.com/es/film637729.html",
           "posterUrl": "https://pics.filmaffinity.com/zootopia-155827662-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -661,7 +757,7 @@
           "ratedAt": "2025-09-05",
           "url": "https://www.filmaffinity.com/es/film153316.html",
           "posterUrl": "https://pics.filmaffinity.com/andor-324362036-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -676,7 +772,7 @@
           "ratedAt": "2025-09-05",
           "url": "https://www.filmaffinity.com/es/film983718.html",
           "posterUrl": "https://pics.filmaffinity.com/obi_wan_kenobi-628833571-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -689,7 +785,7 @@
           "ratedAt": "2025-09-03",
           "url": "https://www.filmaffinity.com/es/film600350.html",
           "posterUrl": "https://pics.filmaffinity.com/ahsoka-572593600-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -704,7 +800,7 @@
           "ratedAt": "2025-09-02",
           "url": "https://www.filmaffinity.com/es/film453678.html",
           "posterUrl": "https://pics.filmaffinity.com/mars_express-470031272-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -714,12 +810,12 @@
           "title": "Together",
           "year": "2025",
           "rating": 7,
-          "averageRating": 6.3,
+          "averageRating": 6.2,
           "ratedAtRaw": "votada 2 de septiembre de 2025",
           "ratedAt": "2025-09-02",
           "url": "https://www.filmaffinity.com/es/film781511.html",
           "posterUrl": "https://pics.filmaffinity.com/together-857321260-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -734,7 +830,7 @@
           "ratedAt": "2025-09-01",
           "url": "https://www.filmaffinity.com/es/film309408.html",
           "posterUrl": "https://pics.filmaffinity.com/eddington-392142970-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -749,7 +845,7 @@
           "ratedAt": "2025-08-31",
           "url": "https://www.filmaffinity.com/es/film133372.html",
           "posterUrl": "https://pics.filmaffinity.com/the_book_of_boba_fett-736176382-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -762,7 +858,7 @@
           "ratedAt": "2025-08-29",
           "url": "https://www.filmaffinity.com/es/film366379.html",
           "posterUrl": "https://pics.filmaffinity.com/the_bad_guys_2-780518548-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -775,7 +871,7 @@
           "ratedAt": "2025-08-27",
           "url": "https://www.filmaffinity.com/es/film986085.html",
           "posterUrl": "https://pics.filmaffinity.com/star_wars_skeleton_crew-219637605-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -788,7 +884,7 @@
           "ratedAt": "2025-08-27",
           "url": "https://www.filmaffinity.com/es/film544948.html",
           "posterUrl": "https://pics.filmaffinity.com/the_mandalorian-299892082-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -803,7 +899,7 @@
           "ratedAt": "2025-08-27",
           "url": "https://www.filmaffinity.com/es/film806435.html",
           "posterUrl": "https://pics.filmaffinity.com/the_mandalorian_2-903747371-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -818,7 +914,7 @@
           "ratedAt": "2025-08-27",
           "url": "https://www.filmaffinity.com/es/film404042.html",
           "posterUrl": "https://pics.filmaffinity.com/the_mandalorian_3-118237548-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -833,7 +929,7 @@
           "ratedAt": "2025-08-19",
           "url": "https://www.filmaffinity.com/es/film822264.html",
           "posterUrl": "https://pics.filmaffinity.com/the_muppet_movie-344030912-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -846,7 +942,7 @@
           "ratedAt": "2025-08-18",
           "url": "https://www.filmaffinity.com/es/film368588.html",
           "posterUrl": "https://pics.filmaffinity.com/muppets_most_wanted-101471990-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -859,7 +955,7 @@
           "ratedAt": "2025-08-18",
           "url": "https://www.filmaffinity.com/es/film202595.html",
           "posterUrl": "https://pics.filmaffinity.com/the_muppets-380853491-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -872,7 +968,7 @@
           "ratedAt": "2025-08-17",
           "url": "https://www.filmaffinity.com/es/film222361.html",
           "posterUrl": "https://pics.filmaffinity.com/black_mirror_common_people-852985529-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -887,7 +983,7 @@
           "ratedAt": "2025-08-10",
           "url": "https://www.filmaffinity.com/es/film132739.html",
           "posterUrl": "https://pics.filmaffinity.com/sorda-343879663-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -902,7 +998,7 @@
           "ratedAt": "2025-08-04",
           "url": "https://www.filmaffinity.com/es/film439023.html",
           "posterUrl": "https://pics.filmaffinity.com/the_bad_guys-974887202-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -915,7 +1011,7 @@
           "ratedAt": "2025-07-31",
           "url": "https://www.filmaffinity.com/es/film751338.html",
           "posterUrl": "https://pics.filmaffinity.com/28_years_later-958240308-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -930,7 +1026,7 @@
           "ratedAt": "2025-07-16",
           "url": "https://www.filmaffinity.com/es/film951830.html",
           "posterUrl": "https://pics.filmaffinity.com/m3gan_2_0-744288322-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -945,7 +1041,7 @@
           "ratedAt": "2025-07-14",
           "url": "https://www.filmaffinity.com/es/film775531.html",
           "posterUrl": "https://pics.filmaffinity.com/luca-907827591-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -958,7 +1054,7 @@
           "ratedAt": "2025-07-14",
           "url": "https://www.filmaffinity.com/es/film179841.html",
           "posterUrl": "https://pics.filmaffinity.com/the_surfer-255497121-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -971,7 +1067,7 @@
           "ratedAt": "2025-07-07",
           "url": "https://www.filmaffinity.com/es/film959573.html",
           "posterUrl": "https://pics.filmaffinity.com/trainspotting-196178076-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -986,7 +1082,7 @@
           "ratedAt": "2025-07-06",
           "url": "https://www.filmaffinity.com/es/film147840.html",
           "posterUrl": "https://pics.filmaffinity.com/it_feeds-586155624-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1001,7 +1097,7 @@
           "ratedAt": "2025-07-04",
           "url": "https://www.filmaffinity.com/es/film724805.html",
           "posterUrl": "https://pics.filmaffinity.com/the_surrender-944292364-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1016,7 +1112,7 @@
           "ratedAt": "2025-07-03",
           "url": "https://www.filmaffinity.com/es/film102649.html",
           "posterUrl": "https://pics.filmaffinity.com/bring_her_back-516362359-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1031,7 +1127,7 @@
           "ratedAt": "2025-07-01",
           "url": "https://www.filmaffinity.com/es/film888120.html",
           "posterUrl": "https://pics.filmaffinity.com/baby_reindeer-582365873-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama",
             "Terror"
@@ -1047,7 +1143,7 @@
           "ratedAt": "2025-07-01",
           "url": "https://www.filmaffinity.com/es/film579097.html",
           "posterUrl": "https://pics.filmaffinity.com/until_dawn-880447124-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1062,7 +1158,7 @@
           "ratedAt": "2025-06-30",
           "url": "https://www.filmaffinity.com/es/film699169.html",
           "posterUrl": "https://pics.filmaffinity.com/sinners-306242848-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1077,7 +1173,7 @@
           "ratedAt": "2025-06-26",
           "url": "https://www.filmaffinity.com/es/film853173.html",
           "posterUrl": "https://pics.filmaffinity.com/final_destination_bloodlines-790034090-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1092,7 +1188,7 @@
           "ratedAt": "2025-06-15",
           "url": "https://www.filmaffinity.com/es/film801174.html",
           "posterUrl": "https://pics.filmaffinity.com/aftersun-852065058-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1107,7 +1203,7 @@
           "ratedAt": "2025-05-20",
           "url": "https://www.filmaffinity.com/es/film187189.html",
           "posterUrl": "https://pics.filmaffinity.com/the_legend_of_ochi-133720079-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1120,7 +1216,7 @@
           "ratedAt": "2025-05-09",
           "url": "https://www.filmaffinity.com/es/film574437.html",
           "posterUrl": "https://pics.filmaffinity.com/slingshot-647800503-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1133,7 +1229,7 @@
           "ratedAt": "2025-05-08",
           "url": "https://www.filmaffinity.com/es/film431234.html",
           "posterUrl": "https://pics.filmaffinity.com/warfare-534208810-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1148,7 +1244,7 @@
           "ratedAt": "2025-05-07",
           "url": "https://www.filmaffinity.com/es/film895021.html",
           "posterUrl": "https://pics.filmaffinity.com/locked-266571024-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1163,7 +1259,7 @@
           "ratedAt": "2025-04-26",
           "url": "https://www.filmaffinity.com/es/film588077.html",
           "posterUrl": "https://pics.filmaffinity.com/ash-296434606-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1178,7 +1274,7 @@
           "ratedAt": "2025-04-19",
           "url": "https://www.filmaffinity.com/es/film642287.html",
           "posterUrl": "https://pics.filmaffinity.com/wyrmwood-233776737-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1193,7 +1289,7 @@
           "ratedAt": "2025-04-16",
           "url": "https://www.filmaffinity.com/es/film511558.html",
           "posterUrl": "https://pics.filmaffinity.com/us-208891193-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1208,7 +1304,7 @@
           "ratedAt": "2025-04-16",
           "url": "https://www.filmaffinity.com/es/film740216.html",
           "posterUrl": "https://pics.filmaffinity.com/tu_no_ets_jo-283160289-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1223,7 +1319,7 @@
           "ratedAt": "2025-04-15",
           "url": "https://www.filmaffinity.com/es/film868861.html",
           "posterUrl": "https://pics.filmaffinity.com/the_woman_in_the_yard-851840893-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1236,7 +1332,7 @@
           "ratedAt": "2025-04-11",
           "url": "https://www.filmaffinity.com/es/film224957.html",
           "posterUrl": "https://pics.filmaffinity.com/novocaine-275478915-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -1251,7 +1347,7 @@
           "ratedAt": "2025-04-10",
           "url": "https://www.filmaffinity.com/es/film466389.html",
           "posterUrl": "https://pics.filmaffinity.com/mickey_17-530854063-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1264,7 +1360,7 @@
           "ratedAt": "2025-03-24",
           "url": "https://www.filmaffinity.com/es/film247371.html",
           "posterUrl": "https://pics.filmaffinity.com/the_monkey-625593145-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1279,7 +1375,7 @@
           "ratedAt": "2025-03-23",
           "url": "https://www.filmaffinity.com/es/film241711.html",
           "posterUrl": "https://pics.filmaffinity.com/severance-462105884-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1294,7 +1390,7 @@
           "ratedAt": "2025-03-21",
           "url": "https://www.filmaffinity.com/es/film541444.html",
           "posterUrl": "https://pics.filmaffinity.com/adolescence-497490057-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1309,7 +1405,7 @@
           "ratedAt": "2025-03-11",
           "url": "https://www.filmaffinity.com/es/film713191.html",
           "posterUrl": "https://pics.filmaffinity.com/possession-842936802-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1324,7 +1420,7 @@
           "ratedAt": "2025-03-06",
           "url": "https://www.filmaffinity.com/es/film447582.html",
           "posterUrl": "https://pics.filmaffinity.com/the_front_room-124240033-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1339,7 +1435,7 @@
           "ratedAt": "2025-02-27",
           "url": "https://www.filmaffinity.com/es/film376898.html",
           "posterUrl": "https://pics.filmaffinity.com/presence-358240836-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1354,7 +1450,7 @@
           "ratedAt": "2025-02-22",
           "url": "https://www.filmaffinity.com/es/film796514.html",
           "posterUrl": "https://pics.filmaffinity.com/companion-438784716-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1367,7 +1463,7 @@
           "ratedAt": "2025-02-22",
           "url": "https://www.filmaffinity.com/es/film840798.html",
           "posterUrl": "https://pics.filmaffinity.com/the_brutalist-339944470-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1382,7 +1478,7 @@
           "ratedAt": "2025-02-14",
           "url": "https://www.filmaffinity.com/es/film435185.html",
           "posterUrl": "https://pics.filmaffinity.com/the_gorge-451269831-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción",
             "Terror"
@@ -1398,7 +1494,7 @@
           "ratedAt": "2025-02-14",
           "url": "https://www.filmaffinity.com/es/film438112.html",
           "posterUrl": "https://pics.filmaffinity.com/the_rubber_keyed_wonder-873480077-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1406,12 +1502,12 @@
           "title": "Salve María",
           "year": "2024",
           "rating": 7,
-          "averageRating": 6.4,
+          "averageRating": 6.3,
           "ratedAtRaw": "votada 12 de febrero de 2025",
           "ratedAt": "2025-02-12",
           "url": "https://www.filmaffinity.com/es/film663680.html",
           "posterUrl": "https://pics.filmaffinity.com/salve_maria-805523701-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1426,7 +1522,7 @@
           "ratedAt": "2025-02-11",
           "url": "https://www.filmaffinity.com/es/film615890.html",
           "posterUrl": "https://pics.filmaffinity.com/better_man-620220109-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1441,7 +1537,7 @@
           "ratedAt": "2025-02-11",
           "url": "https://www.filmaffinity.com/es/film464557.html",
           "posterUrl": "https://pics.filmaffinity.com/parthenope-795912387-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1456,7 +1552,7 @@
           "ratedAt": "2025-02-10",
           "url": "https://www.filmaffinity.com/es/film306627.html",
           "posterUrl": "https://pics.filmaffinity.com/vermines-479048413-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1471,7 +1567,7 @@
           "ratedAt": "2025-02-09",
           "url": "https://www.filmaffinity.com/es/film572473.html",
           "posterUrl": "https://pics.filmaffinity.com/moana-802273424-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1484,7 +1580,7 @@
           "ratedAt": "2025-02-09",
           "url": "https://www.filmaffinity.com/es/film962021.html",
           "posterUrl": "https://pics.filmaffinity.com/moana_2-581593866-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1497,7 +1593,7 @@
           "ratedAt": "2025-02-08",
           "url": "https://www.filmaffinity.com/es/film351606.html",
           "posterUrl": "https://pics.filmaffinity.com/la_estrella_azul-666029724-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1512,7 +1608,7 @@
           "ratedAt": "2025-02-07",
           "url": "https://www.filmaffinity.com/es/film349020.html",
           "posterUrl": "https://pics.filmaffinity.com/revenge-714645133-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1525,7 +1621,7 @@
           "ratedAt": "2025-01-28",
           "url": "https://www.filmaffinity.com/es/film775563.html",
           "posterUrl": "https://pics.filmaffinity.com/juror_2-506872185-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1540,7 +1636,7 @@
           "ratedAt": "2025-01-25",
           "url": "https://www.filmaffinity.com/es/film375352.html",
           "posterUrl": "https://pics.filmaffinity.com/cuando_acecha_la_maldad-702811959-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1555,7 +1651,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film900570.html",
           "posterUrl": "https://pics.filmaffinity.com/american_primeval-436860640-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1568,7 +1664,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film779702.html",
           "posterUrl": "https://pics.filmaffinity.com/nosferatu-964410519-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1578,12 +1674,12 @@
           "title": "Mr. Crocket",
           "year": "2024",
           "rating": 3,
-          "averageRating": 4.9,
+          "averageRating": 4.8,
           "ratedAtRaw": "votada 19 de enero de 2025",
           "ratedAt": "2025-01-19",
           "url": "https://www.filmaffinity.com/es/film479403.html",
           "posterUrl": "https://pics.filmaffinity.com/mr_crocket-792395175-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1598,7 +1694,7 @@
           "ratedAt": "2025-01-18",
           "url": "https://www.filmaffinity.com/es/film480439.html",
           "posterUrl": "https://pics.filmaffinity.com/a_real_pain-779197366-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1613,7 +1709,7 @@
           "ratedAt": "2025-01-17",
           "url": "https://www.filmaffinity.com/es/film599419.html",
           "posterUrl": "https://pics.filmaffinity.com/midsommar-578791309-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama",
             "Terror"
@@ -1629,7 +1725,7 @@
           "ratedAt": "2025-01-16",
           "url": "https://www.filmaffinity.com/es/film203373.html",
           "posterUrl": "https://pics.filmaffinity.com/destroy_all_neighbors-451733014-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1644,7 +1740,7 @@
           "ratedAt": "2025-01-16",
           "url": "https://www.filmaffinity.com/es/film429924.html",
           "posterUrl": "https://pics.filmaffinity.com/anora-968355846-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1659,7 +1755,7 @@
           "ratedAt": "2025-01-15",
           "url": "https://www.filmaffinity.com/es/film651337.html",
           "posterUrl": "https://pics.filmaffinity.com/el_47-838476618-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1674,7 +1770,7 @@
           "ratedAt": "2025-01-15",
           "url": "https://www.filmaffinity.com/es/film213768.html",
           "posterUrl": "https://pics.filmaffinity.com/maria-737620340-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1689,7 +1785,7 @@
           "ratedAt": "2025-01-01",
           "url": "https://www.filmaffinity.com/es/film888733.html",
           "posterUrl": "https://pics.filmaffinity.com/cuckoo-573651530-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1704,7 +1800,7 @@
           "ratedAt": "2024-12-31",
           "url": "https://www.filmaffinity.com/es/film996289.html",
           "posterUrl": "https://pics.filmaffinity.com/nightbitch-440879611-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1719,7 +1815,7 @@
           "ratedAt": "2024-12-24",
           "url": "https://www.filmaffinity.com/es/film594164.html",
           "posterUrl": "https://pics.filmaffinity.com/pajaros-640647961-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1734,7 +1830,7 @@
           "ratedAt": "2024-12-23",
           "url": "https://www.filmaffinity.com/es/film981636.html",
           "posterUrl": "https://pics.filmaffinity.com/don_t_move-752654470-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1749,7 +1845,7 @@
           "ratedAt": "2024-12-22",
           "url": "https://www.filmaffinity.com/es/film671326.html",
           "posterUrl": "https://pics.filmaffinity.com/emilia_perez-892423644-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1764,7 +1860,7 @@
           "ratedAt": "2024-12-22",
           "url": "https://www.filmaffinity.com/es/film397878.html",
           "posterUrl": "https://pics.filmaffinity.com/the_creator-470808400-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1779,7 +1875,7 @@
           "ratedAt": "2024-12-20",
           "url": "https://www.filmaffinity.com/es/film532415.html",
           "posterUrl": "https://pics.filmaffinity.com/exhuma-177352283-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1794,7 +1890,7 @@
           "ratedAt": "2024-12-19",
           "url": "https://www.filmaffinity.com/es/film316461.html",
           "posterUrl": "https://pics.filmaffinity.com/in_search_of_darkness_part_iii-189385993-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1809,7 +1905,7 @@
           "ratedAt": "2024-12-14",
           "url": "https://www.filmaffinity.com/es/film938223.html",
           "posterUrl": "https://pics.filmaffinity.com/revolting_rhymes-638271575-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1822,7 +1918,7 @@
           "ratedAt": "2024-12-12",
           "url": "https://www.filmaffinity.com/es/film744837.html",
           "posterUrl": "https://pics.filmaffinity.com/heretic-158529513-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1837,7 +1933,7 @@
           "ratedAt": "2024-12-10",
           "url": "https://www.filmaffinity.com/es/film810860.html",
           "posterUrl": "https://pics.filmaffinity.com/the_terror-608007091-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1850,7 +1946,7 @@
           "ratedAt": "2024-12-01",
           "url": "https://www.filmaffinity.com/es/film110095.html",
           "posterUrl": "https://pics.filmaffinity.com/caddo_lake-701459212-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1863,7 +1959,7 @@
           "ratedAt": "2024-11-22",
           "url": "https://www.filmaffinity.com/es/film367157.html",
           "posterUrl": "https://pics.filmaffinity.com/la_espera-812969950-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1878,7 +1974,7 @@
           "ratedAt": "2024-11-21",
           "url": "https://www.filmaffinity.com/es/film714669.html",
           "posterUrl": "https://pics.filmaffinity.com/smile_2-891902080-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1893,7 +1989,7 @@
           "ratedAt": "2024-11-15",
           "url": "https://www.filmaffinity.com/es/film444733.html",
           "posterUrl": "https://pics.filmaffinity.com/megalopolis-214910381-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1908,7 +2004,7 @@
           "ratedAt": "2024-11-11",
           "url": "https://www.filmaffinity.com/es/film630860.html",
           "posterUrl": "https://pics.filmaffinity.com/joker_folie_a_deux-920647444-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1923,7 +2019,7 @@
           "ratedAt": "2024-11-09",
           "url": "https://www.filmaffinity.com/es/film248862.html",
           "posterUrl": "https://pics.filmaffinity.com/a_different_man-322920270-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1936,7 +2032,7 @@
           "ratedAt": "2024-11-08",
           "url": "https://www.filmaffinity.com/es/film304830.html",
           "posterUrl": "https://pics.filmaffinity.com/casa_en_flames-236384741-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -1951,7 +2047,7 @@
           "ratedAt": "2024-11-05",
           "url": "https://www.filmaffinity.com/es/film262298.html",
           "posterUrl": "https://pics.filmaffinity.com/syk_pike-284404282-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -1964,7 +2060,7 @@
           "ratedAt": "2024-11-04",
           "url": "https://www.filmaffinity.com/es/film392363.html",
           "posterUrl": "https://pics.filmaffinity.com/stopmotion-295124549-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -1979,7 +2075,7 @@
           "ratedAt": "2024-10-31",
           "url": "https://www.filmaffinity.com/es/film485650.html",
           "posterUrl": "https://pics.filmaffinity.com/apocalipsis_z_el_principio_del_fin-657548553-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción",
             "Terror"
@@ -1995,7 +2091,7 @@
           "ratedAt": "2024-10-29",
           "url": "https://www.filmaffinity.com/es/film809297.html",
           "posterUrl": "https://pics.filmaffinity.com/the_godfather-488102675-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Drama"
           ]
@@ -2010,7 +2106,7 @@
           "ratedAt": "2024-10-29",
           "url": "https://www.filmaffinity.com/es/film905083.html",
           "posterUrl": "https://pics.filmaffinity.com/mads-453988625-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -2025,7 +2121,7 @@
           "ratedAt": "2024-10-28",
           "url": "https://www.filmaffinity.com/es/film329799.html",
           "posterUrl": "https://pics.filmaffinity.com/transformers_one-329708311-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Acción"
           ]
@@ -2040,7 +2136,7 @@
           "ratedAt": "2024-10-25",
           "url": "https://www.filmaffinity.com/es/film257164.html",
           "posterUrl": "https://pics.filmaffinity.com/terrifier_3-141451507-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -2055,7 +2151,7 @@
           "ratedAt": "2024-10-21",
           "url": "https://www.filmaffinity.com/es/film106098.html",
           "posterUrl": "https://pics.filmaffinity.com/the_texas_chainsaw_massacre-849377622-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": [
             "Terror"
           ]
@@ -13998,15 +14094,99 @@
           ]
         }
       ],
-      "count": 962,
+      "count": 970,
       "status": "completed",
       "error": null,
-      "lastSyncedAt": "2026-04-09T15:12:01.328Z"
+      "lastSyncedAt": "2026-04-27T13:49:31.373Z"
     },
     {
       "userName": "J.A.",
       "userId": "602754",
       "ratings": [
+        {
+          "filmId": "694341",
+          "title": "Time",
+          "year": "2006",
+          "rating": 4,
+          "averageRating": 6.9,
+          "ratedAtRaw": "votada 21 de abril de 2026",
+          "ratedAt": "2026-04-21",
+          "url": "https://www.filmaffinity.com/es/film694341.html",
+          "posterUrl": "https://pics.filmaffinity.com/shi_gan_time-326653682-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "781511",
+          "title": "Together",
+          "year": "2025",
+          "rating": 4,
+          "averageRating": 6.2,
+          "ratedAtRaw": "votada 17 de abril de 2026",
+          "ratedAt": "2026-04-17",
+          "url": "https://www.filmaffinity.com/es/film781511.html",
+          "posterUrl": "https://pics.filmaffinity.com/together-857321260-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "960118",
+          "title": "Ruta de escape",
+          "year": "2026",
+          "rating": 3,
+          "averageRating": 6.3,
+          "ratedAtRaw": "votada 16 de abril de 2026",
+          "ratedAt": "2026-04-16",
+          "url": "https://www.filmaffinity.com/es/film960118.html",
+          "posterUrl": "https://pics.filmaffinity.com/crime_101-127743661-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "438253",
+          "title": "Al otro lado de la ley",
+          "year": "2018",
+          "rating": 6,
+          "averageRating": 6.6,
+          "ratedAtRaw": "votada 13 de abril de 2026",
+          "ratedAt": "2026-04-13",
+          "url": "https://www.filmaffinity.com/es/film438253.html",
+          "posterUrl": "https://pics.filmaffinity.com/dragged_across_concrete-847129491-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "317239",
+          "title": "Fascinación",
+          "year": "1976",
+          "rating": 3,
+          "averageRating": 6.6,
+          "ratedAtRaw": "votada 10 de abril de 2026",
+          "ratedAt": "2026-04-10",
+          "url": "https://www.filmaffinity.com/es/film317239.html",
+          "posterUrl": "https://pics.filmaffinity.com/obsession-982397800-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "399287",
+          "title": "Robot Dreams",
+          "year": "2023",
+          "rating": 4,
+          "averageRating": 7,
+          "ratedAtRaw": "votada 10 de abril de 2026",
+          "ratedAt": "2026-04-10",
+          "url": "https://www.filmaffinity.com/es/film399287.html",
+          "posterUrl": "https://pics.filmaffinity.com/robot_dreams-321433099-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
+        {
+          "filmId": "681301",
+          "title": "Doble cuerpo",
+          "year": "1984",
+          "rating": 4,
+          "averageRating": 6.4,
+          "ratedAtRaw": "votada 9 de abril de 2026",
+          "ratedAt": "2026-04-09",
+          "url": "https://www.filmaffinity.com/es/film681301.html",
+          "posterUrl": "https://pics.filmaffinity.com/body_double-740605610-large.jpg",
+          "scrapedAt": "2026-04-27"
+        },
         {
           "filmId": "155414",
           "title": "La propuesta",
@@ -14017,7 +14197,7 @@
           "ratedAt": "2026-04-08",
           "url": "https://www.filmaffinity.com/es/film155414.html",
           "posterUrl": "https://pics.filmaffinity.com/the_proposition-777885969-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14030,7 +14210,7 @@
           "ratedAt": "2026-04-05",
           "url": "https://www.filmaffinity.com/es/film338734.html",
           "posterUrl": "https://pics.filmaffinity.com/bringing_out_the_dead-421218901-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14043,7 +14223,7 @@
           "ratedAt": "2026-04-04",
           "url": "https://www.filmaffinity.com/es/film970587.html",
           "posterUrl": "https://pics.filmaffinity.com/killers_of_the_flower_moon-211527208-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14056,7 +14236,7 @@
           "ratedAt": "2026-03-31",
           "url": "https://www.filmaffinity.com/es/film868058.html",
           "posterUrl": "https://pics.filmaffinity.com/hamnet-574491706-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14069,7 +14249,7 @@
           "ratedAt": "2026-03-30",
           "url": "https://www.filmaffinity.com/es/film463404.html",
           "posterUrl": "https://pics.filmaffinity.com/unicorn_wars-146899499-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14082,7 +14262,7 @@
           "ratedAt": "2026-03-28",
           "url": "https://www.filmaffinity.com/es/film167753.html",
           "posterUrl": "https://pics.filmaffinity.com/maria_llena_eres_de_gracia_maria_full_of_grace-276212336-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14095,7 +14275,7 @@
           "ratedAt": "2026-03-26",
           "url": "https://www.filmaffinity.com/es/film532248.html",
           "posterUrl": "https://pics.filmaffinity.com/sawt_al_hind_rajab-681972916-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14108,7 +14288,7 @@
           "ratedAt": "2026-03-26",
           "url": "https://www.filmaffinity.com/es/film967835.html",
           "posterUrl": "https://pics.filmaffinity.com/lakposhta_parvaz_mikonand-835940653-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14121,7 +14301,7 @@
           "ratedAt": "2026-03-25",
           "url": "https://www.filmaffinity.com/es/film843847.html",
           "posterUrl": "https://pics.filmaffinity.com/wadjda-198857857-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14134,7 +14314,7 @@
           "ratedAt": "2026-03-22",
           "url": "https://www.filmaffinity.com/es/film675688.html",
           "posterUrl": "https://pics.filmaffinity.com/near_dark-469630958-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14147,7 +14327,7 @@
           "ratedAt": "2026-03-22",
           "url": "https://www.filmaffinity.com/es/film754614.html",
           "posterUrl": "https://pics.filmaffinity.com/angst_essen_seele_auf-698802048-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14160,7 +14340,7 @@
           "ratedAt": "2026-03-20",
           "url": "https://www.filmaffinity.com/es/film584711.html",
           "posterUrl": "https://pics.filmaffinity.com/carol-180515019-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14173,7 +14353,7 @@
           "ratedAt": "2026-03-18",
           "url": "https://www.filmaffinity.com/es/film138981.html",
           "posterUrl": "https://pics.filmaffinity.com/the_autopsy_of_jane_doe-741055330-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14186,7 +14366,7 @@
           "ratedAt": "2026-03-18",
           "url": "https://www.filmaffinity.com/es/film801711.html",
           "posterUrl": "https://pics.filmaffinity.com/moartea_domnului_lazarescu_the_death_of_mr_lazarescu-819341778-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14199,7 +14379,7 @@
           "ratedAt": "2026-03-16",
           "url": "https://www.filmaffinity.com/es/film431727.html",
           "posterUrl": "https://pics.filmaffinity.com/the_assassination_of_jesse_james_by_the_coward_robert_ford-743401674-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14212,7 +14392,7 @@
           "ratedAt": "2026-03-14",
           "url": "https://www.filmaffinity.com/es/film651829.html",
           "posterUrl": "https://pics.filmaffinity.com/kyua-352244529-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14225,7 +14405,7 @@
           "ratedAt": "2026-03-13",
           "url": "https://www.filmaffinity.com/es/film991024.html",
           "posterUrl": "https://pics.filmaffinity.com/gwoemul_the_host-345579735-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14238,7 +14418,7 @@
           "ratedAt": "2026-03-12",
           "url": "https://www.filmaffinity.com/es/film206354.html",
           "posterUrl": "https://pics.filmaffinity.com/tar-530526120-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14251,7 +14431,7 @@
           "ratedAt": "2026-03-08",
           "url": "https://www.filmaffinity.com/es/film431873.html",
           "posterUrl": "https://pics.filmaffinity.com/frailty-890433563-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14264,7 +14444,7 @@
           "ratedAt": "2026-03-07",
           "url": "https://www.filmaffinity.com/es/film697248.html",
           "posterUrl": "https://pics.filmaffinity.com/saul_fia_son_of_saul-315763275-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14277,7 +14457,7 @@
           "ratedAt": "2026-03-02",
           "url": "https://www.filmaffinity.com/es/film678742.html",
           "posterUrl": "https://pics.filmaffinity.com/pigen_med_nalen-156798592-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14290,7 +14470,7 @@
           "ratedAt": "2026-03-02",
           "url": "https://www.filmaffinity.com/es/film201853.html",
           "posterUrl": "https://pics.filmaffinity.com/c_e_ancora_domani-411246444-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14303,7 +14483,7 @@
           "ratedAt": "2026-02-28",
           "url": "https://www.filmaffinity.com/es/film294674.html",
           "posterUrl": "https://pics.filmaffinity.com/the_pursuit_of_happyness-660040804-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14316,7 +14496,7 @@
           "ratedAt": "2026-02-28",
           "url": "https://www.filmaffinity.com/es/film962795.html",
           "posterUrl": "https://pics.filmaffinity.com/good_time-619780548-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14329,7 +14509,7 @@
           "ratedAt": "2026-02-26",
           "url": "https://www.filmaffinity.com/es/film150729.html",
           "posterUrl": "https://pics.filmaffinity.com/detroit-529725804-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14342,7 +14522,7 @@
           "ratedAt": "2026-02-26",
           "url": "https://www.filmaffinity.com/es/film380589.html",
           "posterUrl": "https://pics.filmaffinity.com/marty_supreme-556909146-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14355,7 +14535,7 @@
           "ratedAt": "2026-02-25",
           "url": "https://www.filmaffinity.com/es/film961277.html",
           "posterUrl": "https://pics.filmaffinity.com/zero_dark_thirty-566142690-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14368,7 +14548,7 @@
           "ratedAt": "2026-02-25",
           "url": "https://www.filmaffinity.com/es/film844684.html",
           "posterUrl": "https://pics.filmaffinity.com/jubei_ninpucho-639733571-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14381,7 +14561,7 @@
           "ratedAt": "2026-02-23",
           "url": "https://www.filmaffinity.com/es/film802772.html",
           "posterUrl": "https://pics.filmaffinity.com/judas_and_the_black_messiah-912646266-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14394,7 +14574,7 @@
           "ratedAt": "2026-02-22",
           "url": "https://www.filmaffinity.com/es/film836464.html",
           "posterUrl": "https://pics.filmaffinity.com/28_years_later_the_bone_temple-579428600-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14402,12 +14582,12 @@
           "title": "La hermanastra fea",
           "year": "2025",
           "rating": 6,
-          "averageRating": 6.6,
+          "averageRating": 6.5,
           "ratedAtRaw": "votada 22 de febrero de 2026",
           "ratedAt": "2026-02-22",
           "url": "https://www.filmaffinity.com/es/film288125.html",
           "posterUrl": "https://pics.filmaffinity.com/den_stygge_stesosteren-297950674-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14420,7 +14600,7 @@
           "ratedAt": "2026-02-20",
           "url": "https://www.filmaffinity.com/es/film552118.html",
           "posterUrl": "https://pics.filmaffinity.com/predator_killer_of_killers-661445207-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14433,7 +14613,7 @@
           "ratedAt": "2026-02-19",
           "url": "https://www.filmaffinity.com/es/film584053.html",
           "posterUrl": "https://pics.filmaffinity.com/invictus-582873614-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14446,7 +14626,7 @@
           "ratedAt": "2026-02-19",
           "url": "https://www.filmaffinity.com/es/film834864.html",
           "posterUrl": "https://pics.filmaffinity.com/wind_river-870274639-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14459,7 +14639,7 @@
           "ratedAt": "2026-02-15",
           "url": "https://www.filmaffinity.com/es/film179609.html",
           "posterUrl": "https://pics.filmaffinity.com/captain_phillips-273270973-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14472,7 +14652,7 @@
           "ratedAt": "2026-02-15",
           "url": "https://www.filmaffinity.com/es/film917148.html",
           "posterUrl": "https://pics.filmaffinity.com/el_abrazo_de_la_serpiente-385873306-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14485,7 +14665,7 @@
           "ratedAt": "2026-02-09",
           "url": "https://www.filmaffinity.com/es/film880366.html",
           "posterUrl": "https://pics.filmaffinity.com/la_noche_de_12_anos-279392473-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14498,7 +14678,7 @@
           "ratedAt": "2026-02-09",
           "url": "https://www.filmaffinity.com/es/film677826.html",
           "posterUrl": "https://pics.filmaffinity.com/modelo_77-740028363-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14511,7 +14691,7 @@
           "ratedAt": "2026-02-08",
           "url": "https://www.filmaffinity.com/es/film779260.html",
           "posterUrl": "https://pics.filmaffinity.com/american_fiction-376846176-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14524,7 +14704,7 @@
           "ratedAt": "2026-02-04",
           "url": "https://www.filmaffinity.com/es/film274340.html",
           "posterUrl": "https://pics.filmaffinity.com/tinker_tailor_soldier_spy-642430739-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14537,7 +14717,7 @@
           "ratedAt": "2026-02-04",
           "url": "https://www.filmaffinity.com/es/film786159.html",
           "posterUrl": "https://pics.filmaffinity.com/an_cailin_ciuin-249816155-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14545,12 +14725,12 @@
           "title": "Valor sentimental",
           "year": "2025",
           "rating": 6,
-          "averageRating": 7.1,
+          "averageRating": 7,
           "ratedAtRaw": "votada 4 de febrero de 2026",
           "ratedAt": "2026-02-04",
           "url": "https://www.filmaffinity.com/es/film901036.html",
           "posterUrl": "https://pics.filmaffinity.com/sentimental_value-877642234-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14563,7 +14743,7 @@
           "ratedAt": "2026-01-30",
           "url": "https://www.filmaffinity.com/es/film457500.html",
           "posterUrl": "https://pics.filmaffinity.com/o_agente_secreto-885329777-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14576,7 +14756,7 @@
           "ratedAt": "2026-01-29",
           "url": "https://www.filmaffinity.com/es/film288774.html",
           "posterUrl": "https://pics.filmaffinity.com/no_other_choice-782733481-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14589,7 +14769,7 @@
           "ratedAt": "2026-01-21",
           "url": "https://www.filmaffinity.com/es/film414633.html",
           "posterUrl": "https://pics.filmaffinity.com/blood_work-650241689-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14602,7 +14782,7 @@
           "ratedAt": "2026-01-21",
           "url": "https://www.filmaffinity.com/es/film930474.html",
           "posterUrl": "https://pics.filmaffinity.com/absolute_power-449501693-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14615,7 +14795,7 @@
           "ratedAt": "2026-01-20",
           "url": "https://www.filmaffinity.com/es/film156313.html",
           "posterUrl": "https://pics.filmaffinity.com/collateral-993814470-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14628,7 +14808,7 @@
           "ratedAt": "2026-01-19",
           "url": "https://www.filmaffinity.com/es/film964057.html",
           "posterUrl": "https://pics.filmaffinity.com/bugonia-602321624-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14641,7 +14821,7 @@
           "ratedAt": "2026-01-19",
           "url": "https://www.filmaffinity.com/es/film112106.html",
           "posterUrl": "https://pics.filmaffinity.com/first_cow-148202671-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14654,7 +14834,7 @@
           "ratedAt": "2026-01-16",
           "url": "https://www.filmaffinity.com/es/film526634.html",
           "posterUrl": "https://pics.filmaffinity.com/martha_marcy_may_marlene-881768855-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14667,7 +14847,7 @@
           "ratedAt": "2026-01-14",
           "url": "https://www.filmaffinity.com/es/film377182.html",
           "posterUrl": "https://pics.filmaffinity.com/strange_darling-184939212-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14680,7 +14860,7 @@
           "ratedAt": "2026-01-13",
           "url": "https://www.filmaffinity.com/es/film897787.html",
           "posterUrl": "https://pics.filmaffinity.com/love_mercy-618914264-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14693,7 +14873,7 @@
           "ratedAt": "2026-01-13",
           "url": "https://www.filmaffinity.com/es/film994724.html",
           "posterUrl": "https://pics.filmaffinity.com/winter_s_bone-270791611-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14706,7 +14886,7 @@
           "ratedAt": "2026-01-10",
           "url": "https://www.filmaffinity.com/es/film176501.html",
           "posterUrl": "https://pics.filmaffinity.com/the_big_sick-977639733-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14719,7 +14899,7 @@
           "ratedAt": "2026-01-09",
           "url": "https://www.filmaffinity.com/es/film756534.html",
           "posterUrl": "https://pics.filmaffinity.com/minari-400403338-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14732,7 +14912,7 @@
           "ratedAt": "2026-01-09",
           "url": "https://www.filmaffinity.com/es/film910030.html",
           "posterUrl": "https://pics.filmaffinity.com/one_battle_after_another-992235034-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14745,7 +14925,7 @@
           "ratedAt": "2026-01-08",
           "url": "https://www.filmaffinity.com/es/film699169.html",
           "posterUrl": "https://pics.filmaffinity.com/sinners-306242848-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14758,7 +14938,7 @@
           "ratedAt": "2026-01-08",
           "url": "https://www.filmaffinity.com/es/film666035.html",
           "posterUrl": "https://pics.filmaffinity.com/never_rarely_sometimes_always-412982091-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14771,7 +14951,7 @@
           "ratedAt": "2026-01-06",
           "url": "https://www.filmaffinity.com/es/film453359.html",
           "posterUrl": "https://pics.filmaffinity.com/st_vincent-539810966-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14784,7 +14964,7 @@
           "ratedAt": "2026-01-04",
           "url": "https://www.filmaffinity.com/es/film698182.html",
           "posterUrl": "https://pics.filmaffinity.com/the_running_man-814684798-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14797,7 +14977,7 @@
           "ratedAt": "2026-01-03",
           "url": "https://www.filmaffinity.com/es/film330158.html",
           "posterUrl": "https://pics.filmaffinity.com/predator_badlands-767428270-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14810,7 +14990,7 @@
           "ratedAt": "2025-12-28",
           "url": "https://www.filmaffinity.com/es/film911059.html",
           "posterUrl": "https://pics.filmaffinity.com/an_american_crime-947343399-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14823,7 +15003,7 @@
           "ratedAt": "2025-12-27",
           "url": "https://www.filmaffinity.com/es/film527159.html",
           "posterUrl": "https://pics.filmaffinity.com/ruby_sparks-153257768-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14836,7 +15016,7 @@
           "ratedAt": "2025-12-25",
           "url": "https://www.filmaffinity.com/es/film738639.html",
           "posterUrl": "https://pics.filmaffinity.com/green_room-609579493-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14849,7 +15029,7 @@
           "ratedAt": "2025-12-24",
           "url": "https://www.filmaffinity.com/es/film836561.html",
           "posterUrl": "https://pics.filmaffinity.com/half_nelson-759387214-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14862,7 +15042,7 @@
           "ratedAt": "2025-12-24",
           "url": "https://www.filmaffinity.com/es/film204916.html",
           "posterUrl": "https://pics.filmaffinity.com/mondays_see_you_this_week-234960962-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14875,7 +15055,7 @@
           "ratedAt": "2025-12-21",
           "url": "https://www.filmaffinity.com/es/film239766.html",
           "posterUrl": "https://pics.filmaffinity.com/red_state-848226148-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14888,7 +15068,7 @@
           "ratedAt": "2025-12-19",
           "url": "https://www.filmaffinity.com/es/film303972.html",
           "posterUrl": "https://pics.filmaffinity.com/a_guide_to_recognizing_your_saints-608141680-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14901,7 +15081,7 @@
           "ratedAt": "2025-12-19",
           "url": "https://www.filmaffinity.com/es/film185519.html",
           "posterUrl": "https://pics.filmaffinity.com/secretary-466475097-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14914,7 +15094,7 @@
           "ratedAt": "2025-12-05",
           "url": "https://www.filmaffinity.com/es/film231576.html",
           "posterUrl": "https://pics.filmaffinity.com/frankenstein-244825237-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14927,7 +15107,7 @@
           "ratedAt": "2025-11-25",
           "url": "https://www.filmaffinity.com/es/film783828.html",
           "posterUrl": "https://pics.filmaffinity.com/the_long_walk-633814112-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14940,7 +15120,7 @@
           "ratedAt": "2025-11-06",
           "url": "https://www.filmaffinity.com/es/film565820.html",
           "posterUrl": "https://pics.filmaffinity.com/la_trinchera_infinita-366576124-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14953,7 +15133,7 @@
           "ratedAt": "2025-10-14",
           "url": "https://www.filmaffinity.com/es/film375190.html",
           "posterUrl": "https://pics.filmaffinity.com/maixabel-491379276-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14966,7 +15146,7 @@
           "ratedAt": "2025-10-13",
           "url": "https://www.filmaffinity.com/es/film968154.html",
           "posterUrl": "https://pics.filmaffinity.com/el_crack-197225200-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14979,7 +15159,7 @@
           "ratedAt": "2025-10-12",
           "url": "https://www.filmaffinity.com/es/film102649.html",
           "posterUrl": "https://pics.filmaffinity.com/bring_her_back-516362359-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -14992,7 +15172,7 @@
           "ratedAt": "2025-10-12",
           "url": "https://www.filmaffinity.com/es/film809089.html",
           "posterUrl": "https://pics.filmaffinity.com/weapons-367021125-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15005,7 +15185,7 @@
           "ratedAt": "2025-10-11",
           "url": "https://www.filmaffinity.com/es/film780154.html",
           "posterUrl": "https://pics.filmaffinity.com/sirat-867910558-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15018,7 +15198,7 @@
           "ratedAt": "2025-10-07",
           "url": "https://www.filmaffinity.com/es/film376081.html",
           "posterUrl": "https://pics.filmaffinity.com/el_infierno-441063580-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15031,7 +15211,7 @@
           "ratedAt": "2025-10-03",
           "url": "https://www.filmaffinity.com/es/film932478.html",
           "posterUrl": "https://pics.filmaffinity.com/la_infiltrada-537503432-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15044,7 +15224,7 @@
           "ratedAt": "2025-10-02",
           "url": "https://www.filmaffinity.com/es/film332264.html",
           "posterUrl": "https://pics.filmaffinity.com/que_dios_nos_perdone-230971747-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15057,7 +15237,7 @@
           "ratedAt": "2025-09-11",
           "url": "https://www.filmaffinity.com/es/film601862.html",
           "posterUrl": "https://pics.filmaffinity.com/belle_de_jour-540831392-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15070,7 +15250,7 @@
           "ratedAt": "2025-09-10",
           "url": "https://www.filmaffinity.com/es/film878081.html",
           "posterUrl": "https://pics.filmaffinity.com/beginners-400174302-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15083,7 +15263,7 @@
           "ratedAt": "2025-09-10",
           "url": "https://www.filmaffinity.com/es/film261706.html",
           "posterUrl": "https://pics.filmaffinity.com/deux_jours_une_nuit_two_days_one_night-283712038-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15096,7 +15276,7 @@
           "ratedAt": "2025-09-10",
           "url": "https://www.filmaffinity.com/es/film816341.html",
           "posterUrl": "https://pics.filmaffinity.com/le_charme_discret_de_la_bourgeoisie-141065226-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15109,7 +15289,7 @@
           "ratedAt": "2025-09-09",
           "url": "https://www.filmaffinity.com/es/film187303.html",
           "posterUrl": "https://pics.filmaffinity.com/highest_2_lowest-158196288-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15122,7 +15302,7 @@
           "ratedAt": "2025-09-06",
           "url": "https://www.filmaffinity.com/es/film685992.html",
           "posterUrl": "https://pics.filmaffinity.com/innerspace-149314473-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15135,7 +15315,7 @@
           "ratedAt": "2025-09-05",
           "url": "https://www.filmaffinity.com/es/film923082.html",
           "posterUrl": "https://pics.filmaffinity.com/mission_impossible_the_final_reckoning-565388979-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15148,7 +15328,7 @@
           "ratedAt": "2025-09-03",
           "url": "https://www.filmaffinity.com/es/film751338.html",
           "posterUrl": "https://pics.filmaffinity.com/28_years_later-958240308-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15161,7 +15341,7 @@
           "ratedAt": "2025-09-02",
           "url": "https://www.filmaffinity.com/es/film813325.html",
           "posterUrl": "https://pics.filmaffinity.com/buh_ning-383391846-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15174,7 +15354,7 @@
           "ratedAt": "2025-08-29",
           "url": "https://www.filmaffinity.com/es/film502795.html",
           "posterUrl": "https://pics.filmaffinity.com/the_seed_of_the_sacred_fig-609887658-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15187,7 +15367,7 @@
           "ratedAt": "2025-08-29",
           "url": "https://www.filmaffinity.com/es/film597014.html",
           "posterUrl": "https://pics.filmaffinity.com/the_virgin_suicides-614397955-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15200,7 +15380,7 @@
           "ratedAt": "2025-08-17",
           "url": "https://www.filmaffinity.com/es/film702747.html",
           "posterUrl": "https://pics.filmaffinity.com/the_taking_of_pelham_123-588017214-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15213,7 +15393,7 @@
           "ratedAt": "2025-08-17",
           "url": "https://www.filmaffinity.com/es/film365251.html",
           "posterUrl": "https://pics.filmaffinity.com/the_weather_man-890594987-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15226,7 +15406,7 @@
           "ratedAt": "2025-08-17",
           "url": "https://www.filmaffinity.com/es/film768719.html",
           "posterUrl": "https://pics.filmaffinity.com/the_6th_day-116505601-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15239,7 +15419,7 @@
           "ratedAt": "2025-08-17",
           "url": "https://www.filmaffinity.com/es/film810954.html",
           "posterUrl": "https://pics.filmaffinity.com/fallen-983400697-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15252,7 +15432,7 @@
           "ratedAt": "2025-08-14",
           "url": "https://www.filmaffinity.com/es/film560132.html",
           "posterUrl": "https://pics.filmaffinity.com/lolita-990493123-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15265,7 +15445,7 @@
           "ratedAt": "2025-08-12",
           "url": "https://www.filmaffinity.com/es/film522691.html",
           "posterUrl": "https://pics.filmaffinity.com/the_day_of_the_jackal-575835630-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15278,7 +15458,7 @@
           "ratedAt": "2025-08-12",
           "url": "https://www.filmaffinity.com/es/film453678.html",
           "posterUrl": "https://pics.filmaffinity.com/mars_express-470031272-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15291,7 +15471,7 @@
           "ratedAt": "2025-08-11",
           "url": "https://www.filmaffinity.com/es/film649596.html",
           "posterUrl": "https://pics.filmaffinity.com/eden_lake-615832632-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15304,7 +15484,7 @@
           "ratedAt": "2025-08-11",
           "url": "https://www.filmaffinity.com/es/film659986.html",
           "posterUrl": "https://pics.filmaffinity.com/heathers-227550216-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15317,7 +15497,7 @@
           "ratedAt": "2025-08-11",
           "url": "https://www.filmaffinity.com/es/film541914.html",
           "posterUrl": "https://pics.filmaffinity.com/reality_bites-463586080-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15330,7 +15510,7 @@
           "ratedAt": "2025-08-06",
           "url": "https://www.filmaffinity.com/es/film628492.html",
           "posterUrl": "https://pics.filmaffinity.com/65-699908523-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15343,7 +15523,7 @@
           "ratedAt": "2025-08-06",
           "url": "https://www.filmaffinity.com/es/film251494.html",
           "posterUrl": "https://pics.filmaffinity.com/l_evenement-734572348-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15356,7 +15536,7 @@
           "ratedAt": "2025-08-06",
           "url": "https://www.filmaffinity.com/es/film832071.html",
           "posterUrl": "https://pics.filmaffinity.com/cet_obscur_objet_du_desir-220061903-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15369,7 +15549,7 @@
           "ratedAt": "2025-08-01",
           "url": "https://www.filmaffinity.com/es/film172668.html",
           "posterUrl": "https://pics.filmaffinity.com/radical-692347754-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15382,7 +15562,7 @@
           "ratedAt": "2025-07-31",
           "url": "https://www.filmaffinity.com/es/film478693.html",
           "posterUrl": "https://pics.filmaffinity.com/the_taking_of_pelham_one_two_three-407480655-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15395,7 +15575,7 @@
           "ratedAt": "2025-07-31",
           "url": "https://www.filmaffinity.com/es/film509296.html",
           "posterUrl": "https://pics.filmaffinity.com/tarde_para_la_ira-821487359-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15408,7 +15588,7 @@
           "ratedAt": "2025-07-27",
           "url": "https://www.filmaffinity.com/es/film360338.html",
           "posterUrl": "https://pics.filmaffinity.com/uncut_gems-450616345-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15421,7 +15601,7 @@
           "ratedAt": "2025-07-20",
           "url": "https://www.filmaffinity.com/es/film540382.html",
           "posterUrl": "https://pics.filmaffinity.com/kis_uykusu_sommeil_d_hiver-771656456-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15434,7 +15614,7 @@
           "ratedAt": "2025-07-17",
           "url": "https://www.filmaffinity.com/es/film803236.html",
           "posterUrl": "https://pics.filmaffinity.com/le_trou-203887817-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15447,7 +15627,7 @@
           "ratedAt": "2025-07-13",
           "url": "https://www.filmaffinity.com/es/film281888.html",
           "posterUrl": "https://pics.filmaffinity.com/doraibu_mai_ka-916845386-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15460,7 +15640,7 @@
           "ratedAt": "2025-07-11",
           "url": "https://www.filmaffinity.com/es/film779702.html",
           "posterUrl": "https://pics.filmaffinity.com/nosferatu-964410519-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15473,7 +15653,7 @@
           "ratedAt": "2025-07-11",
           "url": "https://www.filmaffinity.com/es/film431234.html",
           "posterUrl": "https://pics.filmaffinity.com/warfare-534208810-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15486,7 +15666,7 @@
           "ratedAt": "2025-07-08",
           "url": "https://www.filmaffinity.com/es/film840798.html",
           "posterUrl": "https://pics.filmaffinity.com/the_brutalist-339944470-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15499,7 +15679,7 @@
           "ratedAt": "2025-06-24",
           "url": "https://www.filmaffinity.com/es/film160764.html",
           "posterUrl": "https://pics.filmaffinity.com/the_whale-293958603-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15512,7 +15692,7 @@
           "ratedAt": "2025-06-20",
           "url": "https://www.filmaffinity.com/es/film218709.html",
           "posterUrl": "https://pics.filmaffinity.com/clerks_iii-451158946-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15525,7 +15705,7 @@
           "ratedAt": "2025-06-16",
           "url": "https://www.filmaffinity.com/es/film466389.html",
           "posterUrl": "https://pics.filmaffinity.com/mickey_17-530854063-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15538,7 +15718,7 @@
           "ratedAt": "2025-06-12",
           "url": "https://www.filmaffinity.com/es/film141786.html",
           "posterUrl": "https://pics.filmaffinity.com/point_break-935042152-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15551,7 +15731,7 @@
           "ratedAt": "2025-06-09",
           "url": "https://www.filmaffinity.com/es/film632981.html",
           "posterUrl": "https://pics.filmaffinity.com/shallow_grave-457210752-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15564,7 +15744,7 @@
           "ratedAt": "2025-05-18",
           "url": "https://www.filmaffinity.com/es/film132842.html",
           "posterUrl": "https://pics.filmaffinity.com/a_working_man-933343627-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15577,7 +15757,7 @@
           "ratedAt": "2025-04-22",
           "url": "https://www.filmaffinity.com/es/film214125.html",
           "posterUrl": "https://pics.filmaffinity.com/madeo_mother-166730194-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15590,7 +15770,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film654852.html",
           "posterUrl": "https://pics.filmaffinity.com/woman_of_the_hour-544558205-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15603,7 +15783,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film170500.html",
           "posterUrl": "https://pics.filmaffinity.com/vice-361559090-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15616,7 +15796,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film351606.html",
           "posterUrl": "https://pics.filmaffinity.com/la_estrella_azul-666029724-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15629,7 +15809,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film990587.html",
           "posterUrl": "https://pics.filmaffinity.com/the_other_guys-914259182-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15642,7 +15822,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film379275.html",
           "posterUrl": "https://pics.filmaffinity.com/opening_night-734650347-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15655,7 +15835,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film609465.html",
           "posterUrl": "https://pics.filmaffinity.com/blink_twice-414415394-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15668,7 +15848,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film910871.html",
           "posterUrl": "https://pics.filmaffinity.com/bad_lieutenant-954644577-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15681,7 +15861,7 @@
           "ratedAt": "2025-04-04",
           "url": "https://www.filmaffinity.com/es/film335445.html",
           "posterUrl": "https://pics.filmaffinity.com/3_women-426073092-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15694,7 +15874,7 @@
           "ratedAt": "2025-03-27",
           "url": "https://www.filmaffinity.com/es/film412237.html",
           "posterUrl": "https://pics.filmaffinity.com/atonement-910660843-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15707,7 +15887,7 @@
           "ratedAt": "2025-03-26",
           "url": "https://www.filmaffinity.com/es/film897951.html",
           "posterUrl": "https://pics.filmaffinity.com/united_93_flight_93-962440706-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15720,7 +15900,7 @@
           "ratedAt": "2025-03-23",
           "url": "https://www.filmaffinity.com/es/film540481.html",
           "posterUrl": "https://pics.filmaffinity.com/when_harry_met_sally-294384997-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15733,7 +15913,7 @@
           "ratedAt": "2025-03-23",
           "url": "https://www.filmaffinity.com/es/film159928.html",
           "posterUrl": "https://pics.filmaffinity.com/moonstruck-728160127-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15746,7 +15926,7 @@
           "ratedAt": "2025-03-21",
           "url": "https://www.filmaffinity.com/es/film775563.html",
           "posterUrl": "https://pics.filmaffinity.com/juror_2-506872185-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15759,7 +15939,7 @@
           "ratedAt": "2025-03-21",
           "url": "https://www.filmaffinity.com/es/film773475.html",
           "posterUrl": "https://pics.filmaffinity.com/victoria-437008125-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15772,7 +15952,7 @@
           "ratedAt": "2025-03-20",
           "url": "https://www.filmaffinity.com/es/film476225.html",
           "posterUrl": "https://pics.filmaffinity.com/rushmore-297714196-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15785,7 +15965,7 @@
           "ratedAt": "2025-03-18",
           "url": "https://www.filmaffinity.com/es/film372203.html",
           "posterUrl": "https://pics.filmaffinity.com/fish_tank-252458176-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15798,7 +15978,7 @@
           "ratedAt": "2025-03-17",
           "url": "https://www.filmaffinity.com/es/film826435.html",
           "posterUrl": "https://pics.filmaffinity.com/the_vast_of_night-233608554-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15811,7 +15991,7 @@
           "ratedAt": "2025-03-15",
           "url": "https://www.filmaffinity.com/es/film774066.html",
           "posterUrl": "https://pics.filmaffinity.com/the_big_short-129125490-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15824,7 +16004,7 @@
           "ratedAt": "2025-03-09",
           "url": "https://www.filmaffinity.com/es/film980148.html",
           "posterUrl": "https://pics.filmaffinity.com/anomalisa-294444626-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15837,7 +16017,7 @@
           "ratedAt": "2025-03-09",
           "url": "https://www.filmaffinity.com/es/film771525.html",
           "posterUrl": "https://pics.filmaffinity.com/king_of_new_york-977988583-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15850,7 +16030,7 @@
           "ratedAt": "2025-03-09",
           "url": "https://www.filmaffinity.com/es/film896560.html",
           "posterUrl": "https://pics.filmaffinity.com/the_ice_storm-165142409-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -15863,7 +16043,7 @@
           "ratedAt": "2025-03-06",
           "url": "https://www.filmaffinity.com/es/film506593.html",
           "posterUrl": "https://pics.filmaffinity.com/barbie-295661697-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36147,10 +36327,10 @@
           "genres": []
         }
       ],
-      "count": 1703,
+      "count": 1710,
       "status": "completed",
       "error": null,
-      "lastSyncedAt": "2026-04-09T15:11:59.912Z"
+      "lastSyncedAt": "2026-04-27T13:49:39.558Z"
     },
     {
       "userName": "S.R.",
@@ -36166,7 +36346,7 @@
           "ratedAt": "2026-02-28",
           "url": "https://www.filmaffinity.com/es/film419029.html",
           "posterUrl": "https://pics.filmaffinity.com/the_lion_king-983881776-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36179,7 +36359,7 @@
           "ratedAt": "2025-10-25",
           "url": "https://www.filmaffinity.com/es/film905016.html",
           "posterUrl": "https://pics.filmaffinity.com/good_boy-840537395-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36192,7 +36372,7 @@
           "ratedAt": "2025-10-25",
           "url": "https://www.filmaffinity.com/es/film255392.html",
           "posterUrl": "https://pics.filmaffinity.com/moulin_rouge-492344022-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36205,7 +36385,7 @@
           "ratedAt": "2025-10-25",
           "url": "https://www.filmaffinity.com/es/film959573.html",
           "posterUrl": "https://pics.filmaffinity.com/trainspotting-196178076-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36218,7 +36398,7 @@
           "ratedAt": "2025-08-10",
           "url": "https://www.filmaffinity.com/es/film132739.html",
           "posterUrl": "https://pics.filmaffinity.com/sorda-343879663-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36231,7 +36411,7 @@
           "ratedAt": "2025-05-29",
           "url": "https://www.filmaffinity.com/es/film631683.html",
           "posterUrl": "https://pics.filmaffinity.com/beautiful_boy-627676487-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36244,7 +36424,7 @@
           "ratedAt": "2025-05-27",
           "url": "https://www.filmaffinity.com/es/film489595.html",
           "posterUrl": "https://pics.filmaffinity.com/adieu_monsieur_haffmann-807043085-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36257,7 +36437,7 @@
           "ratedAt": "2025-05-07",
           "url": "https://www.filmaffinity.com/es/film632443.html",
           "posterUrl": "https://pics.filmaffinity.com/los_anos_nuevos-851854473-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36270,7 +36450,7 @@
           "ratedAt": "2025-03-24",
           "url": "https://www.filmaffinity.com/es/film541444.html",
           "posterUrl": "https://pics.filmaffinity.com/adolescence-497490057-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36283,7 +36463,7 @@
           "ratedAt": "2025-03-20",
           "url": "https://www.filmaffinity.com/es/film870093.html",
           "posterUrl": "https://pics.filmaffinity.com/smiley-300913022-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36296,7 +36476,7 @@
           "ratedAt": "2025-03-13",
           "url": "https://www.filmaffinity.com/es/film429924.html",
           "posterUrl": "https://pics.filmaffinity.com/anora-968355846-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36309,7 +36489,7 @@
           "ratedAt": "2025-03-12",
           "url": "https://www.filmaffinity.com/es/film739284.html",
           "posterUrl": "https://pics.filmaffinity.com/the_greatest_showman-859484211-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36322,7 +36502,7 @@
           "ratedAt": "2025-02-28",
           "url": "https://www.filmaffinity.com/es/film840798.html",
           "posterUrl": "https://pics.filmaffinity.com/the_brutalist-339944470-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36335,7 +36515,7 @@
           "ratedAt": "2025-02-20",
           "url": "https://www.filmaffinity.com/es/film932478.html",
           "posterUrl": "https://pics.filmaffinity.com/la_infiltrada-537503432-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36348,7 +36528,7 @@
           "ratedAt": "2025-02-12",
           "url": "https://www.filmaffinity.com/es/film811561.html",
           "posterUrl": "https://pics.filmaffinity.com/it_follows-990733421-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36361,7 +36541,7 @@
           "ratedAt": "2025-02-08",
           "url": "https://www.filmaffinity.com/es/film351606.html",
           "posterUrl": "https://pics.filmaffinity.com/la_estrella_azul-666029724-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36374,7 +36554,7 @@
           "ratedAt": "2025-02-04",
           "url": "https://www.filmaffinity.com/es/film704069.html",
           "posterUrl": "https://pics.filmaffinity.com/small_things_like_these-763206211-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36387,7 +36567,7 @@
           "ratedAt": "2025-01-29",
           "url": "https://www.filmaffinity.com/es/film451784.html",
           "posterUrl": "https://pics.filmaffinity.com/williams_shakespeare_s_romeo_and_juliet-380564170-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36400,7 +36580,7 @@
           "ratedAt": "2025-01-27",
           "url": "https://www.filmaffinity.com/es/film447737.html",
           "posterUrl": "https://pics.filmaffinity.com/sing_sing-558459109-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36413,7 +36593,7 @@
           "ratedAt": "2025-01-25",
           "url": "https://www.filmaffinity.com/es/film809035.html",
           "posterUrl": "https://pics.filmaffinity.com/relatos_salvajes-102488639-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36426,7 +36606,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film744886.html",
           "posterUrl": "https://pics.filmaffinity.com/competencia_oficial-435986547-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36439,7 +36619,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film651337.html",
           "posterUrl": "https://pics.filmaffinity.com/el_47-838476618-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36452,7 +36632,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film833687.html",
           "posterUrl": "https://pics.filmaffinity.com/the_substance-153348439-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36465,7 +36645,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film779702.html",
           "posterUrl": "https://pics.filmaffinity.com/nosferatu-964410519-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36478,7 +36658,7 @@
           "ratedAt": "2025-01-24",
           "url": "https://www.filmaffinity.com/es/film753623.html",
           "posterUrl": "https://pics.filmaffinity.com/wicked_part_one-562940006-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36491,7 +36671,7 @@
           "ratedAt": "2025-01-22",
           "url": "https://www.filmaffinity.com/es/film480439.html",
           "posterUrl": "https://pics.filmaffinity.com/a_real_pain-779197366-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36504,7 +36684,7 @@
           "ratedAt": "2024-12-23",
           "url": "https://www.filmaffinity.com/es/film981636.html",
           "posterUrl": "https://pics.filmaffinity.com/don_t_move-752654470-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36517,7 +36697,7 @@
           "ratedAt": "2024-12-22",
           "url": "https://www.filmaffinity.com/es/film671326.html",
           "posterUrl": "https://pics.filmaffinity.com/emilia_perez-892423644-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36530,7 +36710,7 @@
           "ratedAt": "2024-12-14",
           "url": "https://www.filmaffinity.com/es/film938223.html",
           "posterUrl": "https://pics.filmaffinity.com/revolting_rhymes-638271575-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36543,7 +36723,7 @@
           "ratedAt": "2024-12-13",
           "url": "https://www.filmaffinity.com/es/film768757.html",
           "posterUrl": "https://pics.filmaffinity.com/querer-466341110-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36556,7 +36736,7 @@
           "ratedAt": "2024-11-11",
           "url": "https://www.filmaffinity.com/es/film630860.html",
           "posterUrl": "https://pics.filmaffinity.com/joker_folie_a_deux-920647444-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36569,7 +36749,7 @@
           "ratedAt": "2024-11-11",
           "url": "https://www.filmaffinity.com/es/film683705.html",
           "posterUrl": "https://pics.filmaffinity.com/perfect_days-620477360-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36582,7 +36762,7 @@
           "ratedAt": "2024-09-27",
           "url": "https://www.filmaffinity.com/es/film475568.html",
           "posterUrl": "https://pics.filmaffinity.com/undone-571202700-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36595,7 +36775,7 @@
           "ratedAt": "2024-09-15",
           "url": "https://www.filmaffinity.com/es/film304830.html",
           "posterUrl": "https://pics.filmaffinity.com/casa_en_flames-236384741-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36608,7 +36788,7 @@
           "ratedAt": "2024-09-09",
           "url": "https://www.filmaffinity.com/es/film387010.html",
           "posterUrl": "https://pics.filmaffinity.com/perfume_the_story_of_a_murderer-926668668-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36621,7 +36801,7 @@
           "ratedAt": "2024-09-08",
           "url": "https://www.filmaffinity.com/es/film361960.html",
           "posterUrl": "https://pics.filmaffinity.com/kinds_of_kindness-324124871-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36634,7 +36814,7 @@
           "ratedAt": "2024-09-08",
           "url": "https://www.filmaffinity.com/es/film150448.html",
           "posterUrl": "https://pics.filmaffinity.com/trap-586929828-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36647,7 +36827,7 @@
           "ratedAt": "2024-07-21",
           "url": "https://www.filmaffinity.com/es/film594164.html",
           "posterUrl": "https://pics.filmaffinity.com/pajaros-640647961-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36660,7 +36840,7 @@
           "ratedAt": "2024-04-06",
           "url": "https://www.filmaffinity.com/es/film808837.html",
           "posterUrl": "https://pics.filmaffinity.com/el_mestre_que_va_prometre_el_mar-903273076-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36673,7 +36853,7 @@
           "ratedAt": "2024-03-03",
           "url": "https://www.filmaffinity.com/es/film270023.html",
           "posterUrl": "https://pics.filmaffinity.com/poor_things-235700969-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36686,7 +36866,7 @@
           "ratedAt": "2024-03-03",
           "url": "https://www.filmaffinity.com/es/film349114.html",
           "posterUrl": "https://pics.filmaffinity.com/the_leftovers-403512194-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36699,7 +36879,7 @@
           "ratedAt": "2024-02-22",
           "url": "https://www.filmaffinity.com/es/film655530.html",
           "posterUrl": "https://pics.filmaffinity.com/the_zone_of_interest-642266949-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36712,7 +36892,7 @@
           "ratedAt": "2024-02-22",
           "url": "https://www.filmaffinity.com/es/film608753.html",
           "posterUrl": "https://pics.filmaffinity.com/maestro-141384252-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36725,7 +36905,7 @@
           "ratedAt": "2024-02-22",
           "url": "https://www.filmaffinity.com/es/film397878.html",
           "posterUrl": "https://pics.filmaffinity.com/the_creator-470808400-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36738,7 +36918,7 @@
           "ratedAt": "2024-02-22",
           "url": "https://www.filmaffinity.com/es/film538977.html",
           "posterUrl": "https://pics.filmaffinity.com/upon_entry-360819012-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36751,7 +36931,7 @@
           "ratedAt": "2024-02-19",
           "url": "https://www.filmaffinity.com/es/film514090.html",
           "posterUrl": "https://pics.filmaffinity.com/20_000_especies_de_abejas-640736401-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36764,7 +36944,7 @@
           "ratedAt": "2024-02-15",
           "url": "https://www.filmaffinity.com/es/film548527.html",
           "posterUrl": "https://pics.filmaffinity.com/creatura-661014062-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36777,7 +36957,7 @@
           "ratedAt": "2024-02-11",
           "url": "https://www.filmaffinity.com/es/film399287.html",
           "posterUrl": "https://pics.filmaffinity.com/robot_dreams-321433099-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36790,7 +36970,7 @@
           "ratedAt": "2024-02-01",
           "url": "https://www.filmaffinity.com/es/film108208.html",
           "posterUrl": "https://pics.filmaffinity.com/anatomie_d_une_chute-695566678-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36803,7 +36983,7 @@
           "ratedAt": "2024-02-01",
           "url": "https://www.filmaffinity.com/es/film119599.html",
           "posterUrl": "https://pics.filmaffinity.com/the_holdovers-349054843-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36816,7 +36996,7 @@
           "ratedAt": "2024-01-07",
           "url": "https://www.filmaffinity.com/es/film556337.html",
           "posterUrl": "https://pics.filmaffinity.com/la_mesias-904861922-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36829,7 +37009,7 @@
           "ratedAt": "2023-11-04",
           "url": "https://www.filmaffinity.com/es/film593683.html",
           "posterUrl": "https://pics.filmaffinity.com/la_desconocida-550861357-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36842,7 +37022,7 @@
           "ratedAt": "2023-10-28",
           "url": "https://www.filmaffinity.com/es/film427211.html",
           "posterUrl": "https://pics.filmaffinity.com/le_otto_montagne-251780794-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36855,7 +37035,7 @@
           "ratedAt": "2023-10-15",
           "url": "https://www.filmaffinity.com/es/film237285.html",
           "posterUrl": "https://pics.filmaffinity.com/the_big_lebowski-877217211-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36868,7 +37048,7 @@
           "ratedAt": "2023-08-04",
           "url": "https://www.filmaffinity.com/es/film927752.html",
           "posterUrl": "https://pics.filmaffinity.com/el_grito_en_el_cielo-561743221-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36881,7 +37061,7 @@
           "ratedAt": "2023-07-12",
           "url": "https://www.filmaffinity.com/es/film178603.html",
           "posterUrl": "https://pics.filmaffinity.com/mulholland_dr-783721234-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36894,7 +37074,7 @@
           "ratedAt": "2023-07-12",
           "url": "https://www.filmaffinity.com/es/film378700.html",
           "posterUrl": "https://pics.filmaffinity.com/the_straight_story-423456282-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36907,7 +37087,7 @@
           "ratedAt": "2023-05-26",
           "url": "https://www.filmaffinity.com/es/film968107.html",
           "posterUrl": "https://pics.filmaffinity.com/triangle_of_sadness-259032337-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36920,7 +37100,7 @@
           "ratedAt": "2023-04-01",
           "url": "https://www.filmaffinity.com/es/film447606.html",
           "posterUrl": "https://pics.filmaffinity.com/the_tree_of_life-567902094-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36933,7 +37113,7 @@
           "ratedAt": "2023-03-20",
           "url": "https://www.filmaffinity.com/es/film198691.html",
           "posterUrl": "https://pics.filmaffinity.com/bande_a_part-795738020-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36946,7 +37126,7 @@
           "ratedAt": "2023-02-27",
           "url": "https://www.filmaffinity.com/es/film848765.html",
           "posterUrl": "https://pics.filmaffinity.com/la_pasajera-160954743-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36959,7 +37139,7 @@
           "ratedAt": "2023-02-27",
           "url": "https://www.filmaffinity.com/es/film401086.html",
           "posterUrl": "https://pics.filmaffinity.com/knock_at_the_cabin-261379789-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36972,7 +37152,7 @@
           "ratedAt": "2023-02-03",
           "url": "https://www.filmaffinity.com/es/film744153.html",
           "posterUrl": "https://pics.filmaffinity.com/venus-730744443-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36985,7 +37165,7 @@
           "ratedAt": "2023-01-06",
           "url": "https://www.filmaffinity.com/es/film309973.html",
           "posterUrl": "https://pics.filmaffinity.com/cinco_lobitos-426717121-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -36998,7 +37178,7 @@
           "ratedAt": "2023-01-04",
           "url": "https://www.filmaffinity.com/es/film143661.html",
           "posterUrl": "https://pics.filmaffinity.com/roald_dahl_s_matilda_the_musical-207391202-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37011,7 +37191,7 @@
           "ratedAt": "2022-12-24",
           "url": "https://www.filmaffinity.com/es/film209761.html",
           "posterUrl": "https://pics.filmaffinity.com/le_petit_prince_the_little_prince-287961646-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37024,7 +37204,7 @@
           "ratedAt": "2022-12-09",
           "url": "https://www.filmaffinity.com/es/film780076.html",
           "posterUrl": "https://pics.filmaffinity.com/the_swimmers-319132424-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37037,7 +37217,7 @@
           "ratedAt": "2022-11-01",
           "url": "https://www.filmaffinity.com/es/film117089.html",
           "posterUrl": "https://pics.filmaffinity.com/argentina_1985-430372554-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37050,7 +37230,7 @@
           "ratedAt": "2022-10-23",
           "url": "https://www.filmaffinity.com/es/film224758.html",
           "posterUrl": "https://pics.filmaffinity.com/the_stranger-745539770-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37063,7 +37243,7 @@
           "ratedAt": "2022-08-29",
           "url": "https://www.filmaffinity.com/es/film457848.html",
           "posterUrl": "https://pics.filmaffinity.com/alcarras-600661704-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37076,7 +37256,7 @@
           "ratedAt": "2022-08-26",
           "url": "https://www.filmaffinity.com/es/film230375.html",
           "posterUrl": "https://pics.filmaffinity.com/nope-999319780-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37089,7 +37269,7 @@
           "ratedAt": "2022-05-20",
           "url": "https://www.filmaffinity.com/es/film241711.html",
           "posterUrl": "https://pics.filmaffinity.com/severance-462105884-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37102,7 +37282,7 @@
           "ratedAt": "2022-04-18",
           "url": "https://www.filmaffinity.com/es/film658785.html",
           "posterUrl": "https://pics.filmaffinity.com/love_gets_a_room-691227652-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37115,7 +37295,7 @@
           "ratedAt": "2022-04-18",
           "url": "https://www.filmaffinity.com/es/film150882.html",
           "posterUrl": "https://pics.filmaffinity.com/infinite_storm-194351163-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37128,7 +37308,7 @@
           "ratedAt": "2022-04-03",
           "url": "https://www.filmaffinity.com/es/film519727.html",
           "posterUrl": "https://pics.filmaffinity.com/cafe_society-572459421-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37141,7 +37321,7 @@
           "ratedAt": "2022-03-20",
           "url": "https://www.filmaffinity.com/es/film222219.html",
           "posterUrl": "https://pics.filmaffinity.com/master-836790082-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37154,7 +37334,7 @@
           "ratedAt": "2022-02-15",
           "url": "https://www.filmaffinity.com/es/film329630.html",
           "posterUrl": "https://pics.filmaffinity.com/chavalas-268818966-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37167,7 +37347,7 @@
           "ratedAt": "2022-02-05",
           "url": "https://www.filmaffinity.com/es/film880572.html",
           "posterUrl": "https://pics.filmaffinity.com/nightmare_alley-347231455-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37180,7 +37360,7 @@
           "ratedAt": "2022-02-05",
           "url": "https://www.filmaffinity.com/es/film521393.html",
           "posterUrl": "https://pics.filmaffinity.com/don_t_look_up-492729563-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37193,7 +37373,7 @@
           "ratedAt": "2022-02-04",
           "url": "https://www.filmaffinity.com/es/film622126.html",
           "posterUrl": "https://pics.filmaffinity.com/house_of_gucci-575878865-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37206,7 +37386,7 @@
           "ratedAt": "2022-02-02",
           "url": "https://www.filmaffinity.com/es/film583347.html",
           "posterUrl": "https://pics.filmaffinity.com/the_hobbit_the_battle_of_the_five_armies-282438316-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37219,7 +37399,7 @@
           "ratedAt": "2022-02-02",
           "url": "https://www.filmaffinity.com/es/film919815.html",
           "posterUrl": "https://pics.filmaffinity.com/the_hobbit_the_desolation_of_smaug-498845622-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37232,7 +37412,7 @@
           "ratedAt": "2022-02-02",
           "url": "https://www.filmaffinity.com/es/film172611.html",
           "posterUrl": "https://pics.filmaffinity.com/the_hobbit_an_unexpected_journey-249234415-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37245,7 +37425,7 @@
           "ratedAt": "2022-01-31",
           "url": "https://www.filmaffinity.com/es/film347306.html",
           "posterUrl": "https://pics.filmaffinity.com/alfred_hitchcock_s_the_birds-851609530-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37258,7 +37438,7 @@
           "ratedAt": "2022-01-31",
           "url": "https://www.filmaffinity.com/es/film647094.html",
           "posterUrl": "https://pics.filmaffinity.com/vertigo-154050178-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37271,7 +37451,7 @@
           "ratedAt": "2022-01-24",
           "url": "https://www.filmaffinity.com/es/film481444.html",
           "posterUrl": "https://pics.filmaffinity.com/little_miss_sunshine-534650278-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37284,7 +37464,7 @@
           "ratedAt": "2022-01-21",
           "url": "https://www.filmaffinity.com/es/film411856.html",
           "posterUrl": "https://pics.filmaffinity.com/el_verdugo-632789770-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37297,7 +37477,7 @@
           "ratedAt": "2022-01-21",
           "url": "https://www.filmaffinity.com/es/film656850.html",
           "posterUrl": "https://pics.filmaffinity.com/enola_holmes-862602767-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37310,7 +37490,7 @@
           "ratedAt": "2022-01-12",
           "url": "https://www.filmaffinity.com/es/film822211.html",
           "posterUrl": "https://pics.filmaffinity.com/dolemite_is_my_name-374809005-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37323,7 +37503,7 @@
           "ratedAt": "2022-01-08",
           "url": "https://www.filmaffinity.com/es/film787296.html",
           "posterUrl": "https://pics.filmaffinity.com/el_paramo-200438076-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37336,7 +37516,7 @@
           "ratedAt": "2022-01-06",
           "url": "https://www.filmaffinity.com/es/film276907.html",
           "posterUrl": "https://pics.filmaffinity.com/boiling_point-812204328-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37349,7 +37529,7 @@
           "ratedAt": "2022-01-05",
           "url": "https://www.filmaffinity.com/es/film757813.html",
           "posterUrl": "https://pics.filmaffinity.com/ghostbusters_afterlife-667822266-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37362,7 +37542,7 @@
           "ratedAt": "2022-01-04",
           "url": "https://www.filmaffinity.com/es/film677436.html",
           "posterUrl": "https://pics.filmaffinity.com/my_octopus_teacher-902842067-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37375,7 +37555,7 @@
           "ratedAt": "2022-01-02",
           "url": "https://www.filmaffinity.com/es/film405972.html",
           "posterUrl": "https://pics.filmaffinity.com/the_card_counter-944459030-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37388,7 +37568,7 @@
           "ratedAt": "2022-01-02",
           "url": "https://www.filmaffinity.com/es/film315057.html",
           "posterUrl": "https://pics.filmaffinity.com/the_power_of_the_dog-646166187-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37401,7 +37581,7 @@
           "ratedAt": "2021-12-26",
           "url": "https://www.filmaffinity.com/es/film926682.html",
           "posterUrl": "https://pics.filmaffinity.com/jumanji_the_next_level-407262058-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37414,7 +37594,7 @@
           "ratedAt": "2021-12-17",
           "url": "https://www.filmaffinity.com/es/film580527.html",
           "posterUrl": "https://pics.filmaffinity.com/king_richard-212327278-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37427,7 +37607,7 @@
           "ratedAt": "2021-12-12",
           "url": "https://www.filmaffinity.com/es/film944693.html",
           "posterUrl": "https://pics.filmaffinity.com/animal_farm-977203545-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37440,7 +37620,7 @@
           "ratedAt": "2021-12-08",
           "url": "https://www.filmaffinity.com/es/film441802.html",
           "posterUrl": "https://pics.filmaffinity.com/tick_tick_boom-363141996-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -37466,7 +37646,7 @@
           "ratedAt": "2021-12-06",
           "url": "https://www.filmaffinity.com/es/film907970.html",
           "posterUrl": "https://pics.filmaffinity.com/the_danish_girl-635017188-large.jpg",
-          "scrapedAt": "2026-04-09",
+          "scrapedAt": "2026-04-27",
           "genres": []
         },
         {
@@ -39358,7 +39538,7 @@
       "count": 246,
       "status": "completed",
       "error": null,
-      "lastSyncedAt": "2026-04-09T15:11:58.873Z"
+      "lastSyncedAt": "2026-04-27T13:49:45.593Z"
     }
   ]
 }
