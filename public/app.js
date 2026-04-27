@@ -21,10 +21,6 @@ const elements = {
   pageInfo: document.querySelector('#page-info'),
   importStatus: document.querySelector('#import-status'),
   resultTemplate: document.querySelector('#result-template'),
-  trailerModal: document.querySelector('#trailer-modal'),
-  trailerFrame: document.querySelector('#trailer-frame'),
-  trailerClose: document.querySelector('#trailer-close'),
-  trailerTitle: document.querySelector('#trailer-title'),
 };
 
 const SPANISH_MONTHS = {
@@ -114,8 +110,6 @@ function normalizeRecord(record) {
     ratedAt: String(record.ratedAt || '').trim(),
     url: String(record.url || '').trim(),
     posterUrl: String(record.posterUrl || '').trim(),
-    trailerVideoId: String(record.trailerVideoId || '').trim(),
-    trailerEmbedUrl: String(record.trailerEmbedUrl || '').trim(),
     otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
   };
 }
@@ -206,6 +200,87 @@ function buildTrailerEmbedUrl(record) {
   return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
 }
 
+function buildTrailerFallbackSrcdoc(title, year) {
+  const safeTitle = escapeHtml(title);
+  const safeYear = year ? `<span class="fallback-year">${escapeHtml(year)}</span>` : '';
+
+  return `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(71, 85, 105, 0.28), transparent 40%),
+          linear-gradient(180deg, #0b1220 0%, #111a2d 100%);
+        color: #e2e8f0;
+      }
+      .card {
+        width: min(92vw, 32rem);
+        padding: 1.5rem;
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 1.25rem;
+        background: rgba(15, 23, 42, 0.78);
+        box-shadow: 0 24px 60px rgba(2, 6, 23, 0.45);
+        text-align: center;
+        backdrop-filter: blur(14px);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.35rem 0.7rem;
+        margin-bottom: 1rem;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.14);
+        color: #bfdbfe;
+        font-size: 0.8rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+      }
+      h4 {
+        margin: 0 0 0.65rem;
+        font-size: 1.15rem;
+        line-height: 1.3;
+      }
+      .fallback-year {
+        display: inline-block;
+        margin-left: 0.35rem;
+        color: #93c5fd;
+      }
+      p {
+        margin: 0 0 1rem;
+        color: #cbd5e1;
+        line-height: 1.6;
+      }
+      .hint {
+        margin: 0;
+        font-size: 0.92rem;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="chip">Trailer no resuelto</div>
+      <h4>${safeTitle}${safeYear}</h4>
+      <p>No hemos podido cargar el tráiler de este título todavía.</p>
+      <p class="hint">Vuelve a sincronizar la biblioteca para completar los datos del vídeo.</p>
+    </div>
+  </body>
+</html>`;
+}
+
 function closeTrailerModal() {
   if (!elements.trailerModal) {
     return;
@@ -233,14 +308,13 @@ function openTrailer(record) {
   if (embedUrl) {
     elements.trailerFrame.src = embedUrl;
   } else {
-    elements.trailerFrame.srcdoc = `<!doctype html><html lang="es"><head><meta charset="utf-8" /><style>body{font-family:system-ui,-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#0f172a;color:#e2e8f0;text-align:center;padding:24px}p{max-width:28rem;line-height:1.5}</style></head><body><p>No hemos podido resolver el tráiler de <strong>${escapeHtml(safeTitle)}</strong> todavía.</p><p>Vuelve a sincronizar la biblioteca para completar los videoId pendientes.</p></body></html>`;
+    elements.trailerFrame.srcdoc = buildTrailerFallbackSrcdoc(safeTitle, safeYear);
   }
 
   elements.trailerModal.hidden = false;
   document.body.classList.add('modal-open');
   elements.trailerClose?.focus();
 }
-
 function parseFlexibleDate(value) {
   const text = String(value || '').trim();
   if (!text) {
@@ -361,6 +435,20 @@ function updateSelectedUserLabel() {
   elements.resultsTitle.textContent = selectedUserName
     ? `🎬 Votaciones de ${selectedUserName}`
     : '🎬 Votaciones del usuario seleccionado';
+}
+
+function buildTrailerQuery(title, year) {
+  return [title, year, 'trailer'].filter(Boolean).join(' ');
+}
+
+function openTrailer(record) {
+  const safeTitle = String(record?.title || '').trim() || 'Trailer';
+  const safeYear = String(record?.year || '').trim();
+  window.open(
+    `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
+    '_blank',
+    'noopener,noreferrer'
+  );
 }
 
 function renderResults(records) {
@@ -666,7 +754,7 @@ elements.sharedOnly.addEventListener('change', () => {
   currentPage = 1;
   render();
 });
-elements.userSelector.addEventListener('change', () => {
+  elements.userSelector.addEventListener('change', () => {
   selectedUserName = elements.userSelector.value;
   localStorage.setItem(SELECTED_USER_KEY, selectedUserName);
   updateQueryString();
@@ -678,17 +766,6 @@ elements.userSelector.addEventListener('change', () => {
   loadLibraryForSelectedUser().catch((error) => {
     setStatus(error.message || 'No se pudo cargar la biblioteca.', true);
   });
-});
-elements.trailerClose?.addEventListener('click', closeTrailerModal);
-elements.trailerModal?.addEventListener('click', (event) => {
-  if (event.target === elements.trailerModal) {
-    closeTrailerModal();
-  }
-});
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && elements.trailerModal && !elements.trailerModal.hidden) {
-    closeTrailerModal();
-  }
 });
 elements.prevPage.addEventListener('click', () => {
   if (currentPage > 1) {
