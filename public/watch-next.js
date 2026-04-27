@@ -23,6 +23,10 @@ const elements = {
   nextPage: document.querySelector('#watch-next-next-page'),
   pageInfo: document.querySelector('#watch-next-page-info'),
   template: document.querySelector('#watch-next-template'),
+  trailerModal: document.querySelector('#trailer-modal'),
+  trailerFrame: document.querySelector('#trailer-frame'),
+  trailerClose: document.querySelector('#trailer-close'),
+  trailerTitle: document.querySelector('#trailer-title'),
 };
 
 let configuredUsers = [];
@@ -80,18 +84,72 @@ function setStatus(message, isError = false) {
   elements.status.style.color = isError ? 'var(--fa-error)' : '';
 }
 
-function buildTrailerQuery(title, year) {
-  return [title, year, 'trailer'].filter(Boolean).join(' ');
+function escapeHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case '&':
+        return '&amp;';
+      case '<':
+        return '&lt;';
+      case '>':
+        return '&gt;';
+      case '"':
+        return '&quot;';
+      case '\'':
+        return '&#39;';
+      default:
+        return character;
+    }
+  });
+}
+
+function buildTrailerEmbedUrl(item) {
+  const explicitEmbedUrl = String(item?.trailerEmbedUrl || '').trim();
+  if (explicitEmbedUrl) {
+    return explicitEmbedUrl;
+  }
+
+  const videoId = String(item?.trailerVideoId || '').trim();
+  if (!videoId) {
+    return '';
+  }
+
+  return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
+}
+
+function closeTrailerModal() {
+  if (!elements.trailerModal) {
+    return;
+  }
+
+  elements.trailerFrame.removeAttribute('src');
+  elements.trailerFrame.removeAttribute('srcdoc');
+  elements.trailerModal.hidden = true;
+  document.body.classList.remove('modal-open');
 }
 
 function openTrailer(item) {
+  if (!elements.trailerModal || !elements.trailerFrame || !elements.trailerTitle) {
+    return;
+  }
+
   const safeTitle = String(item?.title || '').trim() || 'Trailer';
   const safeYear = String(item?.year || '').trim();
-  window.open(
-    `https://www.youtube.com/results?search_query=${encodeURIComponent(buildTrailerQuery(safeTitle, safeYear))}`,
-    '_blank',
-    'noopener,noreferrer'
-  );
+  const embedUrl = buildTrailerEmbedUrl(item);
+
+  elements.trailerTitle.textContent = safeYear ? `${safeTitle} (${safeYear})` : safeTitle;
+  elements.trailerFrame.removeAttribute('src');
+  elements.trailerFrame.removeAttribute('srcdoc');
+
+  if (embedUrl) {
+    elements.trailerFrame.src = embedUrl;
+  } else {
+    elements.trailerFrame.srcdoc = `<!doctype html><html lang="es"><head><meta charset="utf-8" /><style>body{font-family:system-ui,-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#0f172a;color:#e2e8f0;text-align:center;padding:24px}p{max-width:28rem;line-height:1.5}</style></head><body><p>No hemos podido resolver el tráiler de <strong>${escapeHtml(safeTitle)}</strong> todavía.</p><p>Vuelve a sincronizar la biblioteca para completar los videoId pendientes.</p></body></html>`;
+  }
+
+  elements.trailerModal.hidden = false;
+  document.body.classList.add('modal-open');
+  elements.trailerClose?.focus();
 }
 
 function getYearSortValue(yearText) {
@@ -156,7 +214,9 @@ function normalizeRecord(record) {
     averageRating: Number.isFinite(Number(record.averageRating)) ? Number(record.averageRating) : null,
     ratedAt: String(record.ratedAt || '').trim(),
     url: String(record.url || '').trim(),
-    posterUrl: String(record.posterUrl || '').trim()
+    posterUrl: String(record.posterUrl || '').trim(),
+    trailerVideoId: String(record.trailerVideoId || '').trim(),
+    trailerEmbedUrl: String(record.trailerEmbedUrl || '').trim()
   };
 }
 
@@ -647,6 +707,17 @@ elements.userSelector.addEventListener('change', () => {
   loadRecommendations().catch((error) => {
     setStatus(error.message || 'No se pudieron calcular recomendaciones.', true);
   });
+});
+elements.trailerClose?.addEventListener('click', closeTrailerModal);
+elements.trailerModal?.addEventListener('click', (event) => {
+  if (event.target === elements.trailerModal) {
+    closeTrailerModal();
+  }
+});
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && elements.trailerModal && !elements.trailerModal.hidden) {
+    closeTrailerModal();
+  }
 });
 
 elements.yearFilter.addEventListener('change', () => {

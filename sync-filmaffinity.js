@@ -230,7 +230,10 @@ function normalizeExistingRatingRecord(record) {
     ratedAt: String(record?.ratedAt || '').trim(),
     url: String(record?.url || '').trim(),
     posterUrl: String(record?.posterUrl || '').trim(),
-    filmId: String(record?.filmId || '').trim()
+    filmId: String(record?.filmId || '').trim(),
+    trailerVideoId: String(record?.trailerVideoId || '').trim(),
+    trailerEmbedUrl: String(record?.trailerEmbedUrl || '').trim(),
+    trailerSource: String(record?.trailerSource || '').trim()
   };
 }
 
