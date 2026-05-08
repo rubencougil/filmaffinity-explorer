@@ -10,6 +10,7 @@ const PAGE_SIZE = 50;
 const PAGE_DELAY_MS = 900;
 const PAGE_DELAY_JITTER_MS = 500;
 const EARLY_STOP_PAGES_WITHOUT_NEW = 2;
+const IS_CI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
 
 const SPANISH_MONTHS = {
   enero: 0,
@@ -432,11 +433,16 @@ async function scrapeCurrentPage(page) {
 
 async function launchContext(userId, options = {}) {
   const { headless = true } = options;
-  const context = await chromium.launchPersistentContext(buildProfileDir(userId), {
-    channel: 'chrome',
+  const launchOptions = {
     headless,
     viewport: { width: 1440, height: 1600 }
-  });
+  };
+
+  if (!IS_CI) {
+    launchOptions.channel = 'chrome';
+  }
+
+  const context = await chromium.launchPersistentContext(buildProfileDir(userId), launchOptions);
 
   return context;
 }
@@ -582,6 +588,12 @@ async function syncFilmaffinity({ source, existingRatings = [], onProgress = () 
     const message = String(error?.message || '');
     if (!isChallengeErrorMessage(message)) {
       throw error;
+    }
+
+    if (IS_CI) {
+      throw new Error(
+        `${message} GitHub Actions no puede continuar con el fallback interactivo; revisa el acceso o ejecuta el sync manualmente.`
+      );
     }
 
     onProgress(`Aviso: Filmaffinity está bloqueando el acceso automático. ${message}`);

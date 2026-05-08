@@ -42,6 +42,18 @@ Esto actualiza:
 - `public/data/config.json`
 - `public/data/libraries.json`
 
+## 🤖 Sync diario en GitHub Actions
+
+Sí, también se puede automatizar una vez al día desde GitHub Actions.
+
+Para que funcione, crea un secret llamado `FILMAFFINITY_CONFIG_JSON` con el contenido completo de tu `config.json`, y el workflow `.github/workflows/daily-sync.yml`:
+
+- instala las dependencias
+- ejecuta el sync en modo headless
+- publica el resultado en GitHub Pages
+
+Si Filmaffinity devuelve challenge, CAPTCHA o bloqueo temporal, el job falla con un mensaje claro en vez de intentar abrir una ventana visible.
+
 ## 🧪 Probar la versión estática en local
 
 ```bash
