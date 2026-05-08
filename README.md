@@ -52,7 +52,9 @@ Para que funcione, crea un secret llamado `FILMAFFINITY_CONFIG_JSON` con el cont
 
 - instala las dependencias
 - ejecuta el sync en modo headless
-- publica el resultado en GitHub Pages
+- commitea `public/data/*.json` de vuelta a `main`
+
+Después, el workflow de GitHub Pages se encarga de desplegar la versión publicada a partir de ese commit.
 
 Si Filmaffinity devuelve challenge, CAPTCHA o bloqueo temporal, el job falla con un mensaje claro en vez de intentar abrir una ventana visible.
 

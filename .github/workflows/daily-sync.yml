@@ -6,16 +6,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: daily-filmaffinity-sync
   cancel-in-progress: true
 
 jobs:
-  sync-and-deploy:
+  sync-and-commit:
     runs-on: ubuntu-latest
 
     steps:
@@ -51,14 +49,17 @@ jobs:
           CI: true
         run: npm run sync:static
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Commit updated data
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/data/config.json public/data/libraries.json
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
+          if git diff --cached --quiet; then
+            echo "No data changes to commit."
+            exit 0
+          fi
 
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          git commit -m "chore: refresh Filmaffinity data"
+          git push origin HEAD:main
