@@ -5,7 +5,7 @@ node_modules/
 .playwright/
 
 # User-specific configuration
-config.json
+/config.json
 
 # User scraped libraries / personal data
 data/libraries/*.json
