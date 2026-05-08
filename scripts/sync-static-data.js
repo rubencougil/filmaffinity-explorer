@@ -6,7 +6,6 @@ const { resolveYoutubeTrailer } = require('../trailer-resolver');
 const ROOT_DIR = path.join(__dirname, '..');
 const CONFIG_PATH = path.join(ROOT_DIR, 'config.json');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'data');
-const OUTPUT_CONFIG_PATH = path.join(OUTPUT_DIR, 'config.json');
 const OUTPUT_LIBRARIES_PATH = path.join(OUTPUT_DIR, 'libraries.json');
 
 function readJson(filePath, fallback) {
@@ -148,7 +147,6 @@ async function main() {
 
     libraries.push({
       userName: user.name,
-      userId: user.userId,
       ratings: Array.isArray(result?.ratings) ? result.ratings : [],
       count: Number(result?.count) || (Array.isArray(result?.ratings) ? result.ratings.length : 0),
       status: 'completed',
@@ -159,16 +157,6 @@ async function main() {
     console.log(`[${user.name}] Done: ${libraries.at(-1).count} ratings.`);
   }
 
-  const defaultUser = String(config?.filmaffinity?.defaultUser || '').trim();
-  const outputConfig = {
-    filmaffinity: {
-      configured: true,
-      defaultUser: users.some((user) => user.name === defaultUser) ? defaultUser : users[0].name,
-      users
-    },
-    generatedAt
-  };
-
   const outputLibraries = {
     generatedAt,
     libraries
@@ -178,11 +166,9 @@ async function main() {
   const trailerResult = await enrichTrailerData(libraries, { concurrency: 4 });
   outputLibraries.libraries = trailerResult.libraries;
 
-  writeJson(OUTPUT_CONFIG_PATH, outputConfig);
   writeJson(OUTPUT_LIBRARIES_PATH, outputLibraries);
 
   console.log('\\nStatic data updated:');
-  console.log(`- ${path.relative(ROOT_DIR, OUTPUT_CONFIG_PATH)}`);
   console.log(`- ${path.relative(ROOT_DIR, OUTPUT_LIBRARIES_PATH)}`);
   console.log(
     `- Trailers resolved: ${trailerResult.resolvedCount}, missing or unchanged: ${trailerResult.missingCount}`

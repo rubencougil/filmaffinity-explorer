@@ -41,7 +41,6 @@ npm run sync:static
 
 Esto actualiza:
 
-- `public/data/config.json`
 - `public/data/libraries.json`
 
 ## 🤖 Sync diario en GitHub Actions
@@ -52,7 +51,7 @@ Para que funcione, crea un secret llamado `FILMAFFINITY_CONFIG_JSON` con el cont
 
 - instala las dependencias
 - ejecuta el sync en modo headless
-- commitea `public/data/*.json` de vuelta a `main`
+- commitea solo `public/data/libraries.json` de vuelta a `main`
 
 Después, el workflow de GitHub Pages se encarga de desplegar la versión publicada a partir de ese commit.
 
@@ -69,7 +68,7 @@ Abre la URL que te muestre `serve`.
 ## 🚀 Publicar en GitHub Pages
 
 1. Ejecuta `npm run sync:static`.
-2. Haz commit de los cambios (incluyendo `public/data/*.json`).
+2. Haz commit de los cambios (incluyendo `public/data/libraries.json`).
 3. Push a `main`.
 4. El workflow `.github/workflows/pages.yml` desplegará `public/` en Pages.
 

@@ -6,6 +6,7 @@ node_modules/
 
 # User-specific configuration
 /config.json
+/public/data/config.json
 
 # User scraped libraries / personal data
 data/libraries/*.json

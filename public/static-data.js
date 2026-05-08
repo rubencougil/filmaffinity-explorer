@@ -1,5 +1,4 @@
 (function () {
-  const CONFIG_PATH = 'data/config.json';
   const LIBRARIES_PATH = 'data/libraries.json';
 
   let loaded = null;
@@ -25,35 +24,19 @@
         : [];
       const usersFromLibraries = libraries
         .map((entry) => ({
-          name: String(entry?.userName || '').trim(),
-          userId: String(entry?.userId || '').trim()
+          name: String(entry?.userName || '').trim()
         }))
-        .filter((user) => user.name && user.userId);
+        .filter((user) => user.name);
 
-      let configPayload = null;
-      try {
-        const configRes = await fetch(toUrl(CONFIG_PATH));
-        if (configRes.ok) {
-          configPayload = await configRes.json();
-        }
-      } catch (error) {
-        // Fallback handled below.
-      }
-
-      const configUsers = Array.isArray(configPayload?.filmaffinity?.users)
-        ? configPayload.filmaffinity.users
-        : [];
-      const users = configUsers.length ? configUsers : usersFromLibraries;
-      if (!configPayload || !configUsers.length) {
-        configPayload = {
-          filmaffinity: {
-            configured: users.length > 0,
-            defaultUser: users[0]?.name || '',
-            users
-          },
-          generatedAt: String(librariesPayload?.generatedAt || '')
-        };
-      }
+      const users = usersFromLibraries;
+      const configPayload = {
+        filmaffinity: {
+          configured: users.length > 0,
+          defaultUser: users[0]?.name || '',
+          users
+        },
+        generatedAt: String(librariesPayload?.generatedAt || '')
+      };
 
       return {
         configPayload,
@@ -80,14 +63,9 @@
 
   function resolveRequestedUser(searchParams, users) {
     const requestedName = String(searchParams.get('userName') || '').trim();
-    const requestedUserId = String(searchParams.get('userId') || '').trim();
 
     if (requestedName) {
       return users.find((user) => String(user.name || '').trim() === requestedName) || null;
-    }
-
-    if (requestedUserId) {
-      return users.find((user) => String(user.userId || '').trim() === requestedUserId) || null;
     }
 
     return users[0] || null;
@@ -125,7 +103,7 @@
 
     return {
       userName: selectedUser.name,
-      userId: selectedUser.userId,
+      userId: '',
       ratings,
       count: ratings.length,
       status: state?.status || 'completed',
@@ -152,7 +130,7 @@
         staticData.byName.get(String(selectedUser.name || '').trim()) ||
         {
           userName: selectedUser.name,
-          userId: selectedUser.userId,
+          userId: '',
           ratings: [],
           count: 0,
           status: 'idle',
