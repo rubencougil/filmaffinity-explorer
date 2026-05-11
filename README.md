@@ -47,7 +47,12 @@ Esto actualiza:
 
 Sí, también se puede automatizar una vez al día desde GitHub Actions.
 
-Para que funcione, crea un secret llamado `FILMAFFINITY_CONFIG_JSON` con el contenido completo de tu `config.json`, y el workflow `.github/workflows/daily-sync.yml`:
+Para que funcione, crea estos secrets:
+
+- `FILMAFFINITY_CONFIG_JSON` con el contenido completo de tu `config.json`
+- `FILMAFFINITY_PUSH_TOKEN` con un token que tenga permiso de escritura en este repositorio
+
+El workflow `.github/workflows/daily-sync.yml`:
 
 - instala las dependencias
 - ejecuta el sync en modo headless
