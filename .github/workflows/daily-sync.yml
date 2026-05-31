@@ -1,4 +1,4 @@
-name: Daily Filmaffinity Sync
+name: Weekly Filmaffinity Sync
 
 on:
   schedule:
