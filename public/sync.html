@@ -11,8 +11,7 @@
     <meta name="description" content="Importa y sincroniza tus valoraciones de FilmAffinity para explorarlas en FilmAffinity Explorer." />
     <meta name="application-name" content="FilmAffinity Explorer" />
     <meta name="author" content="Rubén Cougil" />
-    <meta name="theme-color" content="#1f2733" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f0f6fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#f4f7fb" />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://ruben.cougil.com/filmaffinity-explorer/sync.html" />
@@ -37,7 +36,7 @@
     <link rel="manifest" href="site.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="sync-page">
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -51,18 +50,12 @@
         </button>
 
         <nav class="top-links" id="top-nav" aria-label="Primary">
-          <a data-nav-target="home" href="index.html">🎬 Biblioteca</a>
-          <a data-nav-target="watchnext" href="watch-next.html">🍿 Qué ver</a>
-          <a data-nav-target="affinity" href="affinity.html">🤝 Afinidad</a>
-          <a data-nav-target="stats" href="stats.html">📊 Estadísticas</a>
+          <a data-nav-target="home" href="index.html">Biblioteca</a>
+          <a data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
+          <a data-nav-target="affinity" href="affinity.html">Afinidad</a>
+          <a data-nav-target="stats" href="stats.html">Estadísticas</a>
         </nav>
 
-        <div class="topbar-controls">
-          <button id="global-theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" aria-pressed="false">
-            <span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span>
-            <span class="theme-toggle-text">Claro</span>
-          </button>
-        </div>
       </div>
     </header>
 
@@ -71,7 +64,7 @@
         <section class="panel">
           <div class="panel-header">
             <div>
-              <p class="panel-kicker">Modo GitHub Pages</p>
+              <p class="panel-kicker">⚙️ Modo GitHub Pages</p>
               <h2>Sync local por línea de comandos</h2>
             </div>
           </div>
@@ -91,8 +84,8 @@
 
     <footer class="site-footer">
       <div class="site-footer-inner">
-        <p class="site-footer-line">🎬 Proyecto creado por <strong>Rubén Cougil</strong> ✨</p>
-        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">🌐 ruben.cougil.com</a>
+        <p class="site-footer-line">✨ Proyecto creado por <strong>Rubén Cougil</strong></p>
+        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">ruben.cougil.com</a>
       </div>
     </footer>
     <script src="theme.js"></script>

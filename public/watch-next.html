@@ -11,8 +11,7 @@
     <meta name="description" content="Descubre qué película ver a continuación basándote en tus valoraciones de FilmAffinity. Recomendaciones personalizadas filtradas por género, año y nota." />
     <meta name="application-name" content="FilmAffinity Explorer" />
     <meta name="author" content="Rubén Cougil" />
-    <meta name="theme-color" content="#1f2733" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f0f6fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#f4f7fb" />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://ruben.cougil.com/filmaffinity-explorer/watch-next.html" />
@@ -37,7 +36,7 @@
     <link rel="manifest" href="site.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body class="watch-next-page">
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -51,19 +50,15 @@
         </button>
 
         <nav class="top-links" id="top-nav" aria-label="Primary">
-          <a data-nav-target="home" href="index.html">🎬 Biblioteca</a>
-          <a class="is-active" data-nav-target="watchnext" href="watch-next.html">🍿 Qué ver</a>
-          <a data-nav-target="affinity" href="affinity.html">🤝 Afinidad</a>
-          <a data-nav-target="stats" href="stats.html">📊 Estadísticas</a>
+          <a data-nav-target="home" href="index.html">Biblioteca</a>
+          <a class="is-active" data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
+          <a data-nav-target="affinity" href="affinity.html">Afinidad</a>
+          <a data-nav-target="stats" href="stats.html">Estadísticas</a>
         </nav>
 
         <div class="topbar-controls">
-          <button id="global-theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" aria-pressed="false">
-            <span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span>
-            <span class="theme-toggle-text">Claro</span>
-          </button>
           <label class="field topbar-user-field">
-            <span class="user-selector-label">👤 Usuario</span>
+            <span class="user-selector-label">Usuario</span>
             <select id="global-user-selector"></select>
           </label>
         </div>
@@ -79,7 +74,7 @@
         <section class="panel">
           <div class="panel-header">
             <div>
-              <p class="panel-kicker">Top sugerencias</p>
+              <p class="panel-kicker">🍿 Sugerencias</p>
               <h2>Qué ver a continuación</h2>
             </div>
           </div>
@@ -98,8 +93,8 @@
           <div class="search-always-visible panel">
             <div class="panel-header sidebar-header">
               <div>
-                <p class="panel-kicker">Búsqueda</p>
-                <h2>🔎 Búsqueda rápida</h2>
+              <p class="panel-kicker">🔎 Búsqueda</p>
+              <h2>Búsqueda rápida</h2>
               </div>
             </div>
             <label class="field search-field">
@@ -116,7 +111,7 @@
           <aside id="filter-sidebar" class="panel filter-sidebar" aria-label="Filtros recomendaciones">
             <div class="panel-header sidebar-header">
               <div>
-                <p class="panel-kicker">Filtros</p>
+                <p class="panel-kicker">🧰 Filtros</p>
                 <h2>Buscar y filtrar</h2>
               </div>
             </div>
@@ -124,7 +119,7 @@
             <div class="search-controls sidebar-controls">
 
               <label class="field small-field">
-                <span>⭐ Nota mínima</span>
+                <span>Nota mínima</span>
                 <div class="rating-filter">
                   <select id="watch-next-min-rating">
                     <option value="0" selected>Todas</option>
@@ -143,7 +138,7 @@
               </label>
 
               <label class="field small-field">
-                <span>📅 Año</span>
+                <span>Año</span>
                 <div class="rating-filter">
                   <select id="watch-next-year-filter">
                     <option value="all" selected>Todos los años</option>
@@ -152,7 +147,7 @@
               </label>
 
               <label class="field small-field">
-                <span>🎯 Nota FA mínima</span>
+                <span>Nota FA mínima</span>
                 <div class="rating-filter">
                   <select id="watch-next-min-fa-rating">
                     <option value="0" selected>Todas</option>
@@ -167,7 +162,7 @@
               </label>
 
               <label class="field small-field">
-                <span>🕒 Fecha de voto</span>
+                <span>Fecha de voto</span>
                 <div class="rating-filter">
                   <select id="watch-next-rated-window">
                     <option value="all" selected>Todas</option>
@@ -180,7 +175,7 @@
               </label>
 
               <label class="field small-field">
-                <span>📈 Score mínimo</span>
+                <span>Score mínimo</span>
                 <div class="rating-filter">
                   <select id="watch-next-min-score">
                     <option value="0" selected>Todos</option>
@@ -193,7 +188,7 @@
               </label>
 
               <label class="field small-field">
-                <span>👤 Soporte mínimo</span>
+                <span>Soporte mínimo</span>
                 <div class="rating-filter">
                   <select id="watch-next-min-support">
                     <option value="1" selected>1 usuario o más</option>
@@ -205,7 +200,7 @@
               </label>
 
               <label class="field small-field">
-                <span>🤝 Afinidad mínima</span>
+                <span>Afinidad mínima</span>
                 <div class="rating-filter">
                   <select id="watch-next-min-agreement">
                     <option value="0" selected>Cualquiera</option>
@@ -218,7 +213,7 @@
               </label>
 
               <label class="field small-field">
-                <span>↕ Ordenar por</span>
+                <span>Ordenar por</span>
                 <div class="rating-filter">
                   <select id="watch-next-sort-by">
                     <option value="rank">Ranking recomendado</option>
@@ -232,7 +227,7 @@
               </label>
 
               <label class="field small-field">
-                <span>👥 Votos comunes</span>
+                <span>Votos comunes</span>
                 <div class="toggle-field">
                   <input id="watch-next-shared-only" type="checkbox" />
                   <span>Solo apoyo múltiple</span>
@@ -246,8 +241,8 @@
 
     <footer class="site-footer">
       <div class="site-footer-inner">
-        <p class="site-footer-line">🎬 Proyecto creado por <strong>Rubén Cougil</strong> ✨</p>
-        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">🌐 ruben.cougil.com</a>
+        <p class="site-footer-line">✨ Proyecto creado por <strong>Rubén Cougil</strong></p>
+        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">ruben.cougil.com</a>
       </div>
     </footer>
 

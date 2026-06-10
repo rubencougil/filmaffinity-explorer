@@ -11,8 +11,7 @@
     <meta name="description" content="Visualiza estadísticas detalladas de tus valoraciones en FilmAffinity: géneros favoritos, notas medias, directores más vistos y evolución en el tiempo." />
     <meta name="application-name" content="FilmAffinity Explorer" />
     <meta name="author" content="Rubén Cougil" />
-    <meta name="theme-color" content="#1f2733" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f0f6fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#f4f7fb" />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://ruben.cougil.com/filmaffinity-explorer/stats.html" />
@@ -51,19 +50,15 @@
         </button>
 
         <nav class="top-links" id="top-nav" aria-label="Primary">
-          <a data-nav-target="home" href="index.html">🎬 Biblioteca</a>
-          <a data-nav-target="watchnext" href="watch-next.html">🍿 Qué ver</a>
-          <a data-nav-target="affinity" href="affinity.html">🤝 Afinidad</a>
-          <a class="is-active" data-nav-target="stats" href="stats.html">📊 Estadísticas</a>
+          <a data-nav-target="home" href="index.html">Biblioteca</a>
+          <a data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
+          <a data-nav-target="affinity" href="affinity.html">Afinidad</a>
+          <a class="is-active" data-nav-target="stats" href="stats.html">Estadísticas</a>
         </nav>
 
         <div class="topbar-controls">
-          <button id="global-theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema" aria-pressed="false">
-            <span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-thumb"></span></span>
-            <span class="theme-toggle-text">Claro</span>
-          </button>
           <label class="field topbar-user-field">
-            <span class="user-selector-label">👤 Usuario</span>
+            <span class="user-selector-label">Usuario</span>
             <select id="global-user-selector"></select>
           </label>
         </div>
@@ -74,7 +69,7 @@
       <header class="hero panel">
         <div class="stats-hero-head">
           <div>
-            <p class="panel-kicker">Analítica por usuario</p>
+              <p class="panel-kicker">📊 Analítica por usuario</p>
             <p id="stats-subtitle" class="hero-copy">
               Explora cómo evoluciona el historial de votos del usuario seleccionado.
             </p>
@@ -83,19 +78,19 @@
 
         <div class="stats-grid stats-grid-large stats-kpi-grid">
           <article class="stat-card">
-            <span class="stat-label has-tooltip" data-tooltip="Cantidad total de títulos con voto personal del usuario seleccionado.">🎟️ Votos totales</span>
+            <span class="stat-label has-tooltip" data-tooltip="Cantidad total de títulos con voto personal del usuario seleccionado.">Votos totales</span>
             <strong id="stats-total-votes">0</strong>
           </article>
           <article class="stat-card">
-            <span class="stat-label has-tooltip" data-tooltip="Promedio simple de todas las notas personales del usuario (escala 1 a 10).">⭐ Nota media global</span>
+            <span class="stat-label has-tooltip" data-tooltip="Promedio simple de todas las notas personales del usuario (escala 1 a 10).">Nota media global</span>
             <strong id="stats-average-rating">-</strong>
           </article>
           <article class="stat-card">
-            <span class="stat-label has-tooltip" data-tooltip="Año con mayor número de votos registrados para el usuario seleccionado.">🔥 Año más activo</span>
+            <span class="stat-label has-tooltip" data-tooltip="Año con mayor número de votos registrados para el usuario seleccionado.">Año más activo</span>
             <strong id="stats-busiest-year">-</strong>
           </article>
           <article class="stat-card">
-            <span class="stat-label has-tooltip" data-tooltip="Número de títulos que también tienen voto de al menos otro usuario configurado.">🤝 Títulos compartidos</span>
+            <span class="stat-label has-tooltip" data-tooltip="Número de títulos que también tienen voto de al menos otro usuario configurado.">Títulos compartidos</span>
             <strong id="stats-shared-count">0</strong>
           </article>
         </div>
@@ -107,8 +102,8 @@
             <section class="panel chart-panel">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Actividad</p>
-                  <h2>🗓️ Votos a través del tiempo</h2>
+                  <p class="panel-kicker">🗓️ Actividad</p>
+                  <h2>Votos a través del tiempo</h2>
                 </div>
               </div>
               <p class="chart-caption">Cantidad de títulos votados por mes.</p>
@@ -118,8 +113,8 @@
             <section class="panel chart-panel">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Calidad media</p>
-                  <h2>⭐ Nota media por año</h2>
+                  <p class="panel-kicker">⭐ Calidad media</p>
+                  <h2>Nota media por año</h2>
                 </div>
               </div>
               <p class="chart-caption">Cómo cambia la nota media del usuario según el año de votación.</p>
@@ -129,8 +124,8 @@
             <section class="panel chart-panel">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Distribución</p>
-                  <h2>🎚️ Reparto de notas</h2>
+                  <p class="panel-kicker">🎚️ Distribución</p>
+                  <h2>Reparto de notas</h2>
                 </div>
               </div>
               <p class="chart-caption">Cuántas veces usas cada puntuación del 1 al 10.</p>
@@ -140,8 +135,8 @@
             <section class="panel chart-panel">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Coincidencias</p>
-                  <h2>👥 Votos compartidos por año</h2>
+                  <p class="panel-kicker">🔁 Coincidencias</p>
+                  <h2>Votos compartidos por año</h2>
                 </div>
               </div>
               <p class="chart-caption">Títulos de la biblioteca del usuario con voto de otros usuarios.</p>
@@ -151,8 +146,8 @@
             <section class="panel chart-panel chart-panel-wide">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Lectura rápida</p>
-                  <h2>🧠 Hallazgos rápidos</h2>
+                  <p class="panel-kicker">🧠 Lectura rápida</p>
+                  <h2>Hallazgos rápidos</h2>
                 </div>
               </div>
               <div id="insights-grid" class="insights-grid"></div>
@@ -161,8 +156,8 @@
             <section class="panel chart-panel">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Top 10</p>
-                  <h2>🏆 Mejores votadas</h2>
+                  <p class="panel-kicker">🏆 Top 10</p>
+                  <h2>Mejores votadas</h2>
                 </div>
               </div>
               <ol id="top-best-list" class="ranking-list"></ol>
@@ -171,8 +166,8 @@
             <section class="panel chart-panel">
               <div class="panel-header">
                 <div>
-                  <p class="panel-kicker">Top 10</p>
-                  <h2>💥 Peores votadas</h2>
+                  <p class="panel-kicker">💥 Top 10</p>
+                  <h2>Peores votadas</h2>
                 </div>
               </div>
               <ol id="top-worst-list" class="ranking-list"></ol>
@@ -184,8 +179,8 @@
 
     <footer class="site-footer">
       <div class="site-footer-inner">
-        <p class="site-footer-line">🎬 Proyecto creado por <strong>Rubén Cougil</strong> ✨</p>
-        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">🌐 ruben.cougil.com</a>
+        <p class="site-footer-line">✨ Proyecto creado por <strong>Rubén Cougil</strong></p>
+        <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">ruben.cougil.com</a>
       </div>
     </footer>
 
