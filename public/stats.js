@@ -96,6 +96,34 @@ function showStatsLoader(message = 'Cargando estadísticas...') {
   elements.topWorstList.appendChild(createLoader(message));
 }
 
+function getRatingToneClass(value) {
+  const rating = Number(value);
+  if (!Number.isFinite(rating)) {
+    return '';
+  }
+
+  if (rating <= 3) {
+    return 'rating-tone-low';
+  }
+
+  if (rating <= 6) {
+    return 'rating-tone-mid';
+  }
+
+  return 'rating-tone-high';
+}
+
+function createChartDetail({
+  id,
+  chart,
+  label,
+  value,
+  summary,
+  meta = []
+}) {
+  return { id, chart, label, value, summary, meta };
+}
+
 function parseFlexibleDate(value) {
   const text = String(value || '').trim();
   if (!text) {
@@ -233,6 +261,80 @@ function createChartShell(title) {
   return empty;
 }
 
+function createChartTooltip() {
+  const node = document.createElement('div');
+  node.className = 'chart-tooltip';
+  node.hidden = true;
+
+  const label = document.createElement('span');
+  label.className = 'chart-tooltip-label';
+
+  const value = document.createElement('strong');
+  value.className = 'chart-tooltip-value';
+
+  const summary = document.createElement('p');
+  summary.className = 'chart-tooltip-summary';
+
+  const meta = document.createElement('div');
+  meta.className = 'chart-tooltip-meta';
+
+  node.append(label, value, summary, meta);
+
+  return {
+    node,
+    show(detail) {
+      label.textContent = detail.chart;
+      value.textContent = `${detail.label} · ${detail.value}`;
+      summary.textContent = detail.summary;
+      meta.innerHTML = '';
+      (detail.meta || []).forEach((item) => {
+        const chip = document.createElement('span');
+        chip.className = 'chart-tooltip-chip';
+        chip.textContent = item;
+        meta.appendChild(chip);
+      });
+      node.hidden = false;
+    },
+    hide() {
+      node.hidden = true;
+    }
+  };
+}
+
+function wireChartElement(element, detail, tooltip) {
+  if (!detail) {
+    return;
+  }
+
+  element.classList.add('chart-item');
+  element.setAttribute('tabindex', '0');
+  element.setAttribute('focusable', 'true');
+  element.setAttribute('aria-label', `${detail.chart}: ${detail.label}. Valor ${detail.value}`);
+  element.setAttribute('data-detail', `${detail.label} ${detail.value}`);
+  element.title = `${detail.label}: ${detail.value}`;
+
+  const activate = () => {
+    element.classList.add('is-active');
+    tooltip.show(detail);
+  };
+
+  const deactivate = () => {
+    element.classList.remove('is-active');
+    tooltip.hide();
+  };
+
+  element.addEventListener('mouseenter', activate);
+  element.addEventListener('focus', activate);
+  element.addEventListener('mouseleave', deactivate);
+  element.addEventListener('blur', deactivate);
+  element.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      deactivate();
+    }
+  });
+}
+
 function renderBarChart(target, dataset, options = {}) {
   target.innerHTML = '';
 
@@ -248,6 +350,8 @@ function renderBarChart(target, dataset, options = {}) {
   const innerHeight = height - padding.top - padding.bottom;
   const maxValue = Math.max(...dataset.map((item) => item.value), 1);
   const barWidth = innerWidth / dataset.length;
+  const chartName = options.chartName || 'Gráfico';
+  const tooltip = createChartTooltip();
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -265,6 +369,16 @@ function renderBarChart(target, dataset, options = {}) {
     const barHeight = (item.value / maxValue) * innerHeight;
     const x = padding.left + index * barWidth + barWidth * 0.14;
     const y = height - padding.bottom - barHeight;
+    const detail = createChartDetail({
+      id: `${chartName}-${item.label}-${index}`,
+      chart: chartName,
+      label: item.label,
+      value: String(item.value),
+      summary: options.describe
+        ? options.describe(item, index)
+        : `${item.label}: ${item.value}`,
+      meta: options.meta ? options.meta(item, index) : []
+    });
     const rect = document.createElementNS(svg.namespaceURI, 'rect');
     rect.setAttribute('x', x);
     rect.setAttribute('y', y);
@@ -272,6 +386,7 @@ function renderBarChart(target, dataset, options = {}) {
     rect.setAttribute('height', Math.max(2, barHeight));
     rect.setAttribute('rx', 10);
     rect.setAttribute('class', options.barClass || 'chart-bar');
+    wireChartElement(rect, detail, tooltip);
     svg.appendChild(rect);
 
     const valueLabel = document.createElementNS(svg.namespaceURI, 'text');
@@ -292,9 +407,10 @@ function renderBarChart(target, dataset, options = {}) {
   });
 
   target.appendChild(svg);
+  target.appendChild(tooltip.node);
 }
 
-function renderLineChart(target, dataset) {
+function renderLineChart(target, dataset, options = {}) {
   target.innerHTML = '';
 
   if (!dataset.length) {
@@ -309,6 +425,8 @@ function renderLineChart(target, dataset) {
   const innerHeight = height - padding.top - padding.bottom;
   const maxValue = Math.max(...dataset.map((item) => item.value), 1);
   const stepX = dataset.length > 1 ? innerWidth / (dataset.length - 1) : innerWidth / 2;
+  const chartName = options.chartName || 'Actividad por mes';
+  const tooltip = createChartTooltip();
 
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
@@ -325,7 +443,17 @@ function renderLineChart(target, dataset) {
   const points = dataset.map((item, index) => {
     const x = padding.left + index * stepX;
     const y = height - padding.bottom - (item.value / maxValue) * innerHeight;
-    return { ...item, x, y };
+    const detail = createChartDetail({
+      id: `${chartName}-${item.label}-${index}`,
+      chart: chartName,
+      label: item.label,
+      value: String(item.value),
+      summary: options.describe
+        ? options.describe(item, index)
+        : `${item.label}: ${item.value}`,
+      meta: options.meta ? options.meta(item, index) : []
+    });
+    return { ...item, x, y, detail };
   });
 
   const path = document.createElementNS(svg.namespaceURI, 'path');
@@ -342,6 +470,7 @@ function renderLineChart(target, dataset) {
     dot.setAttribute('cy', point.y);
     dot.setAttribute('r', 4.5);
     dot.setAttribute('class', 'chart-dot');
+    wireChartElement(dot, point.detail, tooltip);
     svg.appendChild(dot);
 
     if (index % Math.ceil(points.length / 8 || 1) === 0 || index === points.length - 1) {
@@ -356,6 +485,7 @@ function renderLineChart(target, dataset) {
   });
 
   target.appendChild(svg);
+  target.appendChild(tooltip.node);
 }
 
 function renderInsights(records) {
@@ -363,10 +493,14 @@ function renderInsights(records) {
 
   const ratedRecords = records.filter((record) => Number.isFinite(record.rating));
   const datedRecords = records.filter((record) => record.date);
-  const highest = [...ratedRecords]
-    .sort((a, b) => b.rating - a.rating || a.title.localeCompare(b.title))[0];
-  const lowest = [...ratedRecords]
-    .sort((a, b) => a.rating - b.rating || a.title.localeCompare(b.title))[0];
+  const maxRating = ratedRecords.length ? Math.max(...ratedRecords.map((record) => record.rating)) : null;
+  const minRating = ratedRecords.length ? Math.min(...ratedRecords.map((record) => record.rating)) : null;
+  const latestHighest = maxRating === null
+    ? null
+    : [...ratedRecords].filter((record) => record.rating === maxRating).at(-1) || null;
+  const latestLowest = minRating === null
+    ? null
+    : [...ratedRecords].filter((record) => record.rating === minRating).at(-1) || null;
   const shared = records.filter((record) => record.otherVotes.length > 0).length;
   const mostRecent = datedRecords.at(-1);
   const highRatings = ratedRecords.filter((record) => record.rating >= 8).length;
@@ -424,14 +558,26 @@ function renderInsights(records) {
 
   const items = [
     {
-      label: '🏆 Nota más alta',
-      value: highest ? `${highest.rating} · ${highest.title}` : '-',
-      tooltip: 'Mayor nota individual registrada para el usuario y título asociado.'
+      label: '🏆 Última nota más alta',
+      value: latestHighest
+        ? `${latestHighest.rating} · ${latestHighest.title} · ${formatDate(latestHighest.date, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          })}`
+        : '-',
+      tooltip: 'Última aparición de la nota máxima registrada, con fecha.'
     },
     {
-      label: '🫣 Nota más baja',
-      value: lowest ? `${lowest.rating} · ${lowest.title}` : '-',
-      tooltip: 'Menor nota individual registrada para el usuario y título asociado.'
+      label: '🫣 Última nota más baja',
+      value: latestLowest
+        ? `${latestLowest.rating} · ${latestLowest.title} · ${formatDate(latestLowest.date, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          })}`
+        : '-',
+      tooltip: 'Última aparición de la nota mínima registrada, con fecha.'
     },
     {
       label: '🤝 Porcentaje compartido',
@@ -538,6 +684,10 @@ function renderRankingList(target, records, emptyText) {
     const value = document.createElement('span');
     value.className = 'ranking-score';
     value.textContent = String(record.rating ?? '-');
+    const toneClass = getRatingToneClass(record.rating);
+    if (toneClass) {
+      value.classList.add(toneClass);
+    }
 
     item.append(main, value);
     target.appendChild(item);
@@ -894,14 +1044,10 @@ function buildStatistics(records) {
   const datedRecords = records.filter((record) => record.date);
   const average = records.filter((record) => Number.isFinite(record.rating));
 
-  const byMonth = groupCount(datedRecords, (record) => {
-    const year = record.date.getFullYear();
-    const month = String(record.date.getMonth() + 1).padStart(2, '0');
-    return `${year}-${month}`;
-  }).map((item) => ({
-    label: formatMonthKey(item.label),
-    value: item.value
-  }));
+  const byYearCount = groupCount(datedRecords, (record) => {
+    const year = getYear(record.date);
+    return year ? String(year) : '';
+  });
 
   const byYearAverage = groupAverage(datedRecords, (record) => {
     const year = getYear(record.date);
@@ -938,10 +1084,13 @@ function buildStatistics(records) {
   const ranked = records
     .filter((record) => Number.isFinite(record.rating))
     .sort((a, b) => b.rating - a.rating || compareRecentFirst(a, b));
-  const topBest = ranked.slice(0, 10);
+  const topBest = ranked
+    .slice(0, 10)
+    .sort((a, b) => (b.date ? b.date.getTime() : 0) - (a.date ? a.date.getTime() : 0) || a.title.localeCompare(b.title));
   const topWorst = [...ranked]
     .sort((a, b) => a.rating - b.rating || compareRecentFirst(a, b))
-    .slice(0, 10);
+    .slice(0, 10)
+    .sort((a, b) => (b.date ? b.date.getTime() : 0) - (a.date ? a.date.getTime() : 0) || a.title.localeCompare(b.title));
 
   elements.totalVotes.textContent = String(records.length);
   elements.averageRating.textContent = average.length
@@ -950,10 +1099,29 @@ function buildStatistics(records) {
   elements.busiestYear.textContent = busiestYear ? `${busiestYear.label} (${busiestYear.value})` : '-';
   elements.sharedCount.textContent = String(records.filter((record) => record.otherVotes.length > 0).length);
 
-  renderLineChart(elements.timelineChart, byMonth.slice(-18));
-  renderBarChart(elements.averageByYearChart, byYearAverage, { barClass: 'chart-bar chart-bar-gold' });
-  renderBarChart(elements.ratingDistributionChart, byRating);
-  renderBarChart(elements.sharedByYearChart, sharedByYear, { barClass: 'chart-bar chart-bar-soft' });
+  renderBarChart(elements.timelineChart, byYearCount, {
+    chartName: 'Actividad por año',
+    barClass: 'chart-bar chart-bar-soft',
+    describe: (item) => `${item.value} votos en el año ${item.label}.`,
+    meta: (item) => [`Año: ${item.label}`, `Votos: ${item.value}`]
+  });
+  renderBarChart(elements.averageByYearChart, byYearAverage, {
+    chartName: 'Nota media por año',
+    barClass: 'chart-bar chart-bar-gold',
+    describe: (item) => `La media del año ${item.label} fue ${item.value}.`,
+    meta: (item) => [`Año: ${item.label}`, `Media: ${item.value}`]
+  });
+  renderBarChart(elements.ratingDistributionChart, byRating, {
+    chartName: 'Distribución de notas',
+    describe: (item) => `${item.value} votos con nota ${item.label}.`,
+    meta: (item) => [`Nota: ${item.label}`, `Votos: ${item.value}`]
+  });
+  renderBarChart(elements.sharedByYearChart, sharedByYear, {
+    chartName: 'Votos compartidos por año',
+    barClass: 'chart-bar chart-bar-soft',
+    describe: (item) => `${item.value} títulos compartidos en ${item.label}.`,
+    meta: (item) => [`Año: ${item.label}`, `Compartidos: ${item.value}`]
+  });
   renderInsights(records);
   renderRankingList(elements.topBestList, topBest, 'Sin suficientes votos para mostrar un top.');
   renderRankingList(elements.topWorstList, topWorst, 'Sin suficientes votos para mostrar un top.');

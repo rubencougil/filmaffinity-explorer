@@ -120,6 +120,23 @@ function normalizeRecord(record) {
   };
 }
 
+function getRatingToneClass(value) {
+  const rating = Number(value);
+  if (!Number.isFinite(rating)) {
+    return '';
+  }
+
+  if (rating <= 3) {
+    return 'rating-tone-low';
+  }
+
+  if (rating <= 6) {
+    return 'rating-tone-mid';
+  }
+
+  return 'rating-tone-high';
+}
+
 function getPosterCandidates(url) {
   const source = String(url || '').trim();
   if (!source) {
@@ -385,7 +402,12 @@ function renderResults(records) {
     const comparisonList = node.querySelector('.comparison-list');
     const yearNode = node.querySelector('.result-year');
     const averageNode = node.querySelector('.fa-average-pill');
-    node.querySelector('.vote-pill').textContent = record.rating ?? '-';
+    const votePill = node.querySelector('.vote-pill');
+    votePill.textContent = record.rating ?? '-';
+    const voteToneClass = getRatingToneClass(record.rating);
+    if (voteToneClass) {
+      votePill.classList.add(voteToneClass);
+    }
     if (Number.isFinite(record.averageRating)) {
       averageNode.textContent = `FA ${record.averageRating.toFixed(1)}`;
     } else {
@@ -450,6 +472,10 @@ function renderResults(records) {
         }
       }
 
+      const otherToneClass = getRatingToneClass(otherRating);
+      if (otherToneClass) {
+        value.classList.add(otherToneClass);
+      }
       value.textContent = marker ? `${marker} ${vote.rating}` : String(vote.rating);
 
       row.append(user, value);

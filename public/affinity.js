@@ -74,10 +74,99 @@ function normalizeRecord(record) {
   return {
     title: String(record.title || '').trim(),
     rating: Number.isFinite(Number(record.rating)) ? Number(record.rating) : null,
+    ratedAt: String(record.ratedAt || '').trim(),
+    date: parseFlexibleDate(record.ratedAt),
     url: String(record.url || '').trim(),
     posterUrl: String(record.posterUrl || '').trim(),
     otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
   };
+}
+
+function parseFlexibleDate(value) {
+  const text = String(value || '').trim();
+  if (!text) {
+    return null;
+  }
+
+  const direct = new Date(text);
+  if (!Number.isNaN(direct.getTime())) {
+    return direct;
+  }
+
+  const spanishMatch = text
+    .toLowerCase()
+    .match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/i);
+
+  if (!spanishMatch) {
+    return null;
+  }
+
+  const monthLookup = {
+    enero: 0,
+    febrero: 1,
+    marzo: 2,
+    abril: 3,
+    mayo: 4,
+    junio: 5,
+    julio: 6,
+    agosto: 7,
+    septiembre: 8,
+    setiembre: 8,
+    octubre: 9,
+    noviembre: 10,
+    diciembre: 11
+  };
+
+  const day = Number(spanishMatch[1]);
+  const monthName = spanishMatch[2]
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const year = Number(spanishMatch[3]);
+  const month = monthLookup[monthName];
+
+  if (month === undefined) {
+    return null;
+  }
+
+  return new Date(year, month, day);
+}
+
+function formatDate(value, options = {}) {
+  if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
+    return '-';
+  }
+
+  return new Intl.DateTimeFormat('es-ES', options).format(value);
+}
+
+function formatVoteTooltip(userName, ratedAt) {
+  const date = parseFlexibleDate(ratedAt);
+  if (!date) {
+    return `Votación de ${userName}`;
+  }
+
+  return `Votación de ${userName}: ${formatDate(date, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })}`;
+}
+
+function getRatingToneClass(value) {
+  const rating = Number(value);
+  if (!Number.isFinite(rating)) {
+    return '';
+  }
+
+  if (rating <= 3) {
+    return 'rating-tone-low';
+  }
+
+  if (rating <= 6) {
+    return 'rating-tone-mid';
+  }
+
+  return 'rating-tone-high';
 }
 
 function dedupeRecords(records) {
@@ -169,8 +258,12 @@ function buildAffinityData(records, peerName) {
         title: record.title,
         url: record.url,
         posterUrl: record.posterUrl,
+        date: record.date,
+        mineRatedAt: record.ratedAt,
         mine: record.rating,
         theirs: peerRating,
+        theirsRatedAt: String(peerVote.ratedAt || '').trim(),
+        theirsDate: parseFlexibleDate(peerVote.ratedAt),
         diff: Math.abs(record.rating - peerRating)
       }
     ];
@@ -209,12 +302,26 @@ function buildAffinityData(records, peerName) {
       ? Number((covariance / Math.sqrt(varianceMine * varianceTheirs)).toFixed(2))
       : null;
 
+  const sortByPeerDateDescThenTitle = (a, b) => {
+    const timeA =
+      a.theirsDate instanceof Date && !Number.isNaN(a.theirsDate.getTime())
+        ? a.theirsDate.getTime()
+        : -Infinity;
+    const timeB =
+      b.theirsDate instanceof Date && !Number.isNaN(b.theirsDate.getTime())
+        ? b.theirsDate.getTime()
+        : -Infinity;
+    return timeB - timeA || a.title.localeCompare(b.title);
+  };
+
   const topAgreements = [...items]
     .sort((a, b) => a.diff - b.diff || a.title.localeCompare(b.title))
-    .slice(0, 4);
+    .slice(0, 10)
+    .sort(sortByPeerDateDescThenTitle);
   const disagreements = [...items]
     .sort((a, b) => b.diff - a.diff || a.title.localeCompare(b.title))
-    .slice(0, 4);
+    .slice(0, 10)
+    .sort(sortByPeerDateDescThenTitle);
 
   return {
     peerName,
@@ -270,6 +377,9 @@ function renderAgreementList(titleText, entries, { positive = false } = {}) {
     const main = document.createElement('div');
     main.className = 'agreement-main';
 
+    const titleRow = document.createElement('div');
+    titleRow.className = 'agreement-title-row';
+
     const film = document.createElement(entry.url ? 'a' : 'span');
     film.className = 'agreement-film';
     film.textContent = entry.title;
@@ -278,12 +388,43 @@ function renderAgreementList(titleText, entries, { positive = false } = {}) {
       film.target = '_blank';
       film.rel = 'noreferrer';
     }
+    titleRow.appendChild(film);
 
-    const numbers = document.createElement('span');
-    numbers.className = `agreement-gap${positive ? ' agreement-gap-good' : ''}`;
-    numbers.textContent = `Nota usuario activo ${entry.mine} · Nota ${selectedPeerName} ${entry.theirs} · Diferencia ${entry.diff}`;
+    const side = document.createElement('div');
+    side.className = 'agreement-side';
 
-    main.append(film, numbers);
+    if (entry.date instanceof Date && !Number.isNaN(entry.date.getTime())) {
+      const dateChip = document.createElement('span');
+      dateChip.className = 'agreement-date';
+      dateChip.textContent = formatDate(entry.date, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+      side.appendChild(dateChip);
+    }
+
+    const meta = document.createElement('div');
+    meta.className = 'agreement-meta';
+
+    const mineRating = document.createElement('span');
+    mineRating.className = `agreement-rating has-tooltip ${getRatingToneClass(entry.mine)}`.trim();
+    mineRating.textContent = `Tú ${entry.mine}`;
+    mineRating.dataset.tooltip = formatVoteTooltip(selectedUserName, entry.mineRatedAt);
+    mineRating.setAttribute('aria-label', mineRating.dataset.tooltip);
+
+    const peerRating = document.createElement('span');
+    peerRating.className = `agreement-rating has-tooltip ${getRatingToneClass(entry.theirs)}`.trim();
+    peerRating.textContent = `${selectedPeerName} ${entry.theirs}`;
+    peerRating.dataset.tooltip = formatVoteTooltip(selectedPeerName, entry.theirsRatedAt);
+    peerRating.setAttribute('aria-label', peerRating.dataset.tooltip);
+
+    meta.append(mineRating, peerRating);
+
+    side.appendChild(meta);
+    titleRow.appendChild(side);
+
+    main.append(titleRow);
     li.appendChild(main);
     list.appendChild(li);
   });
@@ -358,19 +499,30 @@ function renderAffinity() {
 
   heroMetric.append(heroValue, heroLabel);
 
-  const scoreBadge = document.createElement('span');
-  scoreBadge.className = 'agreement-score';
-  scoreBadge.textContent =
-    affinity.agreementScore === null
-      ? '🧩 Sin datos compartidos'
-      : `🤝 ${affinity.agreementScore}% de compatibilidad`;
+  const summaryBlock = document.createElement('div');
+  summaryBlock.className = 'affinity-summary-block';
 
-  const summary = document.createElement('span');
+  const summary = document.createElement('p');
   summary.className = 'agreement-summary';
   summary.textContent =
     affinity.agreementScore === null
       ? 'Se necesitan más títulos en común para medir afinidad.'
       : `Afinidad ${describeCompatibility(affinity.agreementScore)} entre ambos usuarios.`;
+  summaryBlock.appendChild(summary);
+
+  if (affinity.overlapCount < 15) {
+    const sampleNote = document.createElement('p');
+    sampleNote.className = 'affinity-sample-note is-warning';
+    sampleNote.textContent =
+      'Muestra pequeña: interpreta la compatibilidad con cautela hasta tener más títulos en común.';
+    summaryBlock.appendChild(sampleNote);
+  } else {
+    const sampleNote = document.createElement('p');
+    sampleNote.className = 'affinity-sample-note is-ok';
+    sampleNote.textContent =
+      `Muestra suficiente para leer la señal: ${describeConfidence(affinity.overlapCount)} confianza.`;
+    summaryBlock.appendChild(sampleNote);
+  }
 
   const chips = document.createElement('div');
   chips.className = 'agreement-chips';
@@ -425,18 +577,13 @@ function renderAffinity() {
     corrChip,
     disagreementChip
   );
-  metrics.append(heroMetric, scoreBadge, summary, chips);
+  metrics.append(heroMetric, summaryBlock, chips);
   card.appendChild(metrics);
   elements.content.appendChild(card);
 
   const kpiGrid = document.createElement('div');
   kpiGrid.className = 'affinity-kpi-grid';
   kpiGrid.append(
-    createMetricCard(
-      'Compatibilidad',
-      affinity.agreementScore === null ? '-' : `${affinity.agreementScore}%`,
-      describeCompatibility(affinity.agreementScore ?? 0)
-    ),
     createMetricCard(
       'Títulos en común',
       String(affinity.overlapCount),
