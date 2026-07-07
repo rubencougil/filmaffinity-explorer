@@ -105,7 +105,7 @@ function buildChallengeMessage(title, bodyText) {
 }
 
 function isChallengeErrorMessage(message) {
-  return /too many requests|security verification|just a moment|captcha|turnstile|cloudflare/i.test(
+  return /too many requests|security verification|verificaci[oó]n de seguridad|just a moment|captcha|challenge|turnstile|cloudflare|bloquea temporalmente|no deja acceder/i.test(
     String(message || '')
   );
 }
