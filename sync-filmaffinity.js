@@ -6,9 +6,6 @@ const BASE_URL = 'https://www.filmaffinity.com/es/userratings.php';
 const MAX_PAGES = 200;
 const HEADLESS_WAIT_MS = 3 * 60 * 1000;
 const MANUAL_WAIT_MS = 10 * 60 * 1000;
-const CI_SYNC_RETRY_ATTEMPTS = 3;
-const CI_SYNC_RETRY_BASE_DELAY_MS = 15 * 1000;
-const CI_SYNC_RETRY_MAX_DELAY_MS = 60 * 1000;
 const PAGE_SIZE = 50;
 const PAGE_DELAY_MS = 900;
 const PAGE_DELAY_JITTER_MS = 500;
@@ -579,65 +576,32 @@ async function syncFilmaffinity({ source, existingRatings = [], onProgress = () 
   }
 
   let context = null;
+  let challengeMessage = '';
 
   try {
-    for (let attempt = 1; attempt <= CI_SYNC_RETRY_ATTEMPTS; attempt += 1) {
-      onProgress('Opening headless Chrome and connecting to Filmaffinity...');
-      context = await launchContext(userId, { headless: true });
+    onProgress('Opening headless Chrome and connecting to Filmaffinity...');
+    context = await launchContext(userId, { headless: true });
 
-      try {
-        return await collectRatings(context, userId, onProgress, {
-          allowManualChallengeBypass: false,
-          existingRatings
-        });
-      } catch (error) {
-        const message = String(error?.message || '');
-        if (!isChallengeErrorMessage(message)) {
-          throw error;
-        }
+    try {
+      return await collectRatings(context, userId, onProgress, {
+        allowManualChallengeBypass: false,
+        existingRatings
+      });
+    } catch (error) {
+      challengeMessage = String(error?.message || '');
+      if (!isChallengeErrorMessage(challengeMessage)) {
+        throw error;
+      }
 
-        if (!IS_CI) {
-          throw error;
-        }
-
-        if (attempt >= CI_SYNC_RETRY_ATTEMPTS) {
-          throw new Error(
-            `${message} GitHub Actions agotó ${CI_SYNC_RETRY_ATTEMPTS} intentos automáticos; revisa el acceso o ejecuta el sync manualmente.`
-          );
-        }
-
-        const delayMs = Math.min(
-          CI_SYNC_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1),
-          CI_SYNC_RETRY_MAX_DELAY_MS
+      if (IS_CI) {
+        throw new Error(
+          `${challengeMessage} GitHub Actions no puede continuar con el fallback interactivo; revisa el acceso o ejecuta el sync manualmente.`
         );
-        onProgress(
-          `Filmaffinity sigue bloqueando el acceso. Reintentando automaticamente en ${Math.round(delayMs / 1000)} segundos (intento ${attempt + 1}/${CI_SYNC_RETRY_ATTEMPTS})...`
-        );
-
-        if (context) {
-          await context.close().catch(() => {});
-          context = null;
-        }
-
-        await sleep(delayMs);
       }
     }
-  } catch (error) {
-    const message = String(error?.message || '');
-    if (!isChallengeErrorMessage(message)) {
-      throw error;
-    }
 
-    if (IS_CI) {
-      throw new Error(
-        `${message} GitHub Actions no puede continuar con el fallback interactivo; revisa el acceso o ejecuta el sync manualmente.`
-      );
-    }
-
-    onProgress(`Aviso: Filmaffinity está bloqueando el acceso automático. ${message}`);
-    onProgress(
-      'Reintentando en Chrome visible para verificacion manual (mismo perfil persistente)...'
-    );
+    onProgress(`Aviso: Filmaffinity está bloqueando el acceso automático. ${challengeMessage}`);
+    onProgress('Abriendo Chrome visible para verificacion manual (mismo perfil persistente)...');
 
     if (context) {
       await context.close().catch(() => {});

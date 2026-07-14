@@ -1,15 +1,15 @@
-name: Weekly Filmaffinity Sync
+name: Every 15 Days Filmaffinity Sync
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 6 1,16 * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: daily-filmaffinity-sync
+  group: every-15-days-filmaffinity-sync
   cancel-in-progress: true
 
 jobs:

@@ -1,7 +1,7 @@
 # 🎬 Filmaffinity Explorer
 
 [![CI](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml)
-[![Weekly Filmaffinity Sync](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/daily-sync.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/daily-sync.yml)
+[![Every 15 Days Filmaffinity Sync](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/daily-sync.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/daily-sync.yml)
 [![Deploy GitHub Pages](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/pages.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/pages.yml)
 
 Web app to browse and analyze FilmAffinity ratings for one or more users.
@@ -43,9 +43,9 @@ Esto actualiza:
 
 - `public/data/libraries.json`
 
-## 🤖 Sync diario en GitHub Actions
+## 🤖 Sync cada 15 días en GitHub Actions
 
-Sí, también se puede automatizar una vez al día desde GitHub Actions.
+Sí, también se puede automatizar aproximadamente cada 15 días desde GitHub Actions.
 
 Para que funcione, crea estos secrets:
 
