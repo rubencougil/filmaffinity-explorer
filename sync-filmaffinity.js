@@ -1,6 +1,9 @@
 const path = require('path');
 const https = require('https');
-const { chromium } = require('playwright');
+const { chromium: playwrightChromium } = require('playwright-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+
+playwrightChromium.use(StealthPlugin());
 
 const BASE_URL = 'https://www.filmaffinity.com/es/userratings.php';
 const MAX_PAGES = 200;
@@ -435,14 +438,19 @@ async function launchContext(userId, options = {}) {
   const { headless = true } = options;
   const launchOptions = {
     headless,
-    viewport: { width: 1440, height: 1600 }
+    viewport: { width: 1440, height: 900 },
+    args: [
+      '--disable-blink-features=AutomationControlled',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
   };
 
   if (!IS_CI) {
     launchOptions.channel = 'chrome';
   }
 
-  const context = await chromium.launchPersistentContext(buildProfileDir(userId), launchOptions);
+  const context = await playwrightChromium.launchPersistentContext(buildProfileDir(userId), launchOptions);
 
   return context;
 }
