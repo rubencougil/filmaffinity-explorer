@@ -62,6 +62,8 @@ Después, el workflow de GitHub Pages se encarga de desplegar la versión public
 
 Si Filmaffinity devuelve challenge, CAPTCHA o bloqueo temporal, el job falla con un mensaje claro en vez de intentar abrir una ventana visible.
 
+El sync en GitHub Actions reintenta con perfiles limpios por intento para reducir bloqueos persistentes. Si quieres probar evasiones concretas de stealth, puedes pasar `FILMAFFINITY_STEALTH_EVASIONS` con una lista separada por comas.
+
 ## 🧪 Probar la versión estática en local
 
 ```bash

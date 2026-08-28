@@ -1,9 +1,26 @@
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const https = require('https');
 const { chromium: playwrightChromium } = require('playwright-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 
-playwrightChromium.use(StealthPlugin());
+function parseEnabledEvasions(value) {
+  const entries = String(value || '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  return entries.length ? new Set(entries) : null;
+}
+
+const stealthPlugin = StealthPlugin();
+const enabledEvasions = parseEnabledEvasions(process.env.FILMAFFINITY_STEALTH_EVASIONS);
+if (enabledEvasions) {
+  stealthPlugin.enabledEvasions = enabledEvasions;
+}
+
+playwrightChromium.use(stealthPlugin);
 
 const BASE_URL = 'https://www.filmaffinity.com/es/userratings.php';
 const MAX_PAGES = 200;
@@ -84,6 +101,10 @@ function buildRequestHeaders() {
 
 function buildProfileDir(userId) {
   return path.join(__dirname, '.playwright', `filmaffinity-profile-${userId}`);
+}
+
+function buildTransientProfileDir(userId) {
+  return fs.mkdtempSync(path.join(os.tmpdir(), `filmaffinity-profile-${userId}-`));
 }
 
 function buildChallengeMessage(title, bodyText) {
@@ -435,7 +456,7 @@ async function scrapeCurrentPage(page) {
 }
 
 async function launchContext(userId, options = {}) {
-  const { headless = true } = options;
+  const { headless = true, profileDir = buildProfileDir(userId) } = options;
   const launchOptions = {
     headless,
     viewport: { width: 1440, height: 900 },
@@ -450,7 +471,7 @@ async function launchContext(userId, options = {}) {
     launchOptions.channel = 'chrome';
   }
 
-  const context = await playwrightChromium.launchPersistentContext(buildProfileDir(userId), launchOptions);
+  const context = await playwrightChromium.launchPersistentContext(profileDir, launchOptions);
 
   return context;
 }
@@ -585,45 +606,84 @@ async function syncFilmaffinity({ source, existingRatings = [], onProgress = () 
 
   let context = null;
   let challengeMessage = '';
+  let profileDir = '';
+  let shouldCleanupProfileDir = false;
 
   try {
-    onProgress('Opening headless Chrome and connecting to Filmaffinity...');
-    context = await launchContext(userId, { headless: true });
+    for (let attempt = 1; attempt <= (IS_CI ? CI_SYNC_RETRY_ATTEMPTS : 1); attempt += 1) {
+      profileDir = IS_CI ? buildTransientProfileDir(userId) : buildProfileDir(userId);
+      shouldCleanupProfileDir = IS_CI;
 
-    try {
-      return await collectRatings(context, userId, onProgress, {
-        allowManualChallengeBypass: false,
-        existingRatings
-      });
-    } catch (error) {
-      challengeMessage = String(error?.message || '');
-      if (!isChallengeErrorMessage(challengeMessage)) {
-        throw error;
-      }
+      onProgress(
+        `Opening headless Chrome and connecting to Filmaffinity... (intento ${attempt}/${IS_CI ? CI_SYNC_RETRY_ATTEMPTS : 1})`
+      );
+      context = await launchContext(userId, { headless: true, profileDir });
 
-      if (IS_CI) {
-        throw new Error(
-          `${challengeMessage} GitHub Actions no puede continuar con el fallback interactivo; revisa el acceso o ejecuta el sync manualmente.`
-        );
+      try {
+        return await collectRatings(context, userId, onProgress, {
+          allowManualChallengeBypass: false,
+          existingRatings
+        });
+      } catch (error) {
+        challengeMessage = String(error?.message || '');
+        if (!isChallengeErrorMessage(challengeMessage)) {
+          throw error;
+        }
+
+        if (IS_CI && attempt < CI_SYNC_RETRY_ATTEMPTS) {
+          const delayMs = Math.min(
+            CI_SYNC_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1),
+            CI_SYNC_RETRY_MAX_DELAY_MS
+          );
+          onProgress(
+            `Filmaffinity sigue bloqueando el acceso. Reintentando con un perfil limpio en ${Math.round(
+              delayMs / 1000
+            )} segundos (intento ${attempt + 1}/${CI_SYNC_RETRY_ATTEMPTS})...`
+          );
+
+          if (context) {
+            await context.close().catch(() => {});
+            context = null;
+          }
+
+          if (profileDir) {
+            fs.rmSync(profileDir, { recursive: true, force: true });
+            profileDir = '';
+            shouldCleanupProfileDir = false;
+          }
+
+          await sleep(delayMs);
+          continue;
+        }
+
+        if (IS_CI) {
+          throw new Error(
+            `${challengeMessage} GitHub Actions agotó ${CI_SYNC_RETRY_ATTEMPTS} intentos automáticos con perfiles limpios; revisa el acceso o ejecuta el sync manualmente.`
+          );
+        }
+
+        onProgress(`Aviso: Filmaffinity está bloqueando el acceso automático. ${challengeMessage}`);
+        onProgress('Abriendo Chrome visible para verificacion manual (mismo perfil persistente)...');
+
+        if (context) {
+          await context.close().catch(() => {});
+          context = null;
+        }
+
+        context = await launchContext(userId, { headless: false, profileDir: buildProfileDir(userId) });
+        return await collectRatings(context, userId, onProgress, {
+          allowManualChallengeBypass: true,
+          existingRatings
+        });
       }
     }
-
-    onProgress(`Aviso: Filmaffinity está bloqueando el acceso automático. ${challengeMessage}`);
-    onProgress('Abriendo Chrome visible para verificacion manual (mismo perfil persistente)...');
-
-    if (context) {
-      await context.close().catch(() => {});
-      context = null;
-    }
-
-    context = await launchContext(userId, { headless: false });
-    return await collectRatings(context, userId, onProgress, {
-      allowManualChallengeBypass: true,
-      existingRatings
-    });
   } finally {
     if (context) {
       await context.close().catch(() => {});
+    }
+
+    if (shouldCleanupProfileDir && profileDir) {
+      fs.rmSync(profileDir, { recursive: true, force: true });
     }
   }
 }
