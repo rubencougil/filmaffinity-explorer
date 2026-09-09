@@ -448,7 +448,7 @@ function getFilteredRecommendations() {
   const minFaRating = Number(elements.minFaRating?.value || 0);
   const ratedWindowDays = Number(elements.ratedWindow?.value || 0);
   const minScore = Number(elements.minScore?.value || 0);
-  const minSupport = Number(elements.minSupport?.value || 1);
+  const minSupport = Number(elements.minSupport?.value || 2);
   const minAgreement = Number(elements.minAgreement?.value || 0);
   const sortBy = String(elements.sortBy?.value || 'year-desc');
   const sharedOnly = Boolean(elements.sharedOnly?.checked);
