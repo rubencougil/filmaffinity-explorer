@@ -435,8 +435,7 @@ function buildRecommendations(activeUserName, librariesByUser) {
         return scoreDiff;
       }
       return a.title.localeCompare(b.title);
-    })
-    .slice(0, 80);
+    });
 }
 
 function updateYearFilterOptions(items) {
