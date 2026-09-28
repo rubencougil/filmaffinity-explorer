@@ -141,10 +141,13 @@
 
             <label class="field small-field">
               <span>Año</span>
-              <div class="rating-filter">
-                <select id="year-filter">
-                  <option value="all" selected>Todos los años</option>
-                </select>
+              <div class="year-filter-control">
+                <div class="rating-filter">
+                  <select id="year-filter">
+                    <option value="" selected>Añadir año…</option>
+                  </select>
+                </div>
+                <div id="year-filter-chips" class="year-filter-chips" hidden></div>
               </div>
             </label>
 

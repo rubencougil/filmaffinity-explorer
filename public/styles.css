@@ -514,15 +514,17 @@ textarea:hover {
 
 .rating-filter select,
 .topbar-user-field select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
-  padding-right: 2.2rem;
+  padding-right: 2.4rem;
 }
 
 .rating-filter::after,
 .topbar-user-field::after {
   content: "";
   position: absolute;
-  right: 14px;
+  right: 22px;
   top: 50%;
   width: 8px;
   height: 8px;
@@ -950,6 +952,54 @@ textarea:hover {
 .comparison-item strong,
 .watch-next-chip strong,
 .agreement-chip strong {
+  color: var(--fa-text);
+}
+
+.year-filter-control {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.year-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.year-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 6px 0 10px;
+  border: 1px solid rgba(169, 185, 201, 0.9);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(246, 249, 252, 0.94), rgba(242, 247, 251, 0.94)),
+    linear-gradient(135deg, var(--fa-accent-faint), transparent 65%);
+  color: var(--fa-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.year-filter-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(179, 56, 44, 0.12);
+  color: var(--fa-text-soft);
+  font-size: 0.78rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.year-filter-chip-remove:hover {
+  background: rgba(179, 56, 44, 0.24);
   color: var(--fa-text);
 }
 

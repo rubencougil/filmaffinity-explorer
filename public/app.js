@@ -6,6 +6,7 @@ const elements = {
   searchInput: document.querySelector('#search-input'),
   minRating: document.querySelector('#min-rating'),
   yearFilter: document.querySelector('#year-filter'),
+  yearFilterChips: document.querySelector('#year-filter-chips'),
   minFaRating: document.querySelector('#min-fa-rating'),
   ratedWindow: document.querySelector('#rated-window'),
   sortBy: document.querySelector('#sort-by'),
@@ -45,6 +46,7 @@ const SPANISH_MONTHS = {
 
 let library = [];
 let currentPage = 1;
+let selectedYears = new Set();
 let configuredUsers = [];
 let selectedUserName = '';
 
@@ -372,19 +374,61 @@ function getYearSortValue(yearText) {
   return match ? Number(match[0]) : Number.NEGATIVE_INFINITY;
 }
 
-function updateYearFilterOptions(records) {
-  const previousValue = elements.yearFilter.value || 'all';
+function renderYearFilterChips() {
+  if (!elements.yearFilterChips) {
+    return;
+  }
+  elements.yearFilterChips.innerHTML = '';
+  const years = [...selectedYears].sort((a, b) => getYearSortValue(b) - getYearSortValue(a));
+  elements.yearFilterChips.hidden = years.length === 0;
+
+  years.forEach((year) => {
+    const chip = document.createElement('span');
+    chip.className = 'year-filter-chip';
+
+    const label = document.createElement('span');
+    label.textContent = year;
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'year-filter-chip-remove';
+    removeButton.setAttribute('aria-label', `Quitar el año ${year} del filtro`);
+    removeButton.textContent = '✕';
+    removeButton.addEventListener('click', () => {
+      selectedYears.delete(year);
+      renderYearFilterChips();
+      updateYearFilterOptions(library, { keepSelection: true });
+      currentPage = 1;
+      render();
+    });
+
+    chip.append(label, removeButton);
+    elements.yearFilterChips.appendChild(chip);
+  });
+}
+
+function updateYearFilterOptions(records, { keepSelection = false } = {}) {
+  if (!keepSelection) {
+    selectedYears.clear();
+  } else {
+    const availableYears = new Set(
+      records.map((record) => String(record.year || '').trim()).filter(Boolean)
+    );
+    selectedYears = new Set([...selectedYears].filter((year) => availableYears.has(year)));
+  }
+
   const years = [...new Set(records.map((record) => String(record.year || '').trim()).filter(Boolean))]
+    .filter((year) => !selectedYears.has(year))
     .sort((a, b) => {
       const diff = getYearSortValue(b) - getYearSortValue(a);
       return diff !== 0 ? diff : b.localeCompare(a);
     });
 
   elements.yearFilter.innerHTML = '';
-  const allOption = document.createElement('option');
-  allOption.value = 'all';
-  allOption.textContent = 'Todos los años';
-  elements.yearFilter.appendChild(allOption);
+  const placeholderOption = document.createElement('option');
+  placeholderOption.value = '';
+  placeholderOption.textContent = 'Añadir año…';
+  elements.yearFilter.appendChild(placeholderOption);
 
   years.forEach((year) => {
     const option = document.createElement('option');
@@ -393,8 +437,8 @@ function updateYearFilterOptions(records) {
     elements.yearFilter.appendChild(option);
   });
 
-  const canKeepCurrent = previousValue !== 'all' && years.includes(previousValue);
-  elements.yearFilter.value = canKeepCurrent ? previousValue : 'all';
+  elements.yearFilter.value = '';
+  renderYearFilterChips();
 }
 
 function updateSelectedUserLabel() {
@@ -529,7 +573,6 @@ function renderPagination(totalResults) {
 function filterRecords() {
   const query = elements.searchInput.value.trim().toLowerCase();
   const minRating = Number(elements.minRating.value);
-  const selectedYear = elements.yearFilter.value || 'all';
   const minFaRating = Number(elements.minFaRating?.value || 0);
   const ratedWindowDays = Number(elements.ratedWindow?.value || 0);
   const sortBy = String(elements.sortBy?.value || 'recent');
@@ -540,7 +583,7 @@ function filterRecords() {
     const haystack = `${record.title} ${record.year} ${record.url}`.toLowerCase();
     const queryMatch = !query || haystack.includes(query);
     const ratingMatch = !minRating || (record.rating ?? -Infinity) >= minRating;
-    const yearMatch = selectedYear === 'all' || record.year === selectedYear;
+    const yearMatch = selectedYears.size === 0 || selectedYears.has(String(record.year || '').trim());
     const faMatch = !minFaRating || (record.averageRating ?? -Infinity) >= minFaRating;
     const parsedDate = parseFlexibleDate(record.ratedAt);
     const windowMatch =
@@ -690,6 +733,12 @@ elements.minRating.addEventListener('change', () => {
   render();
 });
 elements.yearFilter.addEventListener('change', () => {
+  const value = elements.yearFilter.value;
+  if (!value) {
+    return;
+  }
+  selectedYears.add(value);
+  updateYearFilterOptions(library, { keepSelection: true });
   currentPage = 1;
   render();
 });
