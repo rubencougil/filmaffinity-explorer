@@ -433,7 +433,6 @@ async function scrapeCurrentPage(page) {
         card.querySelector('.fa-user-rat-box')?.textContent?.trim() ||
         rowBlock?.querySelector('.col-2 .fa-user-rat-box')?.textContent?.trim() ||
         rowBlock?.querySelector('.fa-user-rat-box')?.textContent?.trim() ||
-        card.querySelector('.avgrat-box')?.textContent?.trim() ||
         '';
       const avgText = card.querySelector('.fa-avg-rat-box .avg')?.textContent?.trim() || '';
       const yearText = card.querySelector('.mc-year')?.textContent?.trim() || '';
