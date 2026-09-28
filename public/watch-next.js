@@ -220,6 +220,10 @@ function normalizeRecord(record) {
   };
 }
 
+function getImageProxyUrl(url) {
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+}
+
 function getPosterCandidates(url) {
   const source = String(url || '').trim();
   if (!source) {
@@ -233,13 +237,32 @@ function getPosterCandidates(url) {
     }
   };
 
+  const directCandidates = [];
+  const pushUniqueDirect = (value) => {
+    if (value && !directCandidates.includes(value)) {
+      directCandidates.push(value);
+    }
+  };
+
   if (source.includes('-msmall.')) {
-    pushUnique(source.replace('-msmall.', '-large.'));
-    pushUnique(source.replace('-msmall.', '-mmed.'));
-    pushUnique(source.replace('-msmall.', '-med.'));
+    pushUniqueDirect(source.replace('-msmall.', '-large.'));
+    pushUniqueDirect(source.replace('-msmall.', '-mmed.'));
+    pushUniqueDirect(source.replace('-msmall.', '-med.'));
   }
 
-  pushUnique(source);
+  pushUniqueDirect(source);
+
+  // Filmaffinity's image CDN sends Cross-Origin-Resource-Policy: same-origin,
+  // which browsers block regardless of our own page's policy. Route the
+  // request through a public image proxy so it's fetched server-side and
+  // re-served without that restriction. Keep the direct URL as a fallback.
+  directCandidates.forEach((directUrl) => {
+    pushUnique(getImageProxyUrl(directUrl));
+  });
+  directCandidates.forEach((directUrl) => {
+    pushUnique(directUrl);
+  });
+
   return candidates;
 }
 
