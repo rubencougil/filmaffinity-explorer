@@ -177,6 +177,10 @@ function getYear(date) {
   return date instanceof Date && !Number.isNaN(date.getTime()) ? date.getFullYear() : null;
 }
 
+function getImageProxyUrl(url) {
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+}
+
 function normalizeRecord(record) {
   return {
     title: String(record.title || '').trim(),
@@ -660,7 +664,7 @@ function renderRankingList(target, records, emptyText) {
     if (record.posterUrl) {
       const thumb = document.createElement('img');
       thumb.className = 'ranking-thumb';
-      thumb.src = record.posterUrl;
+      thumb.src = getImageProxyUrl(record.posterUrl);
       thumb.alt = `Portada de ${record.title}`;
       thumb.loading = 'lazy';
       main.appendChild(thumb);
@@ -950,7 +954,7 @@ function renderOverlapGrid(records) {
         if (entry.posterUrl) {
           const thumb = document.createElement('img');
           thumb.className = 'agreement-thumb';
-          thumb.src = entry.posterUrl;
+          thumb.src = getImageProxyUrl(entry.posterUrl);
           thumb.alt = `Portada de ${entry.title}`;
           thumb.loading = 'lazy';
           li.appendChild(thumb);
@@ -1001,7 +1005,7 @@ function renderOverlapGrid(records) {
         if (entry.posterUrl) {
           const thumb = document.createElement('img');
           thumb.className = 'agreement-thumb';
-          thumb.src = entry.posterUrl;
+          thumb.src = getImageProxyUrl(entry.posterUrl);
           thumb.alt = `Portada de ${entry.title}`;
           thumb.loading = 'lazy';
           li.appendChild(thumb);

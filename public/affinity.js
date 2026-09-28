@@ -70,6 +70,10 @@ function setStatus(message, isError = false) {
   elements.status.style.color = isError ? 'var(--fa-error)' : '';
 }
 
+function getImageProxyUrl(url) {
+  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+}
+
 function normalizeRecord(record) {
   return {
     title: String(record.title || '').trim(),
@@ -363,7 +367,7 @@ function renderAgreementList(titleText, entries, { positive = false } = {}) {
     if (entry.posterUrl) {
       const thumb = document.createElement('img');
       thumb.className = 'agreement-thumb';
-      thumb.src = entry.posterUrl;
+      thumb.src = getImageProxyUrl(entry.posterUrl);
       thumb.alt = `Portada de ${entry.title}`;
       thumb.loading = 'lazy';
       li.appendChild(thumb);
