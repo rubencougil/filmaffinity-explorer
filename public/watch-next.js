@@ -18,10 +18,7 @@ const elements = {
   status: document.querySelector('#watch-next-status'),
   meta: document.querySelector('#watch-next-meta'),
   results: document.querySelector('#watch-next-results'),
-  pagination: document.querySelector('#watch-next-pagination'),
-  prevPage: document.querySelector('#watch-next-prev-page'),
-  nextPage: document.querySelector('#watch-next-next-page'),
-  pageInfo: document.querySelector('#watch-next-page-info'),
+  scrollStatus: document.querySelector('#watch-next-scroll-status'),
   template: document.querySelector('#watch-next-template'),
   trailerModal: document.querySelector('#trailer-modal'),
   trailerFrame: document.querySelector('#trailer-frame'),
@@ -32,7 +29,18 @@ const elements = {
 let configuredUsers = [];
 let selectedUserName = '';
 let allRecommendations = [];
-let currentPage = 1;
+
+const pagination = window.createScrollPagination({
+  sentinel: elements.scrollStatus,
+  pageSize: PAGE_SIZE,
+  renderBatch: renderRecommendations,
+  updateMeta(shown, total) {
+    const availablePeers = configuredUsers.filter((user) => user.name !== selectedUserName).length;
+    elements.meta.textContent = allRecommendations.length
+      ? `${total ? 1 : 0}-${shown} de ${total} recomendaciones · ${allRecommendations.length} totales · ${availablePeers} usuarios comparados`
+      : `0 recomendaciones · ${availablePeers} usuarios comparados`;
+  }
+});
 
 const SPANISH_MONTHS = {
   enero: 0,
@@ -534,43 +542,14 @@ function getFilteredRecommendations() {
   return filtered;
 }
 
-function renderPagination(totalResults) {
-  const totalPages = Math.max(1, Math.ceil(totalResults / PAGE_SIZE));
-
-  if (totalResults <= PAGE_SIZE) {
-    elements.pagination.hidden = true;
-    elements.pageInfo.textContent = '';
-    return;
-  }
-
-  elements.pagination.hidden = false;
-  elements.prevPage.disabled = currentPage <= 1;
-  elements.nextPage.disabled = currentPage >= totalPages;
-  elements.pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-}
-
 function applyYearFilterAndRender() {
-  const filtered = getFilteredRecommendations();
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  currentPage = Math.min(currentPage, totalPages);
-  const startIndex = filtered.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
-  const endIndex = Math.min(currentPage * PAGE_SIZE, filtered.length);
-  const visible =
-    filtered.length > 0
-      ? filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-      : [];
-
-  const availablePeers = configuredUsers.filter((user) => user.name !== selectedUserName).length;
-  elements.meta.textContent = allRecommendations.length
-    ? `${startIndex}-${endIndex} de ${filtered.length} recomendaciones · ${allRecommendations.length} totales · ${availablePeers} usuarios comparados`
-    : `0 recomendaciones · ${availablePeers} usuarios comparados`;
-
-  renderRecommendations(visible, startIndex);
-  renderPagination(filtered.length);
+  pagination.reset(getFilteredRecommendations());
 }
 
-function renderRecommendations(items, startRank = 1) {
-  elements.results.innerHTML = '';
+function renderRecommendations(items, startRank = 1, append = false) {
+  if (!append) {
+    elements.results.innerHTML = '';
+  }
 
   if (!items.length) {
     const empty = document.createElement('p');
@@ -684,6 +663,8 @@ async function loadRecommendations() {
     return;
   }
 
+  pagination.pause();
+  allRecommendations = [];
   elements.results.innerHTML = '';
   elements.results.appendChild(createLoader('Calculando recomendaciones...'));
   setStatus(`Calculando recomendaciones para ${selectedUserName}...`);
@@ -710,7 +691,6 @@ async function loadRecommendations() {
 
   const recommendations = buildRecommendations(selectedUserName, librariesByUser);
   allRecommendations = recommendations;
-  currentPage = 1;
   updateYearFilterOptions(recommendations);
 
   if (!recommendations.length) {
@@ -743,77 +723,53 @@ window.addEventListener('keydown', (event) => {
 });
 
 elements.yearFilter.addEventListener('change', () => {
-  currentPage = 1;
   applyYearFilterAndRender();
 });
 if (elements.searchInput) {
   elements.searchInput.addEventListener('input', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.minRating) {
   elements.minRating.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.minFaRating) {
   elements.minFaRating.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.ratedWindow) {
   elements.ratedWindow.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.minScore) {
   elements.minScore.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.minSupport) {
   elements.minSupport.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.minAgreement) {
   elements.minAgreement.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.sortBy) {
   elements.sortBy.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
 if (elements.sharedOnly) {
   elements.sharedOnly.addEventListener('change', () => {
-    currentPage = 1;
     applyYearFilterAndRender();
   });
 }
-
-elements.prevPage.addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage -= 1;
-    applyYearFilterAndRender();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-});
-
-elements.nextPage.addEventListener('click', () => {
-  currentPage += 1;
-  applyYearFilterAndRender();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
 
 async function boot() {
   await loadConfig();

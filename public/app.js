@@ -16,10 +16,7 @@ const elements = {
   resultsTitle: document.querySelector('#results-title'),
   results: document.querySelector('#results'),
   resultsMeta: document.querySelector('#results-meta'),
-  pagination: document.querySelector('#pagination'),
-  prevPage: document.querySelector('#prev-page'),
-  nextPage: document.querySelector('#next-page'),
-  pageInfo: document.querySelector('#page-info'),
+  scrollStatus: document.querySelector('#scroll-status'),
   importStatus: document.querySelector('#import-status'),
   resultTemplate: document.querySelector('#result-template'),
   trailerModal: document.querySelector('#trailer-modal'),
@@ -45,10 +42,20 @@ const SPANISH_MONTHS = {
 };
 
 let library = [];
-let currentPage = 1;
 let selectedYears = new Set();
 let configuredUsers = [];
 let selectedUserName = '';
+
+const pagination = window.createScrollPagination({
+  sentinel: elements.scrollStatus,
+  pageSize: PAGE_SIZE,
+  renderBatch: (records, startRank, append) => renderResults(records, append),
+  updateMeta(shown, total) {
+    elements.resultsMeta.textContent = total
+      ? `1-${shown} de ${total} resultado${total === 1 ? '' : 's'} · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`
+      : `0 resultados · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`;
+  }
+});
 
 function updateNavLinks() {
   const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
@@ -95,15 +102,14 @@ function createLoader(message = 'Cargando...') {
 }
 
 function showLibraryLoader(message = 'Cargando biblioteca...') {
+  pagination.pause();
   elements.results.innerHTML = '';
   elements.results.appendChild(createLoader(message));
   elements.resultsMeta.textContent = 'Cargando datos...';
-  elements.pagination.hidden = true;
 }
 
 function saveLibrary(records) {
   library = records;
-  currentPage = 1;
   render();
 }
 
@@ -398,7 +404,6 @@ function renderYearFilterChips() {
       selectedYears.delete(year);
       renderYearFilterChips();
       updateYearFilterOptions(library, { keepSelection: true });
-      currentPage = 1;
       render();
     });
 
@@ -447,8 +452,10 @@ function updateSelectedUserLabel() {
     : '🎬 Votaciones del usuario seleccionado';
 }
 
-function renderResults(records) {
-  elements.results.innerHTML = '';
+function renderResults(records, append = false) {
+  if (!append) {
+    elements.results.innerHTML = '';
+  }
 
   if (!records.length) {
     const emptyState = document.createElement('p');
@@ -555,21 +562,6 @@ function renderResults(records) {
   elements.results.appendChild(fragment);
 }
 
-function renderPagination(totalResults) {
-  const totalPages = Math.max(1, Math.ceil(totalResults / PAGE_SIZE));
-
-  if (totalResults <= PAGE_SIZE) {
-    elements.pagination.hidden = true;
-    elements.pageInfo.textContent = '';
-    return;
-  }
-
-  elements.pagination.hidden = false;
-  elements.prevPage.disabled = currentPage <= 1;
-  elements.nextPage.disabled = currentPage >= totalPages;
-  elements.pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-}
-
 function filterRecords() {
   const query = elements.searchInput.value.trim().toLowerCase();
   const minRating = Number(elements.minRating.value);
@@ -628,19 +620,8 @@ function filterRecords() {
     return (bDate ? bDate.getTime() : 0) - (aDate ? aDate.getTime() : 0) || a.title.localeCompare(b.title);
   });
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  currentPage = Math.min(currentPage, totalPages);
-  const startIndex = filtered.length ? (currentPage - 1) * PAGE_SIZE + 1 : 0;
-  const endIndex = Math.min(currentPage * PAGE_SIZE, filtered.length);
-  const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-
-  elements.resultsMeta.textContent = filtered.length
-    ? `${startIndex}-${endIndex} de ${filtered.length} resultado${filtered.length === 1 ? '' : 's'} · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`
-    : `0 resultados · ${library.length} votaci${library.length === 1 ? 'ón guardada' : 'ones guardadas'}.`;
-
   updateSelectedUserLabel();
-  renderResults(visible);
-  renderPagination(filtered.length);
+  pagination.reset(filtered);
 }
 
 function render() {
@@ -725,11 +706,9 @@ async function loadConfig() {
 }
 
 elements.searchInput.addEventListener('input', () => {
-  currentPage = 1;
   render();
 });
 elements.minRating.addEventListener('change', () => {
-  currentPage = 1;
   render();
 });
 elements.yearFilter.addEventListener('change', () => {
@@ -739,29 +718,24 @@ elements.yearFilter.addEventListener('change', () => {
   }
   selectedYears.add(value);
   updateYearFilterOptions(library, { keepSelection: true });
-  currentPage = 1;
   render();
 });
 if (elements.minFaRating) {
   elements.minFaRating.addEventListener('change', () => {
-    currentPage = 1;
     render();
   });
 }
 if (elements.ratedWindow) {
   elements.ratedWindow.addEventListener('change', () => {
-    currentPage = 1;
     render();
   });
 }
 if (elements.sortBy) {
   elements.sortBy.addEventListener('change', () => {
-    currentPage = 1;
     render();
   });
 }
 elements.sharedOnly.addEventListener('change', () => {
-  currentPage = 1;
   render();
 });
 elements.userSelector.addEventListener('change', () => {
@@ -769,7 +743,6 @@ elements.userSelector.addEventListener('change', () => {
   localStorage.setItem(SELECTED_USER_KEY, selectedUserName);
   updateQueryString();
   updateNavLinks();
-  currentPage = 1;
   library = [];
   showLibraryLoader(`Cargando la biblioteca del usuario ${selectedUserName}...`);
   setStatus(`Usuario activo: ${selectedUserName}. Cargando biblioteca...`);
@@ -787,18 +760,6 @@ window.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && elements.trailerModal && !elements.trailerModal.hidden) {
     closeTrailerModal();
   }
-});
-elements.prevPage.addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage -= 1;
-    render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-});
-elements.nextPage.addEventListener('click', () => {
-  currentPage += 1;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 async function boot() {

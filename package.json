@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "sync:static": "node scripts/sync-static-data.js",
+    "test:pagination": "node --test tests/scroll-pagination.test.js",
     "serve:static": "npx serve public"
   },
   "dependencies": {

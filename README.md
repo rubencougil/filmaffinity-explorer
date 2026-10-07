@@ -8,6 +8,7 @@ Web app to browse and analyze FilmAffinity ratings for one or more users.
 ## ✨ Features
 
 - Biblioteca con búsqueda y filtros
+- Carga progresiva al hacer scroll en Biblioteca y Qué ver, sin botones de paginación
 - Recomendaciones "Qué ver" por afinidad entre usuarios
 - Vista de Afinidad y Estadísticas
 - Modal de trailer (YouTube)

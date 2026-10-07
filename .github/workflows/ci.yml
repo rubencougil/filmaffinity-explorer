@@ -31,8 +31,15 @@ jobs:
           node --check server.js
           node --check sync-filmaffinity.js
           node --check public/app.js
+          node --check public/watch-next.js
+          node --check public/scroll-pagination.js
           node --check public/stats.js
           node --check public/sync.js
+
+      - name: Test scroll pagination
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:pagination
 
       - name: Start server and smoke test
         run: |

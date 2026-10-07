@@ -84,11 +84,7 @@
 
           <div id="results-meta" class="results-meta">Todavía no hay votaciones importadas.</div>
           <div id="results" class="results-grid"></div>
-          <div id="pagination" class="pagination" hidden>
-            <button id="prev-page" class="ghost-button" type="button">Anterior</button>
-            <span id="page-info" class="page-info"></span>
-            <button id="next-page" class="ghost-button" type="button">Siguiente</button>
-          </div>
+          <p id="scroll-status" class="scroll-status" role="status" aria-live="polite" hidden></p>
         </section>
 
         <div class="sidebar-column">
@@ -258,6 +254,7 @@
 
     <script src="theme.js"></script>
     <script src="static-data.js"></script>
+    <script src="scroll-pagination.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

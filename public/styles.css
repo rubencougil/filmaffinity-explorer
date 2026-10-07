@@ -620,15 +620,10 @@ textarea:hover {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
-.pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
+.scroll-status {
+  min-height: 24px;
   margin-top: 18px;
-}
-
-.page-info {
+  text-align: center;
   color: var(--fa-text-soft);
   font-weight: 700;
 }
