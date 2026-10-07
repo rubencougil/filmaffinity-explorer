@@ -1,7 +1,6 @@
 # 🎬 Filmaffinity Explorer
 
 [![CI](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/ci.yml)
-[![Every 15 Days Filmaffinity Sync](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/daily-sync.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/daily-sync.yml)
 [![Deploy GitHub Pages](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/pages.yml/badge.svg)](https://github.com/rubencougil/filmaffinity-explorer/actions/workflows/pages.yml)
 
 Web app to browse and analyze FilmAffinity ratings for one or more users.
@@ -43,26 +42,7 @@ Esto actualiza:
 
 - `public/data/libraries.json`
 
-## 🤖 Sync cada 15 días en GitHub Actions
-
-Sí, también se puede automatizar aproximadamente cada 15 días desde GitHub Actions.
-
-Para que funcione, crea estos secrets:
-
-- `FILMAFFINITY_CONFIG_JSON` con el contenido completo de tu `config.json`
-- `FILMAFFINITY_PUSH_TOKEN` con un token que tenga permiso de escritura en este repositorio
-
-El workflow `.github/workflows/daily-sync.yml`:
-
-- instala las dependencias
-- ejecuta el sync en modo headless
-- commitea solo `public/data/libraries.json` de vuelta a `main`
-
-Después, el workflow de GitHub Pages se encarga de desplegar la versión publicada a partir de ese commit.
-
-Si Filmaffinity devuelve challenge, CAPTCHA o bloqueo temporal, el job falla con un mensaje claro en vez de intentar abrir una ventana visible.
-
-El sync en GitHub Actions reintenta con perfiles limpios por intento para reducir bloqueos persistentes. Si quieres probar evasiones concretas de stealth, puedes pasar `FILMAFFINITY_STEALTH_EVASIONS` con una lista separada por comas.
+La sincronización se ejecuta solo en local; no hay un workflow de sync en GitHub Actions.
 
 ## 🧪 Probar la versión estática en local
 
