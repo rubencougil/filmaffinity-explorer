@@ -35,8 +35,11 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="manifest" href="site.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preload" href="data/libraries.json" as="fetch" crossorigin data-library-index />
+    <link rel="preconnect" href="https://images.weserv.nl" />
   </head>
   <body class="affinity-page">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -49,28 +52,28 @@
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
 
-        <nav class="top-links" id="top-nav" aria-label="Primary">
+        <nav class="top-links" id="top-nav" aria-label="Navegación principal">
           <a data-nav-target="home" href="index.html">Biblioteca</a>
           <a data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
-          <a class="is-active" data-nav-target="affinity" href="affinity.html">Afinidad</a>
+          <a class="is-active" aria-current="page" data-nav-target="affinity" href="affinity.html">Afinidad</a>
           <a data-nav-target="stats" href="stats.html">Estadísticas</a>
         </nav>
 
         <div class="topbar-controls">
           <label class="field topbar-user-field">
-            <select id="global-user-selector"></select>
+            <select id="global-user-selector" aria-label="Usuario activo"></select>
           </label>
         </div>
       </div>
     </header>
 
     <div class="page-shell">
-      <main class="layout layout-single">
+      <main id="main-content" class="layout layout-single" tabindex="-1">
         <section class="panel affinity-panel">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">🤝 Comparador</p>
-              <h2>Afinidad entre usuarios</h2>
+              <h1>Afinidad entre usuarios</h1>
               <p class="hero-copy affinity-lead">
                 Compara compatibilidad, sesgo y discrepancias para detectar con quién coincides más.
               </p>
@@ -102,8 +105,9 @@
       </div>
     </footer>
 
-    <script src="theme.js"></script>
-    <script src="static-data.js"></script>
-    <script src="affinity.js"></script>
+    <script src="theme.js" defer></script>
+    <script src="site-utils.js" defer></script>
+    <script src="static-data.js" defer></script>
+    <script src="affinity.js" defer></script>
   </body>
 </html>

@@ -20,14 +20,22 @@ function fetchRemoteText(url, redirectsLeft = 4) {
         const code = Number(res.statusCode || 0);
         if (location && code >= 300 && code < 400 && redirectsLeft > 0) {
           const nextUrl = new URL(location, url).toString();
+          res.resume();
           resolve(fetchRemoteText(nextUrl, redirectsLeft - 1));
           return;
         }
 
         let body = '';
+        let bytes = 0;
         res.on('data', (chunk) => {
+          bytes += chunk.length;
+          if (bytes > 10_000_000) {
+            req.destroy(new Error('Trailer search response exceeds 10 MB'));
+            return;
+          }
           body += chunk;
         });
+        res.on('error', reject);
         res.on('end', () => {
           resolve({
             statusCode: code,
@@ -38,6 +46,7 @@ function fetchRemoteText(url, redirectsLeft = 4) {
     );
 
     req.on('error', reject);
+    req.setTimeout(15_000, () => req.destroy(new Error('Trailer search timed out')));
   });
 }
 
@@ -65,7 +74,10 @@ async function resolveYoutubeTrailer({ title, year, query }) {
   const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(queryValue)}`;
   const result = await fetchRemoteText(searchUrl);
 
-  if (result.statusCode >= 400 || !result.body) {
+  if (result.statusCode < 200 || result.statusCode >= 300) {
+    throw new Error(`Trailer search failed with HTTP ${result.statusCode}`);
+  }
+  if (!result.body) {
     return null;
   }
 

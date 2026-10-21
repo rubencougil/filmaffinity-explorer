@@ -35,8 +35,11 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="manifest" href="site.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preload" href="data/libraries.json" as="fetch" crossorigin data-library-index />
+    <link rel="preconnect" href="https://images.weserv.nl" />
   </head>
   <body class="watch-next-page">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -49,37 +52,54 @@
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
 
-        <nav class="top-links" id="top-nav" aria-label="Primary">
+        <nav class="top-links" id="top-nav" aria-label="Navegación principal">
           <a data-nav-target="home" href="index.html">Biblioteca</a>
-          <a class="is-active" data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
+          <a class="is-active" aria-current="page" data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
           <a data-nav-target="affinity" href="affinity.html">Afinidad</a>
           <a data-nav-target="stats" href="stats.html">Estadísticas</a>
         </nav>
 
         <div class="topbar-controls">
           <label class="field topbar-user-field">
-            <select id="global-user-selector"></select>
+            <select id="global-user-selector" aria-label="Usuario activo"></select>
           </label>
         </div>
       </div>
     </header>
 
     <div class="page-shell">
-      <main class="layout library-layout">
+      <main id="main-content" class="layout library-layout" tabindex="-1">
         <button id="mobile-filter-toggle" class="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filter-sidebar">
           <span class="mobile-filter-toggle-label">🔧 Mostrar filtros</span>
         </button>
 
-        <section class="panel">
+        <section id="results-section" class="panel">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">🍿 Sugerencias</p>
-              <h2>Qué ver a continuación</h2>
+              <h1>Qué ver a continuación</h1>
             </div>
           </div>
 
+          <details class="recommendation-help">
+            <summary>¿Por qué aparecen estas películas?</summary>
+            <p>Son títulos que no están en tu biblioteca y que otros usuarios han valorado con un 6 o más.
+              Solo comparamos usuarios con al menos 10 valoraciones en común y suficiente afinidad.</p>
+            <p id="recommendation-estimate-help"><strong>Nota estimada (1–10):</strong> media de sus notas,
+              dando más peso a usuarios con gustos similares y más títulos en común contigo.
+              Es una orientación, no un voto tuyo ni una garantía de que te guste.</p>
+            <p id="recommendation-users-help"><strong>Usuarios que la recomiendan:</strong> quienes aportan
+              esas valoraciones. Mostramos su nota media real y cuántos títulos han valorado también
+              contigo, de media; no son votos de todos los usuarios de FilmAffinity.</p>
+            <p id="recommendation-affinity-help"><strong>Afinidad:</strong> similitud entre vuestras notas
+              en títulos compartidos, no la probabilidad de que te guste la película.
+              El filtro usa la afinidad más alta entre quienes la recomiendan.</p>
+            <p>Por defecto se muestran primero los títulos más nuevos. Al ordenar por «Recomendadas para ti»,
+              también se tienen en cuenta el número de usuarios que la recomiendan y su nota media.</p>
+          </details>
+
           <p id="watch-next-status" class="status-text"></p>
-          <div id="watch-next-meta" class="results-meta"></div>
+          <div id="watch-next-meta" class="results-meta" role="status"></div>
           <div id="watch-next-results" class="watch-next-grid"></div>
           <p id="watch-next-scroll-status" class="scroll-status" role="status" aria-live="polite" hidden></p>
         </section>
@@ -97,6 +117,7 @@
                 <input
                   id="watch-next-search-input"
                   type="search"
+                  aria-label="Buscar recomendaciones"
                   placeholder="Busca entre las recomendaciones"
                 />
               </div>
@@ -114,9 +135,9 @@
             <div class="search-controls sidebar-controls">
 
               <label class="field small-field">
-                <span>Nota mínima</span>
+                <span id="watch-next-min-rating-label">Nota media mínima</span>
                 <div class="rating-filter">
-                  <select id="watch-next-min-rating">
+                  <select id="watch-next-min-rating" aria-labelledby="watch-next-min-rating-label" aria-describedby="recommendation-users-help">
                     <option value="0" selected>Todas</option>
                     <option value="1">1+</option>
                     <option value="2">2+</option>
@@ -157,7 +178,7 @@
               </label>
 
               <label class="field small-field">
-                <span>Fecha de voto</span>
+                <span>Voto más reciente</span>
                 <div class="rating-filter">
                   <select id="watch-next-rated-window">
                     <option value="all" selected>Todas</option>
@@ -170,9 +191,9 @@
               </label>
 
               <label class="field small-field">
-                <span>Score mínimo</span>
+                <span id="watch-next-min-score-label">Nota estimada mínima</span>
                 <div class="rating-filter">
-                  <select id="watch-next-min-score">
+                  <select id="watch-next-min-score" aria-labelledby="watch-next-min-score-label" aria-describedby="recommendation-estimate-help">
                     <option value="0" selected>Todos</option>
                     <option value="5">5.0+</option>
                     <option value="6">6.0+</option>
@@ -183,9 +204,9 @@
               </label>
 
               <label class="field small-field">
-                <span>Soporte mínimo</span>
+                <span id="watch-next-min-support-label">Usuarios que la recomiendan</span>
                 <div class="rating-filter">
-                  <select id="watch-next-min-support">
+                  <select id="watch-next-min-support" aria-labelledby="watch-next-min-support-label" aria-describedby="recommendation-users-help">
                     <option value="1">1 usuario o más</option>
                     <option value="2" selected>2 usuarios o más</option>
                     <option value="3">3 usuarios o más</option>
@@ -195,9 +216,9 @@
               </label>
 
               <label class="field small-field">
-                <span>Afinidad mínima</span>
+                <span id="watch-next-min-agreement-label">Afinidad mínima</span>
                 <div class="rating-filter">
-                  <select id="watch-next-min-agreement">
+                  <select id="watch-next-min-agreement" aria-labelledby="watch-next-min-agreement-label" aria-describedby="recommendation-affinity-help">
                     <option value="0" selected>Cualquiera</option>
                     <option value="0.6">60%+</option>
                     <option value="0.7">70%+</option>
@@ -211,9 +232,9 @@
                 <span>Ordenar por</span>
                 <div class="rating-filter">
                   <select id="watch-next-sort-by">
-                    <option value="rank">Ranking recomendado</option>
-                    <option value="score-desc">Score: mayor a menor</option>
-                    <option value="support-desc">Soporte: mayor a menor</option>
+                    <option value="rank">Recomendadas para ti</option>
+                    <option value="score-desc">Nota estimada: mayor a menor</option>
+                    <option value="support-desc">Más usuarios la recomiendan</option>
                     <option value="agreement-desc">Afinidad: mayor a menor</option>
                     <option value="year-desc" selected>Año: más nuevo</option>
                     <option value="title-asc">Título A-Z</option>
@@ -222,12 +243,13 @@
               </label>
 
               <label class="field small-field">
-                <span>Votos comunes</span>
+                <span>Recomendaciones compartidas</span>
                 <div class="toggle-field">
                   <input id="watch-next-shared-only" type="checkbox" />
-                  <span>Solo apoyo múltiple</span>
+                  <span>Al menos dos usuarios</span>
                 </div>
               </label>
+              <button id="watch-next-clear-filters" class="ghost-button" type="button">Limpiar filtros</button>
             </div>
           </aside>
         </div>
@@ -243,23 +265,25 @@
 
     <template id="watch-next-template">
       <article class="watch-next-card">
+        <div class="poster-wrap">
         <a class="watch-next-poster-link" href="" target="_blank" rel="noreferrer">
           <img class="watch-next-poster" src="" alt="" loading="lazy" />
         </a>
+        </div>
         <div class="watch-next-body">
           <div class="watch-next-topline">
             <span class="watch-next-score"></span>
             <span class="watch-next-year"></span>
           </div>
-          <h3 class="watch-next-title"></h3>
+          <h2 class="watch-next-title"></h2>
           <p class="watch-next-rationale"></p>
           <div class="watch-next-chips"></div>
         </div>
       </article>
     </template>
 
-    <div id="trailer-modal" class="trailer-modal" hidden>
-      <div class="trailer-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trailer-title">
+    <dialog id="trailer-modal" class="trailer-modal" aria-labelledby="trailer-title" hidden>
+      <div class="trailer-modal-dialog">
         <div class="trailer-modal-header">
           <h3 id="trailer-title">Trailer</h3>
           <button id="trailer-close" class="ghost-button trailer-close" type="button" aria-label="Cerrar trailer">
@@ -267,6 +291,9 @@
           </button>
         </div>
         <div class="trailer-frame-wrap">
+          <p id="trailer-unavailable" class="trailer-unavailable" hidden>
+            Este título todavía no tiene un tráiler disponible. Vuelve a sincronizar la biblioteca para completar los datos.
+          </p>
           <iframe
             id="trailer-frame"
             title="Trailer de YouTube"
@@ -277,11 +304,12 @@
           ></iframe>
         </div>
       </div>
-    </div>
+    </dialog>
 
-    <script src="theme.js"></script>
-    <script src="static-data.js"></script>
-    <script src="scroll-pagination.js"></script>
-    <script src="watch-next.js"></script>
+    <script src="theme.js" defer></script>
+    <script src="site-utils.js" defer></script>
+    <script src="static-data.js" defer></script>
+    <script src="scroll-pagination.js" defer></script>
+    <script src="watch-next.js" defer></script>
   </body>
 </html>

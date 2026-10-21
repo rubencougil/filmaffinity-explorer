@@ -60,11 +60,13 @@ async function enrichTrailerData(libraries, { concurrency = 4 } = {}) {
 
       const cacheKey = `${title}::${year}`;
       if (!trailerCache.has(cacheKey)) {
-        const resolved = await resolveYoutubeTrailer({ title, year }).catch(() => null);
-        trailerCache.set(cacheKey, resolved || null);
+        trailerCache.set(cacheKey, resolveYoutubeTrailer({ title, year }).catch((error) => {
+          console.warn(`No se pudo resolver el trailer de ${title}: ${error.message}`);
+          return null;
+        }));
       }
 
-      const trailer = trailerCache.get(cacheKey);
+      const trailer = await trailerCache.get(cacheKey);
       if (!trailer) {
         missingCount += 1;
         return rating;

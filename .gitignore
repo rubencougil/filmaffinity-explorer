@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+dist/
 
 # Local browser profile/session (contains cookies/local state)
 .playwright/

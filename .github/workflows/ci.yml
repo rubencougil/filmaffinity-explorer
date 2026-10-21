@@ -27,19 +27,15 @@ jobs:
         run: cp config.example.json config.json
 
       - name: Validate Node scripts syntax
-        run: |
-          node --check server.js
-          node --check sync-filmaffinity.js
-          node --check public/app.js
-          node --check public/watch-next.js
-          node --check public/scroll-pagination.js
-          node --check public/stats.js
-          node --check public/sync.js
+        run: npm run check
 
-      - name: Test scroll pagination
+      - name: Lint site and scripts
+        run: npm run lint
+
+      - name: Test site behavior
         run: |
           npx playwright install --with-deps chromium
-          npm run test:pagination
+          npm test
 
       - name: Start server and smoke test
         run: |

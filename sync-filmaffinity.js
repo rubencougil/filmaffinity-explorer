@@ -29,7 +29,6 @@ const MANUAL_WAIT_MS = 10 * 60 * 1000;
 const CI_SYNC_RETRY_ATTEMPTS = 3;
 const CI_SYNC_RETRY_BASE_DELAY_MS = 15 * 1000;
 const CI_SYNC_RETRY_MAX_DELAY_MS = 60 * 1000;
-const PAGE_SIZE = 50;
 const PAGE_DELAY_MS = 900;
 const PAGE_DELAY_JITTER_MS = 500;
 const EARLY_STOP_PAGES_WITHOUT_NEW = 2;
@@ -607,7 +606,6 @@ async function syncFilmaffinity({ source, existingRatings = [], onProgress = () 
   }
 
   let context = null;
-  let challengeMessage = '';
   let profileDir = '';
   let shouldCleanupProfileDir = false;
 
@@ -627,7 +625,7 @@ async function syncFilmaffinity({ source, existingRatings = [], onProgress = () 
           existingRatings
         });
       } catch (error) {
-        challengeMessage = String(error?.message || '');
+        const challengeMessage = String(error?.message || '');
         if (!isChallengeErrorMessage(challengeMessage)) {
           throw error;
         }
@@ -660,7 +658,8 @@ async function syncFilmaffinity({ source, existingRatings = [], onProgress = () 
 
         if (IS_CI) {
           throw new Error(
-            `${challengeMessage} GitHub Actions agotó ${CI_SYNC_RETRY_ATTEMPTS} intentos automáticos con perfiles limpios; revisa el acceso o ejecuta el sync manualmente.`
+            `${challengeMessage} GitHub Actions agotó ${CI_SYNC_RETRY_ATTEMPTS} intentos automáticos con perfiles limpios; revisa el acceso o ejecuta el sync manualmente.`,
+            { cause: error }
           );
         }
 

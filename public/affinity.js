@@ -1,52 +1,23 @@
-const SELECTED_USER_KEY = 'filmaffinity-browser-selected-user';
-const USER_QUERY_KEY = 'userName';
+const {
+  parseFlexibleDate, toRating, setPosterSource, initializeUserSelector, updateUserNavigation
+} = window.siteUtils;
 const COMPARE_QUERY_KEY = 'compareUser';
 
 const elements = {
   status: document.querySelector('#affinity-status'),
   userSelector: document.querySelector('#global-user-selector'),
   peerSelector: document.querySelector('#affinity-peer-selector'),
-  content: document.querySelector('#affinity-content'),
-  navLinks: Array.from(document.querySelectorAll('[data-nav-target]'))
+  content: document.querySelector('#affinity-content')
 };
 
 let configuredUsers = [];
 let selectedUserName = '';
 let selectedPeerName = '';
 let library = [];
-
-function updateNavLinks() {
-  const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
-  const byTarget = {
-    home: `index.html${userParam}`,
-    stats: `stats.html${userParam}`,
-    affinity: `affinity.html${userParam}`,
-    watchnext: `watch-next.html${userParam}`
-  };
-
-  elements.navLinks.forEach((link) => {
-    const target = link.dataset.navTarget;
-    if (!target || !byTarget[target]) {
-      return;
-    }
-    link.href = byTarget[target];
-  });
-}
+let libraryLoaded = false;
 
 function updateQueryString() {
-  const url = new URL(window.location.href);
-  if (selectedUserName) {
-    url.searchParams.set(USER_QUERY_KEY, selectedUserName);
-  } else {
-    url.searchParams.delete(USER_QUERY_KEY);
-  }
-  if (selectedPeerName) {
-    url.searchParams.set(COMPARE_QUERY_KEY, selectedPeerName);
-  } else {
-    url.searchParams.delete(COMPARE_QUERY_KEY);
-  }
-  window.history.replaceState({}, '', url);
-  updateNavLinks();
+  updateUserNavigation(selectedUserName, { [COMPARE_QUERY_KEY]: selectedPeerName });
 }
 
 function createLoader(message = 'Cargando afinidad...') {
@@ -70,69 +41,16 @@ function setStatus(message, isError = false) {
   elements.status.style.color = isError ? 'var(--fa-error)' : '';
 }
 
-function getImageProxyUrl(url) {
-  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
-}
-
 function normalizeRecord(record) {
   return {
     title: String(record.title || '').trim(),
-    rating: Number.isFinite(Number(record.rating)) ? Number(record.rating) : null,
+    rating: toRating(record.rating),
     ratedAt: String(record.ratedAt || '').trim(),
     date: parseFlexibleDate(record.ratedAt),
     url: String(record.url || '').trim(),
     posterUrl: String(record.posterUrl || '').trim(),
     otherVotes: Array.isArray(record.otherVotes) ? record.otherVotes : []
   };
-}
-
-function parseFlexibleDate(value) {
-  const text = String(value || '').trim();
-  if (!text) {
-    return null;
-  }
-
-  const direct = new Date(text);
-  if (!Number.isNaN(direct.getTime())) {
-    return direct;
-  }
-
-  const spanishMatch = text
-    .toLowerCase()
-    .match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/i);
-
-  if (!spanishMatch) {
-    return null;
-  }
-
-  const monthLookup = {
-    enero: 0,
-    febrero: 1,
-    marzo: 2,
-    abril: 3,
-    mayo: 4,
-    junio: 5,
-    julio: 6,
-    agosto: 7,
-    septiembre: 8,
-    setiembre: 8,
-    octubre: 9,
-    noviembre: 10,
-    diciembre: 11
-  };
-
-  const day = Number(spanishMatch[1]);
-  const monthName = spanishMatch[2]
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  const year = Number(spanishMatch[3]);
-  const month = monthLookup[monthName];
-
-  if (month === undefined) {
-    return null;
-  }
-
-  return new Date(year, month, day);
 }
 
 function formatDate(value, options = {}) {
@@ -157,8 +75,8 @@ function formatVoteTooltip(userName, ratedAt) {
 }
 
 function getRatingToneClass(value) {
-  const rating = Number(value);
-  if (!Number.isFinite(rating)) {
+  const rating = toRating(value);
+  if (rating === null) {
     return '';
   }
 
@@ -250,7 +168,7 @@ function buildAffinityData(records, peerName) {
     }
 
     const peerVote = record.otherVotes.find(
-      (vote) => vote.userName === peerName && Number.isFinite(Number(vote.rating))
+      (vote) => vote.userName === peerName && toRating(vote.rating) !== null
     );
     if (!peerVote) {
       return [];
@@ -367,7 +285,7 @@ function renderAgreementList(titleText, entries, { positive = false } = {}) {
     if (entry.posterUrl) {
       const thumb = document.createElement('img');
       thumb.className = 'agreement-thumb';
-      thumb.src = getImageProxyUrl(entry.posterUrl);
+      setPosterSource(thumb, entry.posterUrl, { thumbnail: true });
       thumb.alt = `Portada de ${entry.title}`;
       thumb.loading = 'lazy';
       li.appendChild(thumb);
@@ -663,81 +581,56 @@ function populatePeerSelector(preferredPeer = '') {
 }
 
 async function loadConfig() {
-  const response = await fetch('/api/config');
-  const payload = await response.json();
-  configuredUsers = Array.isArray(payload?.filmaffinity?.users) ? payload.filmaffinity.users : [];
-  const queryUser = new URLSearchParams(window.location.search).get(USER_QUERY_KEY) || '';
   const queryPeer = new URLSearchParams(window.location.search).get(COMPARE_QUERY_KEY) || '';
-  const savedUser = localStorage.getItem(SELECTED_USER_KEY) || '';
-  const defaultUser = String(payload?.filmaffinity?.defaultUser || '').trim();
-  const selected =
-    configuredUsers.find((user) => user.name === queryUser) ||
-    configuredUsers.find((user) => user.name === savedUser) ||
-    configuredUsers.find((user) => user.name === defaultUser) ||
-    configuredUsers[0];
-
-  elements.userSelector.innerHTML = '';
-  configuredUsers.forEach((user) => {
-    const option = document.createElement('option');
-    option.value = user.name;
-    option.textContent = user.name;
-    elements.userSelector.appendChild(option);
-  });
-
-  if (!selected) {
-    selectedUserName = '';
+  const config = await initializeUserSelector(elements.userSelector);
+  configuredUsers = config.users;
+  selectedUserName = config.userName;
+  if (!selectedUserName) {
     selectedPeerName = '';
     updateQueryString();
     return;
   }
-
-  selectedUserName = selected.name;
-  elements.userSelector.value = selected.name;
-  localStorage.setItem(SELECTED_USER_KEY, selected.name);
   populatePeerSelector(queryPeer);
   updateQueryString();
 }
 
 async function loadLibrary() {
-  if (!selectedUserName) {
-    return;
-  }
+  return runLibraryLoad(async (isCurrent) => {
+    libraryLoaded = false;
+    library = [];
+    elements.content.innerHTML = '';
+    elements.content.appendChild(createLoader('Cargando afinidad...'));
+    setStatus('Cargando afinidad...');
+    if (!selectedUserName) await loadConfig();
+    if (!isCurrent()) return;
+    if (!selectedUserName) throw new Error('Falta configurar usuarios en config.json.');
 
-  elements.content.innerHTML = '';
-  elements.content.appendChild(createLoader(`Cargando afinidad de ${selectedUserName}...`));
-  setStatus(`Cargando afinidad para ${selectedUserName}...`);
+    const response = await fetch(`/api/library?userName=${encodeURIComponent(selectedUserName)}`);
+    const payload = await response.json();
+    if (!isCurrent()) return;
+    if (!response.ok) throw new Error(payload.error || 'No se pudo cargar la biblioteca.');
+    library = dedupeRecords(payload.ratings || []);
+    libraryLoaded = true;
 
-  const response = await fetch(`/api/library?userName=${encodeURIComponent(selectedUserName)}`);
-  const payload = await response.json();
-  library = dedupeRecords(payload.ratings || []);
-
-  renderAffinity();
+    renderAffinity();
+  });
 }
 
-elements.userSelector.addEventListener('change', async () => {
+elements.userSelector.addEventListener('change', () => {
   selectedUserName = elements.userSelector.value;
-  localStorage.setItem(SELECTED_USER_KEY, selectedUserName);
   const previousPeer = selectedPeerName;
   populatePeerSelector(previousPeer);
   updateQueryString();
-  await loadLibrary();
+  loadLibrary();
 });
 
 elements.peerSelector.addEventListener('change', () => {
   selectedPeerName = elements.peerSelector.value;
   updateQueryString();
-  renderAffinity();
+  if (libraryLoaded) renderAffinity();
 });
 
-async function boot() {
-  await loadConfig();
-  if (!selectedUserName) {
-    setStatus('Falta configurar usuarios en config.json.', true);
-    return;
-  }
-  await loadLibrary();
-}
-
-boot().catch((error) => {
-  setStatus(error.message || 'Error cargando la página de afinidad.', true);
+const runLibraryLoad = window.siteUtils.createLatestLoader(elements.status, (error) => {
+  window.siteUtils.showError(error, elements.status, [elements.content], loadLibrary);
 });
+loadLibrary();

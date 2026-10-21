@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="sync-page">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -49,7 +50,7 @@
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
 
-        <nav class="top-links" id="top-nav" aria-label="Primary">
+        <nav class="top-links" id="top-nav" aria-label="Navegación principal">
           <a data-nav-target="home" href="index.html">Biblioteca</a>
           <a data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
           <a data-nav-target="affinity" href="affinity.html">Afinidad</a>
@@ -60,12 +61,12 @@
     </header>
 
     <div class="page-shell">
-      <main class="layout layout-single">
+      <main id="main-content" class="layout layout-single" tabindex="-1">
         <section class="panel">
           <div class="panel-header">
             <div>
               <p class="panel-kicker">⚙️ Modo GitHub Pages</p>
-              <h2>Sync local por línea de comandos</h2>
+              <h1>Sync local por línea de comandos</h1>
             </div>
           </div>
 
@@ -88,6 +89,6 @@
         <a class="site-footer-link" href="https://ruben.cougil.com/" target="_blank" rel="noreferrer">ruben.cougil.com</a>
       </div>
     </footer>
-    <script src="theme.js"></script>
+    <script src="theme.js" defer></script>
   </body>
 </html>

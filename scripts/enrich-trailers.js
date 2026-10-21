@@ -54,10 +54,13 @@ async function main() {
 
       const key = `${title}::${year}`;
       if (!cache.has(key)) {
-        cache.set(key, await resolveYoutubeTrailer({ title, year }).catch(() => null));
+        cache.set(key, resolveYoutubeTrailer({ title, year }).catch((error) => {
+          console.warn(`No se pudo resolver el trailer de ${title}: ${error.message}`);
+          return null;
+        }));
       }
 
-      const trailer = cache.get(key);
+      const trailer = await cache.get(key);
       if (!trailer) {
         missing += 1;
         return rating;

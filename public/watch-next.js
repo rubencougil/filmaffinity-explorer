@@ -1,10 +1,11 @@
+const {
+  parseFlexibleDate, toRating, setPosterSource, normalizeSearch, createFilterState, renderEmptyState,
+  createTrailerDialog, initializeUserSelector, updateUserNavigation
+} = window.siteUtils;
 const PAGE_SIZE = 20;
-const SELECTED_USER_KEY = 'filmaffinity-browser-selected-user';
-const USER_QUERY_KEY = 'userName';
 
 const elements = {
   userSelector: document.querySelector('#global-user-selector'),
-  navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
   searchInput: document.querySelector('#watch-next-search-input'),
   minRating: document.querySelector('#watch-next-min-rating'),
   yearFilter: document.querySelector('#watch-next-year-filter'),
@@ -15,20 +16,31 @@ const elements = {
   minAgreement: document.querySelector('#watch-next-min-agreement'),
   sortBy: document.querySelector('#watch-next-sort-by'),
   sharedOnly: document.querySelector('#watch-next-shared-only'),
+  clearFilters: document.querySelector('#watch-next-clear-filters'),
   status: document.querySelector('#watch-next-status'),
   meta: document.querySelector('#watch-next-meta'),
   results: document.querySelector('#watch-next-results'),
   scrollStatus: document.querySelector('#watch-next-scroll-status'),
   template: document.querySelector('#watch-next-template'),
-  trailerModal: document.querySelector('#trailer-modal'),
-  trailerFrame: document.querySelector('#trailer-frame'),
-  trailerClose: document.querySelector('#trailer-close'),
-  trailerTitle: document.querySelector('#trailer-title'),
 };
 
+const trailerDialog = createTrailerDialog();
 let configuredUsers = [];
 let selectedUserName = '';
 let allRecommendations = [];
+
+const filterState = createFilterState({
+  q: elements.searchInput,
+  year: elements.yearFilter,
+  minRating: elements.minRating,
+  minFaRating: elements.minFaRating,
+  ratedWindow: elements.ratedWindow,
+  minScore: elements.minScore,
+  minSupport: elements.minSupport,
+  minAgreement: elements.minAgreement,
+  sort: elements.sortBy,
+  sharedOnly: elements.sharedOnly
+});
 
 const pagination = window.createScrollPagination({
   sentinel: elements.scrollStatus,
@@ -42,160 +54,14 @@ const pagination = window.createScrollPagination({
   }
 });
 
-const SPANISH_MONTHS = {
-  enero: 0,
-  febrero: 1,
-  marzo: 2,
-  abril: 3,
-  mayo: 4,
-  junio: 5,
-  julio: 6,
-  agosto: 7,
-  septiembre: 8,
-  setiembre: 8,
-  octubre: 9,
-  noviembre: 10,
-  diciembre: 11
-};
-
-function updateNavLinks() {
-  const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
-  const byTarget = {
-    home: `index.html${userParam}`,
-    stats: `stats.html${userParam}`,
-    affinity: `affinity.html${userParam}`,
-    watchnext: `watch-next.html${userParam}`
-  };
-
-  elements.navLinks.forEach((link) => {
-    const target = link.dataset.navTarget;
-    if (!target || !byTarget[target]) {
-      return;
-    }
-    link.href = byTarget[target];
-  });
-}
-
-function updateQueryString() {
-  const url = new URL(window.location.href);
-  if (selectedUserName) {
-    url.searchParams.set(USER_QUERY_KEY, selectedUserName);
-  } else {
-    url.searchParams.delete(USER_QUERY_KEY);
-  }
-  window.history.replaceState({}, '', url);
-  updateNavLinks();
-}
-
 function setStatus(message, isError = false) {
   elements.status.textContent = message;
   elements.status.style.color = isError ? 'var(--fa-error)' : '';
 }
 
-function escapeHtml(value) {
-  return String(value || '').replace(/[&<>"']/g, (character) => {
-    switch (character) {
-      case '&':
-        return '&amp;';
-      case '<':
-        return '&lt;';
-      case '>':
-        return '&gt;';
-      case '"':
-        return '&quot;';
-      case '\'':
-        return '&#39;';
-      default:
-        return character;
-    }
-  });
-}
-
-function buildTrailerEmbedUrl(item) {
-  const explicitEmbedUrl = String(item?.trailerEmbedUrl || '').trim();
-  if (explicitEmbedUrl) {
-    return explicitEmbedUrl;
-  }
-
-  const videoId = String(item?.trailerVideoId || '').trim();
-  if (!videoId) {
-    return '';
-  }
-
-  return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`;
-}
-
-function closeTrailerModal() {
-  if (!elements.trailerModal) {
-    return;
-  }
-
-  elements.trailerFrame.removeAttribute('src');
-  elements.trailerFrame.removeAttribute('srcdoc');
-  elements.trailerModal.hidden = true;
-  document.body.classList.remove('modal-open');
-}
-
-function openTrailer(item) {
-  if (!elements.trailerModal || !elements.trailerFrame || !elements.trailerTitle) {
-    return;
-  }
-
-  const safeTitle = String(item?.title || '').trim() || 'Trailer';
-  const safeYear = String(item?.year || '').trim();
-  const embedUrl = buildTrailerEmbedUrl(item);
-
-  elements.trailerTitle.textContent = safeYear ? `${safeTitle} (${safeYear})` : safeTitle;
-  elements.trailerFrame.removeAttribute('src');
-  elements.trailerFrame.removeAttribute('srcdoc');
-
-  if (embedUrl) {
-    elements.trailerFrame.src = embedUrl;
-  } else {
-    elements.trailerFrame.srcdoc = `<!doctype html><html lang="es"><head><meta charset="utf-8" /><style>body{font-family:system-ui,-apple-system,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#0f172a;color:#e2e8f0;text-align:center;padding:24px}p{max-width:28rem;line-height:1.5}</style></head><body><p>No hemos podido resolver el tráiler de <strong>${escapeHtml(safeTitle)}</strong> todavía.</p><p>Vuelve a sincronizar la biblioteca para completar los videoId pendientes.</p></body></html>`;
-  }
-
-  elements.trailerModal.hidden = false;
-  document.body.classList.add('modal-open');
-  elements.trailerClose?.focus();
-}
-
 function getYearSortValue(yearText) {
   const match = String(yearText || '').match(/\d{4}/);
   return match ? Number(match[0]) : Number.NEGATIVE_INFINITY;
-}
-
-function parseFlexibleDate(value) {
-  const text = String(value || '').trim();
-  if (!text) {
-    return null;
-  }
-
-  const direct = new Date(text);
-  if (!Number.isNaN(direct.getTime())) {
-    return direct;
-  }
-
-  const spanishMatch = text
-    .toLowerCase()
-    .match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/i);
-
-  if (!spanishMatch) {
-    return null;
-  }
-
-  const day = Number(spanishMatch[1]);
-  const monthName = spanishMatch[2]
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  const year = Number(spanishMatch[3]);
-  const month = SPANISH_MONTHS[monthName];
-
-  if (month === undefined) {
-    return null;
-  }
-
-  return new Date(year, month, day);
 }
 
 function createLoader(message = 'Cargando recomendaciones...') {
@@ -218,90 +84,14 @@ function normalizeRecord(record) {
   return {
     title: String(record.title || '').trim(),
     year: String(record.year || '').trim(),
-    rating: Number.isFinite(Number(record.rating)) ? Number(record.rating) : null,
-    averageRating: Number.isFinite(Number(record.averageRating)) ? Number(record.averageRating) : null,
+    rating: toRating(record.rating),
+    averageRating: toRating(record.averageRating),
     ratedAt: String(record.ratedAt || '').trim(),
     url: String(record.url || '').trim(),
     posterUrl: String(record.posterUrl || '').trim(),
     trailerVideoId: String(record.trailerVideoId || '').trim(),
     trailerEmbedUrl: String(record.trailerEmbedUrl || '').trim()
   };
-}
-
-function getImageProxyUrl(url) {
-  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
-}
-
-function getPosterCandidates(url) {
-  const source = String(url || '').trim();
-  if (!source) {
-    return [];
-  }
-
-  const candidates = [];
-  const pushUnique = (value) => {
-    if (value && !candidates.includes(value)) {
-      candidates.push(value);
-    }
-  };
-
-  const directCandidates = [];
-  const pushUniqueDirect = (value) => {
-    if (value && !directCandidates.includes(value)) {
-      directCandidates.push(value);
-    }
-  };
-
-  if (source.includes('-msmall.')) {
-    pushUniqueDirect(source.replace('-msmall.', '-large.'));
-    pushUniqueDirect(source.replace('-msmall.', '-mmed.'));
-    pushUniqueDirect(source.replace('-msmall.', '-med.'));
-  }
-
-  pushUniqueDirect(source);
-
-  // Filmaffinity's image CDN sends Cross-Origin-Resource-Policy: same-origin,
-  // which browsers block regardless of our own page's policy. Route the
-  // request through a public image proxy so it's fetched server-side and
-  // re-served without that restriction. Keep the direct URL as a fallback.
-  directCandidates.forEach((directUrl) => {
-    pushUnique(getImageProxyUrl(directUrl));
-  });
-  directCandidates.forEach((directUrl) => {
-    pushUnique(directUrl);
-  });
-
-  return candidates;
-}
-
-function setPosterSource(imageNode, posterUrl) {
-  const candidates = getPosterCandidates(posterUrl);
-  if (!candidates.length) {
-    imageNode.removeAttribute('src');
-    return;
-  }
-
-  let currentIndex = 0;
-  const applyNextCandidate = () => {
-    if (currentIndex >= candidates.length) {
-      imageNode.removeAttribute('src');
-      imageNode.onerror = null;
-      imageNode.onload = null;
-      return;
-    }
-    imageNode.src = candidates[currentIndex];
-  };
-
-  imageNode.onerror = () => {
-    currentIndex += 1;
-    applyNextCandidate();
-  };
-  imageNode.onload = () => {
-    imageNode.onerror = null;
-    imageNode.onload = null;
-  };
-
-  applyNextCandidate();
 }
 
 function makeKey(record) {
@@ -378,11 +168,15 @@ function buildRecommendations(activeUserName, librariesByUser) {
           year: peerRecord.year,
           url: peerRecord.url,
           posterUrl: peerRecord.posterUrl,
+          trailerVideoId: peerRecord.trailerVideoId,
+          trailerEmbedUrl: peerRecord.trailerEmbedUrl,
           weightedScore: 0,
           totalWeight: 0,
           supportUsers: [],
           overlapAvg: 0
         };
+        current.trailerVideoId ||= peerRecord.trailerVideoId;
+        current.trailerEmbedUrl ||= peerRecord.trailerEmbedUrl;
 
         current.weightedScore += scoreContribution;
         current.totalWeight += affinity.weight;
@@ -408,7 +202,7 @@ function buildRecommendations(activeUserName, librariesByUser) {
         ? item.supportUsers.reduce((sum, support) => sum + support.rating, 0) / supportCount
         : 0;
       const faValues = item.supportUsers
-        .map((support) => Number(support.averageRating))
+        .map((support) => support.averageRating)
         .filter((value) => Number.isFinite(value));
       const supportAvgFaRating = faValues.length
         ? faValues.reduce((sum, value) => sum + value, 0) / faValues.length
@@ -472,7 +266,7 @@ function updateYearFilterOptions(items) {
 }
 
 function getFilteredRecommendations() {
-  const query = elements.searchInput?.value.trim().toLowerCase() || '';
+  const query = normalizeSearch(elements.searchInput.value);
   const minRating = Number(elements.minRating?.value || 0);
   const selectedYear = elements.yearFilter.value || 'all';
   const minFaRating = Number(elements.minFaRating?.value || 0);
@@ -486,7 +280,7 @@ function getFilteredRecommendations() {
 
   const filtered = allRecommendations.filter((item) => {
     const yearMatch = selectedYear === 'all' || String(item.year || '').trim() === selectedYear;
-    const titleMatch = !query || String(item.title || '').toLowerCase().includes(query);
+    const titleMatch = !query || normalizeSearch(item.title).includes(query);
     const ratingMatch = !minRating || Number(item.supportAvgRating || 0) >= minRating;
     const faMatch = !minFaRating || Number(item.supportAvgFaRating || -Infinity) >= minFaRating;
     const windowMatch =
@@ -543,7 +337,15 @@ function getFilteredRecommendations() {
 }
 
 function applyYearFilterAndRender() {
+  filterState.save();
   pagination.reset(getFilteredRecommendations());
+}
+
+function clearFilters() {
+  filterState.reset();
+  elements.minSupport.value = '1';
+  applyYearFilterAndRender();
+  elements.searchInput.focus();
 }
 
 function renderRecommendations(items, startRank = 1, append = false) {
@@ -552,11 +354,10 @@ function renderRecommendations(items, startRank = 1, append = false) {
   }
 
   if (!items.length) {
-    const empty = document.createElement('p');
-    empty.className = 'status-text';
-    empty.textContent =
-      'No hay suficientes datos de afinidad para generar recomendaciones útiles todavía.';
-    elements.results.appendChild(empty);
+    renderEmptyState(elements.results, allRecommendations.length
+      ? 'No hay recomendaciones para la búsqueda y los filtros actuales.'
+      : 'No hay suficientes datos de afinidad para generar recomendaciones útiles todavía.',
+    allRecommendations.length ? clearFilters : null);
     return;
   }
 
@@ -568,19 +369,20 @@ function renderRecommendations(items, startRank = 1, append = false) {
     const poster = node.querySelector('.watch-next-poster');
     const chips = node.querySelector('.watch-next-chips');
 
-    node.querySelector('.watch-next-score').textContent = `Score ${item.predicted.toFixed(2)}`;
+    node.querySelector('.watch-next-score').textContent = `Estimada ${item.predicted.toFixed(2)}/10`;
     node.querySelector('.watch-next-title').textContent = `${startRank + index}. ${item.title}`;
     node.querySelector('.watch-next-year').textContent = item.year || '';
     node.querySelector('.watch-next-year').hidden = !item.year;
     node.querySelector('.watch-next-rationale').textContent =
       item.strongestSupport
-        ? `Mejor señal: ${item.strongestSupport.userName} (${Math.round(item.strongestSupport.agreement * 100)}% afinidad, nota ${item.strongestSupport.rating}).`
-        : 'Sin señal principal.';
+        ? `Gustos más parecidos: ${item.strongestSupport.userName} (${Math.round(item.strongestSupport.agreement * 100)}% de afinidad; le dio ${item.strongestSupport.rating}/10).`
+        : 'Sin una comparación principal disponible.';
 
     poster.alt = item.title ? `Poster de ${item.title}` : 'Poster';
+    posterLink.setAttribute('aria-label', `Ver ${item.title} en FilmAffinity`);
     if (item.posterUrl) {
       posterLink.classList.remove('is-empty');
-      setPosterSource(poster, item.posterUrl);
+      setPosterSource(poster, item.posterUrl, { priority: !append && index === 0 });
     } else {
       posterLink.classList.add('is-empty');
       poster.removeAttribute('src');
@@ -602,14 +404,14 @@ function renderRecommendations(items, startRank = 1, append = false) {
     trailerButton.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopPropagation();
-      openTrailer(item);
+      trailerDialog.open(item);
     });
-    posterLink.appendChild(trailerButton);
+    node.querySelector('.poster-wrap').appendChild(trailerButton);
 
     const chipsData = [
-      `👥 Soporte: ${item.supportCount} usuario${item.supportCount === 1 ? '' : 's'}`,
-      `⭐ Nota media soporte: ${item.supportAvgRating.toFixed(1)}`,
-      `🧪 Solidez media: ${Math.round(item.overlapAvg)} títulos en común`
+      `👥 Recomendada por ${item.supportCount} usuario${item.supportCount === 1 ? '' : 's'}`,
+      `⭐ Su nota media: ${item.supportAvgRating.toFixed(1)}/10`,
+      `🤝 ${Math.round(item.overlapAvg)} títulos en común contigo, de media`
     ];
 
     chipsData.forEach((text) => {
@@ -626,102 +428,64 @@ function renderRecommendations(items, startRank = 1, append = false) {
 }
 
 async function loadConfig() {
-  const response = await fetch('/api/config');
-  const payload = await response.json();
-  configuredUsers = Array.isArray(payload?.filmaffinity?.users) ? payload.filmaffinity.users : [];
-  const queryUser = new URLSearchParams(window.location.search).get(USER_QUERY_KEY) || '';
-  const savedUser = localStorage.getItem(SELECTED_USER_KEY) || '';
-  const defaultUser = String(payload?.filmaffinity?.defaultUser || '').trim();
-  const selected =
-    configuredUsers.find((user) => user.name === queryUser) ||
-    configuredUsers.find((user) => user.name === savedUser) ||
-    configuredUsers.find((user) => user.name === defaultUser) ||
-    configuredUsers[0];
-
-  elements.userSelector.innerHTML = '';
-  configuredUsers.forEach((user) => {
-    const option = document.createElement('option');
-    option.value = user.name;
-    option.textContent = user.name;
-    elements.userSelector.appendChild(option);
-  });
-
-  if (selected) {
-    selectedUserName = selected.name;
-    elements.userSelector.value = selected.name;
-    localStorage.setItem(SELECTED_USER_KEY, selected.name);
-  } else {
-    selectedUserName = '';
-  }
-
-  updateQueryString();
+  const config = await initializeUserSelector(elements.userSelector);
+  configuredUsers = config.users;
+  selectedUserName = config.userName;
 }
 
 async function loadRecommendations() {
-  if (!selectedUserName) {
-    setStatus('No hay usuario seleccionado.', true);
-    return;
-  }
+  return runRecommendationsLoad(async (isCurrent) => {
+    pagination.pause();
+    allRecommendations = [];
+    elements.results.innerHTML = '';
+    elements.results.appendChild(createLoader('Calculando recomendaciones...'));
+    setStatus('Calculando recomendaciones...');
+    if (!selectedUserName) await loadConfig();
+    if (!isCurrent()) return;
+    if (!selectedUserName) throw new Error('Falta configurar usuarios en config.json.');
 
-  pagination.pause();
-  allRecommendations = [];
-  elements.results.innerHTML = '';
-  elements.results.appendChild(createLoader('Calculando recomendaciones...'));
-  setStatus(`Calculando recomendaciones para ${selectedUserName}...`);
+    const userNames = configuredUsers.map((user) => user.name);
+    const responses = await Promise.all(
+      userNames.map((userName) =>
+        fetch(`/api/library?userName=${encodeURIComponent(userName)}&otherVotes=false`).then(async (response) => ({
+          userName,
+          ok: response.ok,
+          payload: await response.json()
+        }))
+      )
+    );
+    if (!isCurrent()) return;
+    const failed = responses.find((entry) => !entry.ok);
+    if (failed) throw new Error(failed.payload.error || `No se pudo cargar la biblioteca de ${failed.userName}.`);
 
-  const userNames = configuredUsers.map((user) => user.name);
-  const responses = await Promise.all(
-    userNames.map((userName) =>
-      fetch(`/api/library?userName=${encodeURIComponent(userName)}`).then(async (response) => ({
-        userName,
-        ok: response.ok,
-        payload: await response.json()
-      }))
-    )
-  );
-
-  const librariesByUser = new Map(
-    responses
-      .filter((entry) => entry.ok)
-      .map((entry) => [
+    const librariesByUser = new Map(
+      responses.map((entry) => [
         entry.userName,
         (Array.isArray(entry.payload.ratings) ? entry.payload.ratings : []).map(normalizeRecord)
       ])
-  );
+    );
 
-  const recommendations = buildRecommendations(selectedUserName, librariesByUser);
-  allRecommendations = recommendations;
-  updateYearFilterOptions(recommendations);
+    const recommendations = buildRecommendations(selectedUserName, librariesByUser);
+    allRecommendations = recommendations;
+    updateYearFilterOptions(recommendations);
+    filterState.restore();
 
-  if (!recommendations.length) {
-    setStatus('No se encontraron sugerencias con la señal de afinidad actual.');
-  } else {
-    setStatus('Recomendaciones actualizadas.');
-  }
+    if (!recommendations.length) {
+      setStatus('No se encontraron sugerencias con la señal de afinidad actual.');
+    } else {
+      setStatus('Recomendaciones actualizadas.');
+    }
 
-  applyYearFilterAndRender();
+    applyYearFilterAndRender();
+  });
 }
 
 elements.userSelector.addEventListener('change', () => {
   selectedUserName = elements.userSelector.value;
-  localStorage.setItem(SELECTED_USER_KEY, selectedUserName);
-  updateQueryString();
-  loadRecommendations().catch((error) => {
-    setStatus(error.message || 'No se pudieron calcular recomendaciones.', true);
-  });
+  updateUserNavigation(selectedUserName);
+  loadRecommendations();
 });
-elements.trailerClose?.addEventListener('click', closeTrailerModal);
-elements.trailerModal?.addEventListener('click', (event) => {
-  if (event.target === elements.trailerModal) {
-    closeTrailerModal();
-  }
-});
-window.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && elements.trailerModal && !elements.trailerModal.hidden) {
-    closeTrailerModal();
-  }
-});
-
+elements.clearFilters.addEventListener('click', clearFilters);
 elements.yearFilter.addEventListener('change', () => {
   applyYearFilterAndRender();
 });
@@ -771,28 +535,8 @@ if (elements.sharedOnly) {
   });
 }
 
-async function boot() {
-  await loadConfig();
-  if (!selectedUserName) {
-    setStatus('Falta configurar usuarios en config.json.', true);
-    return;
-  }
-  await loadRecommendations();
-}
-
-boot().catch((error) => {
-  setStatus(error.message || 'Error inicializando la página Qué ver.', true);
+const runRecommendationsLoad = window.siteUtils.createLatestLoader(elements.status, (error) => {
+  window.siteUtils.showError(error, elements.status, [elements.results], loadRecommendations);
+  elements.meta.textContent = '';
 });
-
-(function initMobileFilterToggle() {
-  const toggle = document.getElementById('mobile-filter-toggle');
-  const sidebar = document.getElementById('filter-sidebar');
-  if (!toggle || !sidebar) return;
-  toggle.addEventListener('click', () => {
-    const isOpen = sidebar.classList.toggle('is-open');
-    toggle.setAttribute('aria-expanded', String(isOpen));
-    toggle.querySelector('.mobile-filter-toggle-label').textContent = isOpen
-      ? '✕ Ocultar filtros'
-      : '🔧 Mostrar filtros';
-  });
-}());
+loadRecommendations();

@@ -35,8 +35,11 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="manifest" href="site.webmanifest" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="preload" href="data/libraries.json" as="fetch" crossorigin data-library-index />
+    <link rel="preconnect" href="https://images.weserv.nl" />
   </head>
   <body class="home-page">
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
@@ -49,8 +52,8 @@
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
 
-        <nav class="top-links" id="top-nav" aria-label="Primary">
-          <a class="is-active" data-nav-target="home" href="index.html">Biblioteca</a>
+        <nav class="top-links" id="top-nav" aria-label="Navegación principal">
+          <a class="is-active" aria-current="page" data-nav-target="home" href="index.html">Biblioteca</a>
           <a data-nav-target="watchnext" href="watch-next.html">Qué ver</a>
           <a data-nav-target="affinity" href="affinity.html">Afinidad</a>
           <a data-nav-target="stats" href="stats.html">Estadísticas</a>
@@ -58,14 +61,14 @@
 
         <div class="topbar-controls">
           <label class="field topbar-user-field">
-            <select id="global-user-selector"></select>
+            <select id="global-user-selector" aria-label="Usuario activo"></select>
           </label>
         </div>
       </div>
     </header>
 
     <div class="page-shell">
-      <main class="layout library-layout">
+      <main id="main-content" class="layout library-layout" tabindex="-1">
         <button id="mobile-filter-toggle" class="mobile-filter-toggle" type="button" aria-expanded="false" aria-controls="filter-sidebar">
           <span class="mobile-filter-toggle-label">🔧 Mostrar filtros</span>
         </button>
@@ -74,7 +77,7 @@
           <div class="panel-header">
             <div>
               <p class="panel-kicker">🎬 Explorar</p>
-              <h2 id="results-title">Votaciones del usuario seleccionado</h2>
+              <h1 id="results-title">Votaciones del usuario seleccionado</h1>
             </div>
           </div>
 
@@ -82,7 +85,7 @@
             <p id="import-status" class="status-text browse-status"></p>
           </div>
 
-          <div id="results-meta" class="results-meta">Todavía no hay votaciones importadas.</div>
+          <div id="results-meta" class="results-meta" role="status">Todavía no hay votaciones importadas.</div>
           <div id="results" class="results-grid"></div>
           <p id="scroll-status" class="scroll-status" role="status" aria-live="polite" hidden></p>
         </section>
@@ -100,6 +103,7 @@
                 <input
                   id="search-input"
                   type="search"
+                  aria-label="Buscar en la biblioteca"
                   placeholder="Escribe aquí para encontrar cualquier título en segundos ✨"
                 />
               </div>
@@ -198,6 +202,7 @@
                 <span>Solo títulos compartidos</span>
               </div>
             </label>
+            <button id="clear-filters" class="ghost-button" type="button">Limpiar filtros</button>
           </div>
         </aside>
         </div>
@@ -213,9 +218,11 @@
 
     <template id="result-template">
       <article class="result-card">
+        <div class="poster-wrap">
         <a class="poster-link" href="" target="_blank" rel="noreferrer">
           <img class="result-poster" src="" alt="" loading="lazy" />
         </a>
+        </div>
         <div class="result-body">
           <div class="result-topline">
             <div class="result-rating-meta">
@@ -224,15 +231,15 @@
             </div>
             <span class="result-year"></span>
           </div>
-          <h3 class="result-title"></h3>
+          <h2 class="result-title"></h2>
           <p class="result-date"></p>
           <div class="comparison-list"></div>
         </div>
       </article>
     </template>
 
-    <div id="trailer-modal" class="trailer-modal" hidden>
-      <div class="trailer-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="trailer-title">
+    <dialog id="trailer-modal" class="trailer-modal" aria-labelledby="trailer-title" hidden>
+      <div class="trailer-modal-dialog">
         <div class="trailer-modal-header">
           <h3 id="trailer-title">Trailer</h3>
           <button id="trailer-close" class="ghost-button trailer-close" type="button" aria-label="Cerrar trailer">
@@ -240,6 +247,9 @@
           </button>
         </div>
         <div class="trailer-frame-wrap">
+          <p id="trailer-unavailable" class="trailer-unavailable" hidden>
+            Este título todavía no tiene un tráiler disponible. Vuelve a sincronizar la biblioteca para completar los datos.
+          </p>
           <iframe
             id="trailer-frame"
             title="Trailer de YouTube"
@@ -250,11 +260,12 @@
           ></iframe>
         </div>
       </div>
-    </div>
+    </dialog>
 
-    <script src="theme.js"></script>
-    <script src="static-data.js"></script>
-    <script src="scroll-pagination.js"></script>
-    <script src="app.js"></script>
+    <script src="theme.js" defer></script>
+    <script src="site-utils.js" defer></script>
+    <script src="static-data.js" defer></script>
+    <script src="scroll-pagination.js" defer></script>
+    <script src="app.js" defer></script>
   </body>
 </html>

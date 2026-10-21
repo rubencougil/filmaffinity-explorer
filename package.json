@@ -6,12 +6,28 @@
   "scripts": {
     "start": "node server.js",
     "sync:static": "node scripts/sync-static-data.js",
+    "check": "node scripts/check.js",
+    "test": "npm run build && node --test tests/*.test.js",
     "test:pagination": "node --test tests/scroll-pagination.test.js",
-    "serve:static": "npx serve public"
+    "serve:static": "npm run build && serve dist --config ../serve.json --listen tcp://127.0.0.1:3000",
+    "lint": "eslint .",
+    "build": "node scripts/build.js"
   },
   "dependencies": {
     "playwright": "^1.58.2",
     "playwright-extra": "^4.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "serve": "^14.2.6"
+  },
+  "overrides": {
+    "serve": {
+      "compression": "^1.8.2"
+    }
   }
 }

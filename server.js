@@ -19,6 +19,7 @@ const MIME_TYPES = {
   '.css': 'text/css; charset=utf-8',
   '.js': 'application/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
   '.svg': 'image/svg+xml; charset=utf-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
@@ -121,6 +122,7 @@ function getConfiguredUser(config, requestedName = '', requestedUserId = '') {
     if (byName) {
       return byName;
     }
+    return null;
   }
 
   if (requestedUserId) {
@@ -128,6 +130,7 @@ function getConfiguredUser(config, requestedName = '', requestedUserId = '') {
     if (byId) {
       return byId;
     }
+    return null;
   }
 
   const defaultName = String(config?.filmaffinity?.defaultUser || '').trim();
@@ -442,17 +445,22 @@ function handleGetLibrary(req, res, reqUrl) {
 
   const state = getLibraryState(configuredUser.name);
   const job = state.lastJobId ? jobs.get(state.lastJobId) : null;
+  const peerRatings = new Map(users.filter((user) => user.name !== configuredUser.name).map((user) => [
+    user.name,
+    new Map((getLibraryState(user.name).ratings || []).map((rating) => [
+      String(rating.url || rating.title || '').trim(), rating
+    ]))
+  ]));
   const ratings = (state.ratings || []).map((rating) => {
+    if (url.searchParams.get('otherVotes') === 'false') return rating;
     const key = String(rating.url || rating.title || '').trim();
     const otherVotes = users
       .filter((user) => user.name !== configuredUser.name)
       .map((user) => {
-        const otherState = getLibraryState(user.name);
-        const match = (otherState.ratings || []).find(
-          (item) => String(item.url || item.title || '').trim() === key
-        );
+        const match = peerRatings.get(user.name)?.get(key);
 
-        if (!match || !Number.isFinite(Number(match.rating))) {
+        if (!match || match.rating == null || String(match.rating).trim() === '' ||
+            !Number.isFinite(Number(match.rating)) || Number(match.rating) < 1 || Number(match.rating) > 10) {
           return null;
         }
 
@@ -489,7 +497,17 @@ function handleGetLibrary(req, res, reqUrl) {
 }
 
 const server = http.createServer((req, res) => {
-  const requestPath = decodeURIComponent((req.url || '/').split('?')[0]);
+  let requestPath;
+  try {
+    requestPath = decodeURIComponent((req.url || '/').split('?')[0]);
+    if (requestPath.includes('\0')) {
+      sendJson(res, 400, { error: 'Invalid path' });
+      return;
+    }
+  } catch {
+    sendJson(res, 400, { error: 'Invalid URL encoding' });
+    return;
+  }
 
   if (req.method === 'GET' && requestPath === '/api/config') {
     handleGetConfig(req, res);
@@ -524,7 +542,7 @@ const server = http.createServer((req, res) => {
   const safePath = path.normalize(requestPath).replace(/^(\.\.[/\\])+/, '');
   let filePath = path.join(PUBLIC_DIR, safePath === '/' ? 'index.html' : safePath);
 
-  if (!filePath.startsWith(PUBLIC_DIR)) {
+  if (filePath !== PUBLIC_DIR && !filePath.startsWith(`${PUBLIC_DIR}${path.sep}`)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     res.end('Forbidden');
     return;
@@ -533,8 +551,6 @@ const server = http.createServer((req, res) => {
   fs.stat(filePath, (error, stats) => {
     if (!error && stats.isDirectory()) {
       filePath = path.join(filePath, 'index.html');
-    } else if (error) {
-      filePath = path.join(PUBLIC_DIR, 'index.html');
     }
 
     sendFile(res, filePath);
@@ -542,7 +558,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`Filmaffinity Browser running at http://${HOST}:${PORT}`);
+  console.log(`Filmaffinity Browser running at http://${HOST}:${server.address().port}`);
 
   const config = readConfig();
   ensureDataDir();

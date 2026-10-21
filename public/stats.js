@@ -1,10 +1,10 @@
-const SELECTED_USER_KEY = 'filmaffinity-browser-selected-user';
-const USER_QUERY_KEY = 'userName';
+const {
+  parseFlexibleDate, toRating, setPosterSource, initializeUserSelector, updateUserNavigation
+} = window.siteUtils;
 
 const elements = {
   subtitle: document.querySelector('#stats-subtitle'),
   userSelector: document.querySelector('#global-user-selector'),
-  navLinks: Array.from(document.querySelectorAll('[data-nav-target]')),
   totalVotes: document.querySelector('#stats-total-votes'),
   averageRating: document.querySelector('#stats-average-rating'),
   busiestYear: document.querySelector('#stats-busiest-year'),
@@ -18,43 +18,8 @@ const elements = {
   topWorstList: document.querySelector('#top-worst-list')
 };
 
-const SPANISH_MONTHS = {
-  enero: 0,
-  febrero: 1,
-  marzo: 2,
-  abril: 3,
-  mayo: 4,
-  junio: 5,
-  julio: 6,
-  agosto: 7,
-  septiembre: 8,
-  setiembre: 8,
-  octubre: 9,
-  noviembre: 10,
-  diciembre: 11
-};
-
-let configuredUsers = [];
 let selectedUserName = '';
 let library = [];
-
-function updateNavLinks() {
-  const userParam = selectedUserName ? `?${USER_QUERY_KEY}=${encodeURIComponent(selectedUserName)}` : '';
-  const byTarget = {
-    home: `index.html${userParam}`,
-    stats: `stats.html${userParam}`,
-    affinity: `affinity.html${userParam}`,
-    watchnext: `watch-next.html${userParam}`
-  };
-
-  elements.navLinks.forEach((link) => {
-    const target = link.dataset.navTarget;
-    if (!target || !byTarget[target]) {
-      return;
-    }
-    link.href = byTarget[target];
-  });
-}
 
 function createLoader(message = 'Cargando...') {
   const wrapper = document.createElement('div');
@@ -97,8 +62,8 @@ function showStatsLoader(message = 'Cargando estadísticas...') {
 }
 
 function getRatingToneClass(value) {
-  const rating = Number(value);
-  if (!Number.isFinite(rating)) {
+  const rating = toRating(value);
+  if (rating === null) {
     return '';
   }
 
@@ -124,39 +89,6 @@ function createChartDetail({
   return { id, chart, label, value, summary, meta };
 }
 
-function parseFlexibleDate(value) {
-  const text = String(value || '').trim();
-  if (!text) {
-    return null;
-  }
-
-  const direct = new Date(text);
-  if (!Number.isNaN(direct.getTime())) {
-    return direct;
-  }
-
-  const spanishMatch = text
-    .toLowerCase()
-    .match(/(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/i);
-
-  if (!spanishMatch) {
-    return null;
-  }
-
-  const day = Number(spanishMatch[1]);
-  const monthName = spanishMatch[2]
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  const year = Number(spanishMatch[3]);
-  const month = SPANISH_MONTHS[monthName];
-
-  if (month === undefined) {
-    return null;
-  }
-
-  return new Date(year, month, day);
-}
-
 function formatDate(value, options = {}) {
   if (!(value instanceof Date) || Number.isNaN(value.getTime())) {
     return '-';
@@ -165,26 +97,14 @@ function formatDate(value, options = {}) {
   return new Intl.DateTimeFormat('es-ES', options).format(value);
 }
 
-function formatMonthKey(key) {
-  const [year, month] = String(key).split('-').map(Number);
-  return formatDate(new Date(year, (month || 1) - 1, 1), {
-    year: 'numeric',
-    month: 'short'
-  });
-}
-
 function getYear(date) {
   return date instanceof Date && !Number.isNaN(date.getTime()) ? date.getFullYear() : null;
-}
-
-function getImageProxyUrl(url) {
-  return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
 }
 
 function normalizeRecord(record) {
   return {
     title: String(record.title || '').trim(),
-    rating: Number.isFinite(Number(record.rating)) ? Number(record.rating) : null,
+    rating: toRating(record.rating),
     ratedAt: String(record.ratedAt || '').trim(),
     date: parseFlexibleDate(record.ratedAt),
     url: String(record.url || '').trim(),
@@ -313,6 +233,7 @@ function wireChartElement(element, detail, tooltip) {
   element.classList.add('chart-item');
   element.setAttribute('tabindex', '0');
   element.setAttribute('focusable', 'true');
+  element.setAttribute('role', 'img');
   element.setAttribute('aria-label', `${detail.chart}: ${detail.label}. Valor ${detail.value}`);
   element.setAttribute('data-detail', `${detail.label} ${detail.value}`);
   element.title = `${detail.label}: ${detail.value}`;
@@ -360,6 +281,8 @@ function renderBarChart(target, dataset, options = {}) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
   svg.setAttribute('class', 'chart-svg');
+  svg.setAttribute('role', 'group');
+  svg.setAttribute('aria-label', chartName);
 
   const axis = document.createElementNS(svg.namespaceURI, 'line');
   axis.setAttribute('x1', padding.left);
@@ -414,84 +337,6 @@ function renderBarChart(target, dataset, options = {}) {
   target.appendChild(tooltip.node);
 }
 
-function renderLineChart(target, dataset, options = {}) {
-  target.innerHTML = '';
-
-  if (!dataset.length) {
-    target.appendChild(createChartShell('Todavía no hay suficientes datos para esta gráfica.'));
-    return;
-  }
-
-  const width = 760;
-  const height = 260;
-  const padding = { top: 18, right: 18, bottom: 44, left: 42 };
-  const innerWidth = width - padding.left - padding.right;
-  const innerHeight = height - padding.top - padding.bottom;
-  const maxValue = Math.max(...dataset.map((item) => item.value), 1);
-  const stepX = dataset.length > 1 ? innerWidth / (dataset.length - 1) : innerWidth / 2;
-  const chartName = options.chartName || 'Actividad por mes';
-  const tooltip = createChartTooltip();
-
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-  svg.setAttribute('class', 'chart-svg');
-
-  const axis = document.createElementNS(svg.namespaceURI, 'line');
-  axis.setAttribute('x1', padding.left);
-  axis.setAttribute('y1', height - padding.bottom);
-  axis.setAttribute('x2', width - padding.right);
-  axis.setAttribute('y2', height - padding.bottom);
-  axis.setAttribute('class', 'chart-axis');
-  svg.appendChild(axis);
-
-  const points = dataset.map((item, index) => {
-    const x = padding.left + index * stepX;
-    const y = height - padding.bottom - (item.value / maxValue) * innerHeight;
-    const detail = createChartDetail({
-      id: `${chartName}-${item.label}-${index}`,
-      chart: chartName,
-      label: item.label,
-      value: String(item.value),
-      summary: options.describe
-        ? options.describe(item, index)
-        : `${item.label}: ${item.value}`,
-      meta: options.meta ? options.meta(item, index) : []
-    });
-    return { ...item, x, y, detail };
-  });
-
-  const path = document.createElementNS(svg.namespaceURI, 'path');
-  path.setAttribute(
-    'd',
-    points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`).join(' ')
-  );
-  path.setAttribute('class', 'chart-line');
-  svg.appendChild(path);
-
-  points.forEach((point, index) => {
-    const dot = document.createElementNS(svg.namespaceURI, 'circle');
-    dot.setAttribute('cx', point.x);
-    dot.setAttribute('cy', point.y);
-    dot.setAttribute('r', 4.5);
-    dot.setAttribute('class', 'chart-dot');
-    wireChartElement(dot, point.detail, tooltip);
-    svg.appendChild(dot);
-
-    if (index % Math.ceil(points.length / 8 || 1) === 0 || index === points.length - 1) {
-      const tick = document.createElementNS(svg.namespaceURI, 'text');
-      tick.setAttribute('x', point.x);
-      tick.setAttribute('y', height - padding.bottom + 18);
-      tick.setAttribute('text-anchor', 'middle');
-      tick.setAttribute('class', 'chart-tick');
-      tick.textContent = point.label;
-      svg.appendChild(tick);
-    }
-  });
-
-  target.appendChild(svg);
-  target.appendChild(tooltip.node);
-}
-
 function renderInsights(records) {
   elements.insightsGrid.innerHTML = '';
 
@@ -530,7 +375,7 @@ function renderInsights(records) {
       return [];
     }
     return (record.otherVotes || [])
-      .map((vote) => Number(vote.rating))
+      .map((vote) => toRating(vote.rating))
       .filter((rating) => Number.isFinite(rating))
       .map((rating) => Math.abs(record.rating - rating));
   });
@@ -542,7 +387,11 @@ function renderInsights(records) {
 
   const uniqueDays = [...new Set(
     datedRecords
-      .map((record) => record.date.toISOString().slice(0, 10))
+      .map((record) => [
+        record.date.getFullYear(),
+        String(record.date.getMonth() + 1).padStart(2, '0'),
+        String(record.date.getDate()).padStart(2, '0')
+      ].join('-'))
       .sort()
   )];
   let longestStreak = 0;
@@ -664,7 +513,7 @@ function renderRankingList(target, records, emptyText) {
     if (record.posterUrl) {
       const thumb = document.createElement('img');
       thumb.className = 'ranking-thumb';
-      thumb.src = getImageProxyUrl(record.posterUrl);
+      setPosterSource(thumb, record.posterUrl, { thumbnail: true });
       thumb.alt = `Portada de ${record.title}`;
       thumb.loading = 'lazy';
       main.appendChild(thumb);
@@ -695,352 +544,6 @@ function renderRankingList(target, records, emptyText) {
 
     item.append(main, value);
     target.appendChild(item);
-  });
-}
-
-function renderOverlapGrid(records) {
-  elements.overlapGrid.innerHTML = '';
-  const peers = configuredUsers
-    .filter((user) => user.name !== selectedUserName)
-    .map((user) => user.name);
-
-  if (!peers.length) {
-    const empty = document.createElement('p');
-    empty.className = 'status-text';
-    empty.textContent = 'No hay otros usuarios configurados para comparar.';
-    elements.overlapGrid.appendChild(empty);
-    return;
-  }
-
-  const analyticsByUser = new Map(peers.map((name) => [name, []]));
-
-  records.forEach((record) => {
-    const currentRating = Number(record.rating);
-    if (!Number.isFinite(currentRating)) {
-      return;
-    }
-
-    record.otherVotes.forEach((vote) => {
-      const peerRating = Number(vote.rating);
-      if (!Number.isFinite(peerRating) || !analyticsByUser.has(vote.userName)) {
-        return;
-      }
-
-      analyticsByUser.get(vote.userName).push({
-        title: record.title,
-        url: record.url,
-        posterUrl: record.posterUrl,
-        mine: currentRating,
-        theirs: peerRating,
-        diff: Math.abs(currentRating - peerRating)
-      });
-    });
-  });
-
-  const ranking = peers
-    .map((name) => {
-      const items = analyticsByUser.get(name) || [];
-      const overlapCount = items.length;
-      const totalGap = items.reduce((sum, item) => sum + item.diff, 0);
-      const avgGap = overlapCount ? totalGap / overlapCount : null;
-      const bias = overlapCount
-        ? items.reduce((sum, item) => sum + (item.mine - item.theirs), 0) / overlapCount
-        : null;
-      const exactMatches = items.filter((item) => item.diff === 0).length;
-      const exactRate = overlapCount ? Math.round((exactMatches / overlapCount) * 100) : null;
-      const agreementScore = overlapCount
-        ? Math.round(
-            (items.reduce((sum, item) => sum + (1 - item.diff / 9), 0) / overlapCount) * 100
-          )
-        : null;
-      const strongDisagreements = items.filter((item) => item.diff >= 4).length;
-      const disagreements = [...items]
-        .sort((a, b) => b.diff - a.diff || a.title.localeCompare(b.title))
-        .slice(0, 4);
-      const topAgreements = [...items]
-        .sort((a, b) => a.diff - b.diff || a.title.localeCompare(b.title))
-        .slice(0, 3);
-
-      const meanMine = overlapCount
-        ? items.reduce((sum, item) => sum + item.mine, 0) / overlapCount
-        : null;
-      const meanTheirs = overlapCount
-        ? items.reduce((sum, item) => sum + item.theirs, 0) / overlapCount
-        : null;
-      const covariance = overlapCount
-        ? items.reduce((sum, item) => sum + (item.mine - meanMine) * (item.theirs - meanTheirs), 0)
-        : null;
-      const varianceMine = overlapCount
-        ? items.reduce((sum, item) => sum + (item.mine - meanMine) ** 2, 0)
-        : null;
-      const varianceTheirs = overlapCount
-        ? items.reduce((sum, item) => sum + (item.theirs - meanTheirs) ** 2, 0)
-        : null;
-      const pearson =
-        overlapCount && varianceMine > 0 && varianceTheirs > 0
-          ? Number((covariance / Math.sqrt(varianceMine * varianceTheirs)).toFixed(2))
-          : null;
-
-      return {
-        name,
-        overlapCount,
-        avgGap,
-        bias,
-        exactMatches,
-        exactRate,
-        agreementScore,
-        pearson,
-        strongDisagreements,
-        topAgreements,
-        disagreements
-      };
-    })
-    .sort((a, b) => {
-      const scoreA = a.agreementScore ?? -1;
-      const scoreB = b.agreementScore ?? -1;
-      if (scoreB !== scoreA) {
-        return scoreB - scoreA;
-      }
-      if (b.overlapCount !== a.overlapCount) {
-        return b.overlapCount - a.overlapCount;
-      }
-      return a.name.localeCompare(b.name);
-    });
-
-  function describeCompatibility(score) {
-    if (!Number.isFinite(score)) {
-      return 'Sin base de comparacion';
-    }
-    if (score >= 85) {
-      return 'Muy alta';
-    }
-    if (score >= 70) {
-      return 'Alta';
-    }
-    if (score >= 55) {
-      return 'Media';
-    }
-    if (score >= 40) {
-      return 'Baja';
-    }
-    return 'Muy baja';
-  }
-
-  function describeConfidence(overlap) {
-    if (overlap >= 120) {
-      return 'Alta';
-    }
-    if (overlap >= 50) {
-      return 'Media';
-    }
-    if (overlap >= 15) {
-      return 'Baja';
-    }
-    return 'Muy baja';
-  }
-
-  ranking.forEach((item) => {
-    const card = document.createElement('article');
-    card.className = 'overlap-card agreement-card';
-
-    const user = document.createElement('span');
-    user.className = 'overlap-user';
-    user.textContent = `👤 ${item.name}`;
-
-    const metrics = document.createElement('div');
-    metrics.className = 'agreement-metrics';
-
-    const scoreBadge = document.createElement('span');
-    scoreBadge.className = 'agreement-score has-tooltip';
-    scoreBadge.textContent =
-      item.agreementScore === null
-        ? '🧩 Sin datos compartidos'
-        : `🤝 ${item.agreementScore}% de compatibilidad`;
-    scoreBadge.dataset.tooltip =
-      'Afinidad normalizada entre 0% y 100% según la distancia media entre notas en títulos compartidos.';
-
-    const summary = document.createElement('span');
-    summary.className = 'agreement-summary';
-    summary.textContent =
-      item.agreementScore === null
-        ? 'Se necesitan mas titulos en comun para medir afinidad.'
-        : `Afinidad ${describeCompatibility(item.agreementScore)} entre las notas de ambos usuarios.`;
-
-    const chips = document.createElement('div');
-    chips.className = 'agreement-chips';
-
-    const overlapChip = document.createElement('span');
-    overlapChip.className = 'agreement-chip has-tooltip';
-    overlapChip.textContent = `🎬 En comun: ${item.overlapCount}`;
-    overlapChip.dataset.tooltip =
-      'Número de títulos donde ambos usuarios tienen voto y se puede comparar.';
-
-    const gapChip = document.createElement('span');
-    gapChip.className = 'agreement-chip has-tooltip';
-    gapChip.textContent = `📏 Gap medio: ${
-      item.avgGap === null ? '-' : item.avgGap.toFixed(2)
-    }`;
-    gapChip.dataset.tooltip =
-      'Diferencia absoluta media entre ambas notas. Más bajo = mayor cercanía.';
-
-    const exactChip = document.createElement('span');
-    exactChip.className = 'agreement-chip has-tooltip';
-    exactChip.textContent = `✅ Exactas: ${item.exactMatches}`;
-    exactChip.dataset.tooltip = 'Cantidad de títulos donde ambos usuarios pusieron exactamente la misma nota.';
-
-    const exactRateChip = document.createElement('span');
-    exactRateChip.className = 'agreement-chip has-tooltip';
-    exactRateChip.textContent = `📌 Exactitud: ${item.exactRate ?? '-'}%`;
-    exactRateChip.dataset.tooltip = 'Porcentaje de coincidencias exactas sobre el total de títulos compartidos.';
-
-    const confidenceChip = document.createElement('span');
-    confidenceChip.className = 'agreement-chip has-tooltip';
-    confidenceChip.textContent = `🧪 Confianza: ${describeConfidence(item.overlapCount)}`;
-    confidenceChip.dataset.tooltip = 'Nivel orientativo basado en tamaño de muestra: más títulos compartidos = más confianza.';
-
-    const biasChip = document.createElement('span');
-    biasChip.className = 'agreement-chip has-tooltip';
-    if (item.bias === null) {
-      biasChip.textContent = '↕️ Sesgo: -';
-    } else if (item.bias > 0.2) {
-      biasChip.textContent = `⬆️ Sesgo: usuario activo +${item.bias.toFixed(2)}`;
-    } else if (item.bias < -0.2) {
-      biasChip.textContent = `⬇️ Sesgo: ${item.name} +${Math.abs(item.bias).toFixed(2)}`;
-    } else {
-      biasChip.textContent = '↔️ Sesgo: equilibrado';
-    }
-    biasChip.dataset.tooltip =
-      'Diferencia media firmada: indica qué usuario suele puntuar más alto en los mismos títulos.';
-
-    const corrChip = document.createElement('span');
-    corrChip.className = 'agreement-chip has-tooltip';
-    corrChip.textContent = `📈 Correlación: ${item.pearson ?? '-'}`;
-    corrChip.dataset.tooltip =
-      'Correlación de Pearson entre ambas series de notas. 1 = patrón muy parecido, 0 = sin relación, -1 = patrón inverso.';
-
-    const disagreementChip = document.createElement('span');
-    disagreementChip.className = 'agreement-chip has-tooltip';
-    disagreementChip.textContent = `⚠️ Desacuerdos fuertes: ${item.strongDisagreements}`;
-    disagreementChip.dataset.tooltip =
-      'Cantidad de títulos con diferencia de 4 puntos o más entre ambos usuarios.';
-
-    chips.append(
-      overlapChip,
-      gapChip,
-      exactChip,
-      exactRateChip,
-      confidenceChip,
-      biasChip,
-      corrChip,
-      disagreementChip
-    );
-
-    metrics.append(scoreBadge, summary, chips);
-    card.append(user, metrics);
-
-    if (item.topAgreements.length) {
-      const agreementTitle = document.createElement('p');
-      agreementTitle.className = 'agreement-list-title agreement-list-title-good';
-      agreementTitle.textContent = '💚 Donde mejor encajais';
-      card.appendChild(agreementTitle);
-
-      const bestList = document.createElement('ol');
-      bestList.className = 'agreement-list agreement-list-good';
-
-      item.topAgreements.forEach((entry) => {
-        const li = document.createElement('li');
-        li.className = 'agreement-item';
-
-        if (entry.posterUrl) {
-          const thumb = document.createElement('img');
-          thumb.className = 'agreement-thumb';
-          thumb.src = getImageProxyUrl(entry.posterUrl);
-          thumb.alt = `Portada de ${entry.title}`;
-          thumb.loading = 'lazy';
-          li.appendChild(thumb);
-        } else {
-          const thumbFallback = document.createElement('span');
-          thumbFallback.className = 'agreement-thumb-fallback';
-          thumbFallback.textContent = '🎞️';
-          li.appendChild(thumbFallback);
-        }
-
-        const main = document.createElement('div');
-        main.className = 'agreement-main';
-
-        const film = document.createElement(entry.url ? 'a' : 'span');
-        film.className = 'agreement-film';
-        film.textContent = entry.title;
-        if (entry.url) {
-          film.href = entry.url;
-          film.target = '_blank';
-          film.rel = 'noreferrer';
-        }
-
-        const numbers = document.createElement('span');
-        numbers.className = 'agreement-gap agreement-gap-good';
-        numbers.textContent = `Nota usuario activo ${entry.mine} · Nota ${item.name} ${entry.theirs} · Diferencia ${entry.diff}`;
-
-        main.append(film, numbers);
-        li.appendChild(main);
-        bestList.appendChild(li);
-      });
-
-      card.appendChild(bestList);
-    }
-
-    if (item.disagreements.length) {
-      const disagreementTitle = document.createElement('p');
-      disagreementTitle.className = 'agreement-list-title';
-      disagreementTitle.textContent = '⚡ Donde mas discrepais';
-      card.appendChild(disagreementTitle);
-
-      const list = document.createElement('ol');
-      list.className = 'agreement-list';
-
-      item.disagreements.forEach((entry) => {
-        const li = document.createElement('li');
-        li.className = 'agreement-item';
-
-        if (entry.posterUrl) {
-          const thumb = document.createElement('img');
-          thumb.className = 'agreement-thumb';
-          thumb.src = getImageProxyUrl(entry.posterUrl);
-          thumb.alt = `Portada de ${entry.title}`;
-          thumb.loading = 'lazy';
-          li.appendChild(thumb);
-        } else {
-          const thumbFallback = document.createElement('span');
-          thumbFallback.className = 'agreement-thumb-fallback';
-          thumbFallback.textContent = '🎞️';
-          li.appendChild(thumbFallback);
-        }
-
-        const main = document.createElement('div');
-        main.className = 'agreement-main';
-
-        const film = document.createElement(entry.url ? 'a' : 'span');
-        film.className = 'agreement-film';
-        film.textContent = entry.title;
-        if (entry.url) {
-          film.href = entry.url;
-          film.target = '_blank';
-          film.rel = 'noreferrer';
-        }
-
-        const numbers = document.createElement('span');
-        numbers.className = 'agreement-gap';
-        numbers.textContent = `Nota usuario activo ${entry.mine} · Nota ${item.name} ${entry.theirs} · Diferencia ${entry.diff}`;
-
-        main.append(film, numbers);
-        li.appendChild(main);
-        list.appendChild(li);
-      });
-
-      card.appendChild(list);
-    }
-
-    elements.overlapGrid.appendChild(card);
   });
 }
 
@@ -1096,7 +599,7 @@ function buildStatistics(records) {
     .slice(0, 10)
     .sort((a, b) => (b.date ? b.date.getTime() : 0) - (a.date ? a.date.getTime() : 0) || a.title.localeCompare(b.title));
 
-  elements.totalVotes.textContent = String(records.length);
+  elements.totalVotes.textContent = String(average.length);
   elements.averageRating.textContent = average.length
     ? (average.reduce((sum, record) => sum + record.rating, 0) / average.length).toFixed(1)
     : '-';
@@ -1132,73 +635,45 @@ function buildStatistics(records) {
 }
 
 async function loadConfig() {
-  const response = await fetch('/api/config');
-  const payload = await response.json();
-  configuredUsers = Array.isArray(payload?.filmaffinity?.users) ? payload.filmaffinity.users : [];
-  const queryUser = new URLSearchParams(window.location.search).get(USER_QUERY_KEY) || '';
-  const savedUser = localStorage.getItem(SELECTED_USER_KEY) || '';
-  const defaultUser = String(payload?.filmaffinity?.defaultUser || '').trim();
-  const selected =
-    configuredUsers.find((user) => user.name === queryUser) ||
-    configuredUsers.find((user) => user.name === savedUser) ||
-    configuredUsers.find((user) => user.name === defaultUser) ||
-    configuredUsers[0];
-
-  elements.userSelector.innerHTML = '';
-  configuredUsers.forEach((user) => {
-    const option = document.createElement('option');
-    option.value = user.name;
-    option.textContent = user.name;
-    elements.userSelector.appendChild(option);
-  });
-
-  if (selected) {
-    selectedUserName = selected.name;
-    elements.userSelector.value = selected.name;
-    localStorage.setItem(SELECTED_USER_KEY, selected.name);
-  }
+  const config = await initializeUserSelector(elements.userSelector);
+  selectedUserName = config.userName;
 }
 
 async function loadLibrary() {
-  if (!selectedUserName) {
-    return;
-  }
+  return runLibraryLoad(async (isCurrent) => {
+    const message = selectedUserName ? `Cargando estadísticas de ${selectedUserName}...` : 'Cargando estadísticas...';
+    showStatsLoader(message);
+    elements.subtitle.textContent = message;
+    if (!selectedUserName) await loadConfig();
+    if (!isCurrent()) return;
+    if (!selectedUserName) throw new Error('Falta configurar usuarios en config.json.');
 
-  showStatsLoader(`Cargando estadísticas de ${selectedUserName}...`);
-  const response = await fetch(`/api/library?userName=${encodeURIComponent(selectedUserName)}`);
-  const payload = await response.json();
-  library = dedupeRecords(payload.ratings || []);
+    const response = await fetch(`/api/library?userName=${encodeURIComponent(selectedUserName)}`);
+    const payload = await response.json();
+    if (!isCurrent()) return;
+    if (!response.ok) throw new Error(payload.error || 'No se pudo cargar la biblioteca.');
+    library = dedupeRecords(payload.ratings || []);
 
-  elements.subtitle.textContent = library.length
-    ? `Lectura rápida de ${library.length} votos guardados para este usuario.`
-    : 'Este usuario todavía no tiene votos guardados para analizar.';
+    elements.subtitle.textContent = library.length
+      ? `Lectura rápida de ${library.length} votos guardados para este usuario.`
+      : 'Este usuario todavía no tiene votos guardados para analizar.';
 
-  buildStatistics(library);
+    buildStatistics(library);
+  });
 }
 
-function updateQueryString() {
-  const url = new URL(window.location.href);
-  if (selectedUserName) {
-    url.searchParams.set(USER_QUERY_KEY, selectedUserName);
-  } else {
-    url.searchParams.delete(USER_QUERY_KEY);
-  }
-  window.history.replaceState({}, '', url);
-  updateNavLinks();
-}
-
-elements.userSelector.addEventListener('change', async () => {
+elements.userSelector.addEventListener('change', () => {
   selectedUserName = elements.userSelector.value;
-  localStorage.setItem(SELECTED_USER_KEY, selectedUserName);
-  updateQueryString();
-  await loadLibrary();
+  updateUserNavigation(selectedUserName);
+  loadLibrary();
 });
 
-async function boot() {
-  await loadConfig();
-  updateQueryString();
-  showStatsLoader('Cargando estadísticas...');
-  await loadLibrary();
+function showStatsError(error) {
+  window.siteUtils.showError(error, elements.subtitle, [
+    elements.timelineChart, elements.averageByYearChart, elements.ratingDistributionChart,
+    elements.sharedByYearChart, elements.insightsGrid, elements.topBestList, elements.topWorstList
+  ], loadLibrary);
 }
 
-boot();
+const runLibraryLoad = window.siteUtils.createLatestLoader(elements.subtitle, showStatsError);
+loadLibrary();
