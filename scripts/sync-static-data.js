@@ -8,6 +8,27 @@ const CONFIG_PATH = path.join(ROOT_DIR, 'config.json');
 const OUTPUT_DIR = path.join(ROOT_DIR, 'public', 'data');
 const OUTPUT_LIBRARIES_PATH = path.join(OUTPUT_DIR, 'libraries.json');
 
+function readConfig(filePath = CONFIG_PATH) {
+  let raw;
+  try {
+    raw = fs.readFileSync(filePath, 'utf8');
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      throw new Error(
+        'Missing config.json. Run "cp config.example.json config.json", then set filmaffinity.users with your names and FilmAffinity user IDs before running "npm run sync:static".',
+        { cause: error }
+      );
+    }
+    throw error;
+  }
+
+  try {
+    return JSON.parse(raw);
+  } catch (error) {
+    throw new Error(`Invalid JSON in config.json: ${error.message}`, { cause: error });
+  }
+}
+
 function readJson(filePath, fallback) {
   try {
     const raw = fs.readFileSync(filePath, 'utf8');
@@ -114,11 +135,13 @@ function normalizeUsers(config) {
 }
 
 async function main() {
-  const config = readJson(CONFIG_PATH, {});
+  const config = readConfig();
   const users = normalizeUsers(config);
 
   if (!users.length) {
-    throw new Error('No users found in config.json under filmaffinity.users');
+    throw new Error(
+      'No valid users found in config.json under filmaffinity.users. Add at least one entry with a non-empty "name" and "userId"; see config.example.json.'
+    );
   }
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -177,7 +200,11 @@ async function main() {
   );
 }
 
-main().catch((error) => {
-  console.error(error?.stack || String(error));
-  process.exitCode = 1;
-});
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(error?.stack || String(error));
+    process.exitCode = 1;
+  });
+}
+
+module.exports = { readConfig, normalizeUsers };

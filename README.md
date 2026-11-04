@@ -19,6 +19,13 @@ Web app to browse and analyze FilmAffinity ratings for one or more users.
 
 Crea `config.json` desde `config.example.json`:
 
+```bash
+cp config.example.json config.json
+```
+
+Edita la copia y sustituye los IDs de ejemplo por los IDs reales de FilmAffinity
+(el valor de `user_id` en la URL del perfil). `config.json` es local y no se guarda en Git.
+
 ```json
 {
   "filmaffinity": {

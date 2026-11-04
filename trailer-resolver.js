@@ -5,6 +5,7 @@ function buildTrailerQuery(title, year) {
 }
 
 function fetchRemoteText(url, redirectsLeft = 4) {
+  const hostname = new URL(url).hostname;
   return new Promise((resolve, reject) => {
     const req = https.get(
       url,
@@ -12,15 +13,23 @@ function fetchRemoteText(url, redirectsLeft = 4) {
         headers: {
           'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-          'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8'
+          'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+          // Reject optional cookies so regional consent redirects do not loop.
+          ...(hostname === 'youtube.com' || hostname.endsWith('.youtube.com')
+            ? { Cookie: 'SOCS=CAI' }
+            : {})
         }
       },
       (res) => {
         const location = res.headers.location;
         const code = Number(res.statusCode || 0);
-        if (location && code >= 300 && code < 400 && redirectsLeft > 0) {
-          const nextUrl = new URL(location, url).toString();
+        if (location && code >= 300 && code < 400) {
           res.resume();
+          if (redirectsLeft <= 0) {
+            reject(new Error(`Trailer search exceeded redirect limit (HTTP ${code})`));
+            return;
+          }
+          const nextUrl = new URL(location, url).toString();
           resolve(fetchRemoteText(nextUrl, redirectsLeft - 1));
           return;
         }
