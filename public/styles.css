@@ -509,18 +509,18 @@ textarea:hover {
 }
 
 #results-title {
-  min-height: 2.16em;
+  min-height: 0;
 }
 
 .browse-status,
 #watch-next-status,
 .affinity-status {
-  min-height: 3em;
+  min-height: 0;
 }
 
 .results-meta {
-  min-height: 3em;
-  margin-bottom: 16px;
+  min-height: 0;
+  margin-bottom: 12px;
 }
 
 /* Search and filter controls */
