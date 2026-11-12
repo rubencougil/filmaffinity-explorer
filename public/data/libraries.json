@@ -1,9 +1,25 @@
 {
-  "generatedAt": "2026-11-12T12:59:08.444Z",
+  "generatedAt": "2026-11-12T13:17:06.158Z",
   "libraries": [
     {
       "userName": "R.C.",
       "ratings": [
+        {
+          "filmId": "914839",
+          "title": "El hombre que mató a Liberty Valance",
+          "year": "1962",
+          "rating": 10,
+          "averageRating": 8.3,
+          "ratedAtRaw": "votada 12 de noviembre de 2026",
+          "ratedAt": "2026-11-12",
+          "url": "https://www.filmaffinity.com/es/film914839.html",
+          "posterUrl": "https://pics.filmaffinity.com/the_man_who_shot_liberty_valance-414918328-large.jpg",
+          "scrapedAt": "2026-11-12",
+          "genres": [],
+          "trailerVideoId": "Q6iEna2pJqM",
+          "trailerEmbedUrl": "https://www.youtube-nocookie.com/embed/Q6iEna2pJqM?autoplay=1&rel=0",
+          "trailerSource": "youtube"
+        },
         {
           "filmId": "689813",
           "title": "El extraño",
@@ -5976,22 +5992,6 @@
           ],
           "trailerVideoId": "ALIJsrGNNoU",
           "trailerEmbedUrl": "https://www.youtube-nocookie.com/embed/ALIJsrGNNoU?autoplay=1&rel=0",
-          "trailerSource": "youtube"
-        },
-        {
-          "filmId": "914839",
-          "title": "El hombre que mató a Liberty Valance",
-          "year": "1962",
-          "rating": 9,
-          "averageRating": 8.3,
-          "ratedAtRaw": "votada 29 de abril de 2023",
-          "ratedAt": "2023-04-29",
-          "url": "https://www.filmaffinity.com/es/film914839.html",
-          "posterUrl": "https://pics.filmaffinity.com/the_man_who_shot_liberty_valance-414918328-large.jpg",
-          "scrapedAt": "2026-03-30",
-          "genres": [],
-          "trailerVideoId": "Q6iEna2pJqM",
-          "trailerEmbedUrl": "https://www.youtube-nocookie.com/embed/Q6iEna2pJqM?autoplay=1&rel=0",
           "trailerSource": "youtube"
         },
         {
@@ -18116,7 +18116,7 @@
       "count": 1044,
       "status": "completed",
       "error": null,
-      "lastSyncedAt": "2026-11-12T12:59:12.127Z"
+      "lastSyncedAt": "2026-11-12T13:17:09.769Z"
     },
     {
       "userName": "J.A.",
@@ -46153,7 +46153,7 @@
       "count": 1755,
       "status": "completed",
       "error": null,
-      "lastSyncedAt": "2026-11-12T12:59:15.586Z"
+      "lastSyncedAt": "2026-11-12T13:17:12.982Z"
     },
     {
       "userName": "S.R.",
@@ -50353,7 +50353,7 @@
       "count": 263,
       "status": "completed",
       "error": null,
-      "lastSyncedAt": "2026-11-12T12:59:18.710Z"
+      "lastSyncedAt": "2026-11-12T13:17:16.335Z"
     }
   ]
 }
