@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('node:child_process');
 const { syncFilmaffinity } = require('../sync-filmaffinity');
 const { resolveYoutubeTrailer } = require('../trailer-resolver');
 
@@ -134,7 +135,41 @@ function normalizeUsers(config) {
   return [...unique.values()];
 }
 
+function requireMainBranch() {
+  const branch = execFileSync('git', ['branch', '--show-current'], {
+    cwd: ROOT_DIR,
+    encoding: 'utf8'
+  }).trim();
+  if (branch !== 'main') {
+    throw new Error('Publishing requires the main branch. Switch to main before running with --publish.');
+  }
+}
+
+function publishStaticData() {
+  requireMainBranch();
+  const dataPath = 'public/data/libraries.json';
+  const changes = execFileSync('git', ['status', '--porcelain', '--', dataPath], {
+    cwd: ROOT_DIR,
+    encoding: 'utf8'
+  }).trim();
+
+  if (changes) {
+    for (const args of [
+      ['add', '--', dataPath],
+      ['commit', '--only', '-m', 'Update static FilmAffinity data', '--', dataPath]
+    ]) {
+      execFileSync('git', args, { cwd: ROOT_DIR, stdio: 'inherit' });
+    }
+  }
+
+  execFileSync('git', ['push', 'origin', 'refs/heads/main:refs/heads/main'], {
+    cwd: ROOT_DIR,
+    stdio: 'inherit'
+  });
+}
+
 async function main() {
+  const publish = process.argv.includes('--publish');
   const config = readConfig();
   const users = normalizeUsers(config);
 
@@ -142,6 +177,10 @@ async function main() {
     throw new Error(
       'No valid users found in config.json under filmaffinity.users. Add at least one entry with a non-empty "name" and "userId"; see config.example.json.'
     );
+  }
+
+  if (publish) {
+    requireMainBranch();
   }
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
@@ -198,6 +237,10 @@ async function main() {
   console.log(
     `- Trailers resolved: ${trailerResult.resolvedCount}, missing or unchanged: ${trailerResult.missingCount}`
   );
+
+  if (publish) {
+    publishStaticData();
+  }
 }
 
 if (require.main === module) {

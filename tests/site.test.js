@@ -92,6 +92,30 @@ async function openStaticApi(options = {}) {
 }
 
 for (const directory of ['public', 'dist']) {
+  test(`${directory} aligns header branding, navigation and controls in a single desktop row`, async () => {
+    for (const file of ['index.html', 'watch-next.html', 'affinity.html', 'stats.html', 'sync.html']) {
+      const { page, errors } = await openPage(file, { directory });
+      try {
+        for (const width of [1121, 1280]) {
+          await page.setViewportSize({ width, height: 800 });
+          const aligned = await page.locator('.topbar').evaluate((header) => {
+            const rects = [...header.querySelectorAll('.brand-mark, .top-links a, input, select')]
+              .map((element) => element.getBoundingClientRect());
+            const centers = rects.map((rect) => rect.top + rect.height / 2);
+            const heights = rects.map((rect) => rect.height);
+            return Math.max(...centers) - Math.min(...centers) <= 1 &&
+              Math.max(...heights) - Math.min(...heights) <= 1;
+          });
+          assert(aligned, `${file} at ${width}px`);
+          assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+        }
+        assert.deepEqual(errors, []);
+      } finally {
+        await page.close();
+      }
+    }
+  });
+
   for (const file of ['index.html', 'watch-next.html', 'affinity.html', 'stats.html', 'sync.html']) {
     test(`${directory}/${file} loads under a deployment subpath`, async () => {
       const { page, errors } = await openPage(file, { directory, mobile: true });
@@ -1015,7 +1039,7 @@ test('library layout preserves columns and filter visibility at every breakpoint
         };
       });
       assert.equal(layout.columns, width <= 760 ? 1 : width <= 920 ? 2 : width <= 1120 ? 3 : 4);
-      assert.equal(layout.sidebar, width <= 1120 ? 'static' : 'sticky');
+      assert.equal(layout.sidebar, 'static');
       assert.equal(layout.filters, width <= 760 ? 'none' : 'block');
       assert.equal(layout.navigation, width <= 760 ? 'none' : 'flex');
     }
@@ -1093,6 +1117,54 @@ const browsePages = [
 ];
 
 for (const { file, prefix, card, results, sort } of browsePages) {
+  for (const directory of ['public', 'dist']) {
+    test(`${directory}/${file} keeps header search and all filters reachable on short screens`, async () => {
+      const { page, errors } = await openPage(file, { directory });
+      try {
+        await page.waitForSelector(card);
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        for (const width of [390, 761, 1121, 1280]) {
+          await page.setViewportSize({ width, height: 480 });
+          if (width <= 760) await page.locator('#mobile-filter-toggle').click();
+          const search = page.locator(`.topbar #${prefix}search-input`);
+          assert.equal(await search.count(), 1);
+          assert(await search.isVisible());
+          assert(await search.getAttribute('aria-label'));
+          assert.equal((await page.locator('.topbar-search-field').textContent()).trim(), '');
+          if (width > 1120) {
+            assert(await search.evaluate((input) =>
+              input.getBoundingClientRect().right <= document.getElementById('top-nav').getBoundingClientRect().left));
+          }
+          assert(await page.locator('#filter-sidebar').evaluate((sidebar) =>
+            [...sidebar.querySelectorAll('select, .toggle-field, button')].every((control) =>
+              control.getBoundingClientRect().right <= sidebar.getBoundingClientRect().right &&
+              control.getBoundingClientRect().left >= sidebar.getBoundingClientRect().left)));
+          const clear = page.locator(`#${prefix}clear-filters`);
+          await clear.scrollIntoViewIfNeeded();
+          assert(await clear.evaluate((button) => {
+            const rect = button.getBoundingClientRect();
+            return rect.top >= document.querySelector('.topbar').getBoundingClientRect().bottom &&
+              rect.bottom <= window.innerHeight;
+          }));
+          assert(await search.evaluate((input) => {
+            const rect = input.getBoundingClientRect();
+            return rect.top >= 0 && rect.bottom <= window.innerHeight;
+          }));
+          await search.fill('No matching title');
+          assert.equal(await page.locator(card).count(), 0);
+          assert.equal(new URL(page.url()).searchParams.get('q'), 'No matching title');
+          await clear.click();
+          assert.equal(await search.inputValue(), '');
+          assert(await page.locator(card).count() > 0);
+          assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth));
+        }
+        assert.deepEqual(errors, []);
+      } finally {
+        await page.close();
+      }
+    });
+  }
+
   test(`${file} round-trips all filters through reload and a shared URL`, async () => {
     const data = structuredClone(payload);
     for (const library of data.libraries) {

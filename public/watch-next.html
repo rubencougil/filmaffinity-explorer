@@ -41,9 +41,9 @@
   <body class="watch-next-page">
     <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
     <header class="topbar">
-      <div class="topbar-inner">
+      <div class="topbar-inner has-header-search">
         <div class="brand-block">
-          <a class="brand-mark" href="index.html">FilmAffinity Explorer</a>
+          <a class="brand-mark" href="index.html">FA Explorer</a>
         </div>
 
         <button class="hamburger-button" id="nav-menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="top-nav">
@@ -51,6 +51,10 @@
           <span class="hamburger-icon" aria-hidden="true"></span>
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
+
+        <div class="topbar-search-field">
+          <input id="watch-next-search-input" type="search" aria-label="Buscar recomendaciones" placeholder="Buscar recomendaciones…" />
+        </div>
 
         <nav class="top-links" id="top-nav" aria-label="Navegación principal">
           <a data-nav-target="home" href="index.html">Biblioteca</a>
@@ -105,25 +109,6 @@
         </section>
 
         <div class="sidebar-column">
-          <div class="search-always-visible panel">
-            <div class="panel-header sidebar-header">
-              <div>
-              <p class="panel-kicker">🔎 Búsqueda</p>
-              <h2>Búsqueda rápida</h2>
-              </div>
-            </div>
-            <label class="field search-field">
-              <div class="search-pill">
-                <input
-                  id="watch-next-search-input"
-                  type="search"
-                  aria-label="Buscar recomendaciones"
-                  placeholder="Busca entre las recomendaciones"
-                />
-              </div>
-            </label>
-          </div>
-
           <aside id="filter-sidebar" class="panel filter-sidebar" aria-label="Filtros recomendaciones">
             <div class="panel-header sidebar-header">
               <div>

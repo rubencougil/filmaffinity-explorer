@@ -41,9 +41,9 @@
   <body class="stats-page">
     <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
     <header class="topbar">
-      <div class="topbar-inner">
+      <div class="topbar-inner has-header-search">
         <div class="brand-block">
-          <a class="brand-mark" href="index.html">FilmAffinity Explorer</a>
+          <a class="brand-mark" href="index.html">FA Explorer</a>
         </div>
 
         <button class="hamburger-button" id="nav-menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="top-nav">
@@ -51,6 +51,10 @@
           <span class="hamburger-icon" aria-hidden="true"></span>
           <span class="hamburger-icon" aria-hidden="true"></span>
         </button>
+
+        <form class="topbar-search-field" role="search" action="index.html" method="get">
+          <input type="search" name="q" aria-label="Buscar en la biblioteca" placeholder="Buscar títulos…" />
+        </form>
 
         <nav class="top-links" id="top-nav" aria-label="Navegación principal">
           <a data-nav-target="home" href="index.html">Biblioteca</a>

@@ -41,7 +41,7 @@
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand-block">
-          <a class="brand-mark" href="index.html">FilmAffinity Explorer</a>
+          <a class="brand-mark" href="index.html">FA Explorer</a>
         </div>
 
         <button class="hamburger-button" id="nav-menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="top-nav">
@@ -78,6 +78,9 @@
 
           <p class="hint">
             Este comando genera/actualiza <code>public/data/libraries.json</code>. El <code>config.json</code> con los IDs de usuario se usa solo en local y no se publica.
+          </p>
+          <p class="hint">
+            Para sincronizar, hacer commit solo de los datos y push a <code>origin/main</code>, ejecuta <code>npm run sync:static -- --publish</code> desde la rama <code>main</code>.
           </p>
         </section>
       </main>

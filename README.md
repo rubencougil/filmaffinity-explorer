@@ -54,6 +54,19 @@ Esto actualiza:
 La sincronización se ejecuta solo en local; no hay un workflow de sync en GitHub Actions.
 Los errores al resolver trailers se muestran en la consola; los metadatos ya resueltos se conservan.
 
+Para sincronizar y publicar en un solo comando, desde la rama `main`:
+
+```bash
+npm run sync:static -- --publish
+```
+
+Solo después de completar el sync, se hace commit de `public/data/libraries.json`
+y push a `origin/main`, sin force-push. Los demás cambios, incluso los preparados
+en el índice, no se incluyen en el commit. El push también envía los commits
+locales pendientes de `main`. Sin `--publish`, el comando sigue siendo solo local.
+Si el commit o el push falla, el comando termina con error y conserva los datos
+generados y cualquier commit ya creado; no intenta hacer pull ni resolver conflictos.
+
 ## 🧪 Probar la versión estática en local
 
 ```bash
@@ -91,10 +104,10 @@ garantía sobre la compresión del alojamiento.
 
 ## 🚀 Publicar en GitHub Pages
 
-1. Ejecuta `npm run sync:static`.
-2. Haz commit de los cambios (incluyendo `public/data/libraries.json`).
-3. Push a `main`.
-4. El workflow `.github/workflows/pages.yml` construirá y desplegará `dist/` en Pages.
+1. Desde `main`, ejecuta `npm run sync:static -- --publish` para sincronizar, hacer commit de los datos y push.
+2. El workflow `.github/workflows/pages.yml` construirá y desplegará `dist/` en Pages.
+
+También puedes ejecutar `npm run sync:static` y hacer commit y push manualmente.
 
 ## Comprobaciones
 
@@ -137,6 +150,8 @@ del proxy externo; la compresión y la caché HTTP dependen del alojamiento.
 Biblioteca y Qué ver guardan la búsqueda y los filtros en la URL para compartirlos,
 marcarlos como favoritos o recuperarlos al recargar. Por ejemplo:
 `index.html?userName=Usuario&q=amelie&year=2001&minRating=8`.
+«Búsqueda rápida» está en la cabecera y filtra la vista actual. Los filtros
+laterales se desplazan con la página para poder acceder a todos en pantallas bajas.
 Biblioteca permite repetir `year` para seleccionar varios años. Los valores no
 válidos se descartan y los filtros predeterminados se omiten de la URL.
 
